@@ -2,6 +2,8 @@
 
 Waterbear is a friendly block-based programming language. It has been around at http://waterbearlang.com/ for some time in experimental form. This is an attempt to fix longstanding issues with that version and push it for a 1.0 release.
 
+NOTE: This is a very early stage work in progress. See the link above for a working version.
+
 Among the goals of this rewrite are:
 
 * Bring back the toolkit nature of Waterbear, allowing people to easily create their own block-based languages with it.
@@ -30,3 +32,4 @@ Outside of Sketchdance, several other libraries are used to help make Waterbear 
 * [immer](https://medium.com/hackernoon/introducing-immer-immutability-the-easy-way-9d73d8f71cb3) is a library to work with immutable data in JavaScript
 * [Ramda](https://ramdajs.com/) (probably, there are still a couple of other contenders) for functional programming support and standard library
 * [ShareDB](https://github.com/share/sharedb) (probably) for collaborative JSON and text
+* [dragula](https://bevacqua.github.io/dragula/) drag and drop functionality
