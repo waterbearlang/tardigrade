@@ -1,37 +1,29 @@
-Welcome to Glitch
-=================
+# Waterbear
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+Waterbear is a friendly block-based programming language. It has been around at http://waterbearlang.com/ for some time in experimental form. This is an attempt to fix longstanding issues with that version and push it for a 1.0 release.
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+Among the goals of this rewrite are:
 
-Find out more [about Glitch](https://glitch.com/about).
+* Bring back the toolkit nature of Waterbear, allowing people to easily create their own block-based languages with it.
+* Make the UI more powerful, allowing customizations and support for tutorials and walkthroughs
+* Improved embedding, allowing Waterbear scripts to be embedded in any web page
+* Vastly improved text output producing scripts which can dropped into a browser and run without further work
+* Round-trip from script mode using the Moonshine language, a text-based programming language designed to map well to blocks
+* Improve undo/redo, copy/paste and other infrastructure
+* Compile to JS for speed or run block-by block for debugging
+* Collaborative: invite others to contribute to your Waterbear projects
+* Many, many more example programs and tutorials
 
+## Libraries and Tools
 
-Your Project
-------------
+Waterbear is a (big) part of the [Sketchdance suite](https://hackmd.io/@dethe/rJHyDz3eS) of tools and uses several projects from that:
 
-### ← README.md
+* [Moonshine](https://hackmd.io/MPFE8cvQQOeP1bFb54FqCg) A text-based language designed to map to blocks
+* Tardigrade: General-purpose block language toolkit.
+* Moss Piglet: GUI toolkit for Sketchdance for building declarative and customizable programmign and creation tools.
+* Alley: Optional server-side connector to allow Waterbear to work with external systems beyond web pages, like Arduino, Raspberry Pi, etc.
 
-That's this file, where you can tell people what your cool website does and how you built it.
+Outside of Sketchdance, several other libraries are used to help make Waterbear work.
 
-### ← index.html
-
-Where you'll write the content of your website. 
-
-### ← style.css
-
-CSS files add styling rules to your content.
-
-### ← script.js
-
-If you're feeling fancy you can add interactivity to your site with JavaScript.
-
-### ← assets
-
-Drag in `assets`, like images or music, to add them to your project
-
-Made by [Glitch](https://glitch.com/)
--------------------
-
-\ ゜o゜)ノ
+* [pagjs](https://pegjs.org/) is used to build the Moonshine parser
+* [heresy](https://github.com/WebReflection/heresy/) is used to build HTML from object parse trees
