@@ -23,7 +23,10 @@ Waterbear is a (big) part of the [Sketchdance suite](https://hackmd.io/@dethe/rJ
 * Moss Piglet: GUI toolkit for Sketchdance for building declarative and customizable programmign and creation tools.
 * Alley: Optional server-side connector to allow Waterbear to work with external systems beyond web pages, like Arduino, Raspberry Pi, etc.
 
-Outside of Sketchdance, several other libraries are used to help make Waterbear work.
+Outside of Sketchdance, several other libraries are used to help make Waterbear work. These are part of my evolving [Standard Stack](https://hackmd.io/@dethe/rJHyDz3eS)
 
 * [pagjs](https://pegjs.org/) is used to build the Moonshine parser
-* [heresy](https://github.com/WebReflection/heresy/) is used to build HTML from object parse trees
+* [heresy](https://github.com/WebReflection/heresy/) is used to build HTML from object parse trees, like a very lightweight version of React
+* [immer](https://medium.com/hackernoon/introducing-immer-immutability-the-easy-way-9d73d8f71cb3) is a library to work with immutable data in JavaScript
+* [Ramda](https://ramdajs.com/) (probably, there are still a couple of other contenders) for functional programming support and standard library
+* [ShareDB](https://github.com/share/sharedb) (probably) for collaborative JSON and text
