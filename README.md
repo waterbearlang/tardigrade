@@ -1,6 +1,6 @@
 # Waterbear
 
-Waterbear is a friendly block-based programming language. It has been around at http://waterbearlang.com/ for some time in experimental form. This is an attempt to fix longstanding issues with that version and push it for a 1.0 release.
+Waterbear is a friendly block-based programming language. It has been around at [waterbearlang.com](https://waterbearlang.com/) for some time in experimental form. This is an attempt to fix longstanding issues with that version and push it for a 1.0 release.
 
 NOTE: This is a very early stage work in progress. See the link above for a working version.
 
@@ -27,9 +27,10 @@ Waterbear is a (big) part of the [Sketchdance suite](https://hackmd.io/@dethe/rJ
 
 Outside of Sketchdance, several other libraries are used to help make Waterbear work. These are part of my evolving [Standard Stack](https://hackmd.io/@dethe/rJHyDz3eS)
 
-* [pagjs](https://pegjs.org/) is used to build the Moonshine parser
+* [pegjs](https://pegjs.org/) is used to build the Moonshine parser
 * [heresy](https://github.com/WebReflection/heresy/) is used to build HTML from object parse trees, like a very lightweight version of React
 * [immer](https://medium.com/hackernoon/introducing-immer-immutability-the-easy-way-9d73d8f71cb3) is a library to work with immutable data in JavaScript
 * [Ramda](https://ramdajs.com/) (probably, there are still a couple of other contenders) for functional programming support and standard library
 * [ShareDB](https://github.com/share/sharedb) (probably) for collaborative JSON and text
 * [dragula](https://bevacqua.github.io/dragula/) drag and drop functionality
+* [hsluv](https://www.hsluv.org/) human-friendly alternative to HSL for colours
