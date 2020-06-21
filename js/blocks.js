@@ -1,3 +1,3 @@
-import { define, html, render } from "https://unpkg.com/heresy@latest?module";
+import { define, html, render } from heresy;
 
 console.log([define, html, render]);
