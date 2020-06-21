@@ -1,2 +1,3 @@
 import "*" from "ramda";
-console.log(dragula, immer, ramda);
+import {parse} from "moonshine";
+console.log(dragula, immer, parse);
