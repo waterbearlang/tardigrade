@@ -1,3 +1,3 @@
-import "*" from "ramda";
-import {parse} from "moonshine";
-console.log(dragula, immer, parse);
+import * as R from "../lib/ramda.min.js";
+import {parse} from "./moonshine.js";
+import { define, html, render } from "../lib/heresy.min.js";
