@@ -1,7 +1,8 @@
 import { parse } from "./moonshine.js";
 import {define, ref, render, html} from "../lib/heresy.min.js";
-import R from "../lib/ramda.min.js";
+import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
+import dragula from "../lib/dragula.min.js";
 
 console.log({ immer, R, parse, dragula, define, ref, render, html });
 
