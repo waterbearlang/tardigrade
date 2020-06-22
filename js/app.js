@@ -1,10 +1,9 @@
 import { parse } from "./moonshine.js";
-import {heresy} from "../lib/heresy.min.js";
-const {define, ref, render, html} = heresy;
-import * as R from "../lib/ramda.min.js";
-import * as Immer from "../lib/immer.min.js";
+import {define, ref, render, html} from "../lib/heresy.min.js";
+import R from "../lib/ramda.min.js";
+import * as immer from "../lib/immer.min.js";
 
-// console.log({ immer, R, parse, dragula, define, ref, render, html });
+console.log({ immer, R, parse, dragula, define, ref, render, html });
 
 const processScript = async script => {
   const tree = await parse(script);
