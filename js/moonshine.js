@@ -2308,7 +2308,4 @@ function peg$parse(input, options) {
   }
 }
 
-const SyntaxError = peg$SyntaxError;
-const parse = peg$parse;
-
-export { SyntaxError, parse};
+export { peg$SyntaxError as SyntaxError, peg$parse as parse};
