@@ -169,7 +169,7 @@ function peg$parse(input, options) {
     peg$c2 = "}",
     peg$c3 = peg$literalExpectation("}", false),
     peg$c4 = function(name, values) {
-      console.log("ns values: %s", JSON.stringify(values, null, 2));
+      // console.log("ns values: %s", JSON.stringify(values, null, 2));
       return { name, type: "namespace", values };
     },
     peg$c5 = function(fns) {
