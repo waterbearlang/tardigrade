@@ -1,3 +1,3 @@
 import {parse} from "./moonshine.js";
 
-console.log({R, parse, dragula, heresy});
+console.log({immer, R, parse, dragula, heresy});
