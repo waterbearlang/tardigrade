@@ -1,5 +1,5 @@
 import { parse } from "./moonshine.js";
-import {define, ref, renderhtml} from "../lib/heresy.min.js";
+import {define, ref, render, html} from "../lib/heresy.min.js";
 import * as Immer from "../lib/immer.min.js";
 
 console.log({ immer, R, parse, dragula, define, ref, render, html });
