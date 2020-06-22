@@ -1,16 +1,20 @@
-import {parse} from "./moonshine.js";
+import { parse } from "./moonshine.js";
 import * as Immer from "../lib/immer.min.js";
 
-console.log({immer, R, parse, dragula, heresy});
+console.log({ immer, R, parse, dragula, heresy });
 
-window.processScript = (script) => {
+const processScript = script => {
   console.log(script);
-}
+};
 
-window.processError = (script) => {
+const processError = script => {
   console.log(script);
-}
+};
 
-const blockScripts = ['vector'];
+const blockScripts = ["vector"];
 
-blockScripts.forEach(name => fetch(`/blocks/${name}.moonshine`).then(response => processScript(response.)))
+blockScripts.forEach(name =>
+  fetch(`/blocks/${name}.moonshine`).then(response =>
+    response.text().then(text => processScript(text))
+  )
+);
