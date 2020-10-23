@@ -23,7 +23,14 @@ blockScripts.forEach(name =>
   )
 );
 
-class Step extends HTMLElement{
-  static get tagName() { return 'Step'; }
+class WBStep extends HTMLElement{
+  static get name(){ return 'WBStep'; }
+  static get tagName() { return 'wb-step'; }
    onconnected() { console.log(this.outerHTML); }
+  static style(WBStep){
+    return `${WBStep} {
+      border: 2px solid black;
+    }`
+  }
 }
+define(WBStep);
