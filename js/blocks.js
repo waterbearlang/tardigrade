@@ -65,7 +65,18 @@ class WBStep extends HTMLElement {
   }
   static style(WBStep) {
     return `${WBStep} {
-      border: 2px solid black;
+      display: inline-block;
+      background-color: #EDE378;
+      border-radius: 5px;
+      border-color: #CEBD3E;
+      border-width: 2px;
+      border-style: solid;
+      margin: 5px 5px 2px 2px;
+      padding-left: 10px;
+      float: left;
+      clear: left;
+      position: relative;
+      z-index: 0;    
     }`;
   }
   oninit(event) {
