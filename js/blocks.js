@@ -4,6 +4,13 @@ import {define, ref, render, html} from "../lib/heresy.min.js";
 class WBTab extends SVGSVGElement{
   static get name(){ return 'WBTab'; }
   static get tagName(){ return 'wb-tab'; }
+  oninit(){
+    this.className = 'tab';
+    this.setAttribute('width', '40');
+    this.setAttribute('height', '12');
+    // this.width = 40;
+    // this.height = 12;
+  }
   onconnected() { console.log(this.outerHTML); }
   static style(WBTab){
     return `${WBTab}{
@@ -17,9 +24,6 @@ define(WBTab);
 class WBStep extends HTMLElement{
   static get name(){ return 'WBStep'; }
   static get tagName() { return 'wb-step'; }
-  oninit(){
-    this.className 
-  }
    onconnected() { console.log(this.outerHTML); }
   static style(WBStep){
     return `${WBStep} {
