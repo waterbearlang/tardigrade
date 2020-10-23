@@ -22,3 +22,8 @@ blockScripts.forEach(name =>
     response.text().then(text => processScript(text))
   )
 );
+
+class Step extends HTMLElement{
+  static get tagName() { return 'Step'; }
+   onconnected() { console.log(this.outerHTML); }
+}
