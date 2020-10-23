@@ -5,7 +5,7 @@ class WBTab extends SVGSVGElement{
   static get name(){ return 'WBTab'; }
   static get tagName(){ return 'wb-tab'; }
   oninit(){
-    this.className = 'tab';
+    this.className = this.props.type;
     this.setAttribute('width', '40');
     this.setAttribute('height', '12');
     // this.width = 40;
@@ -16,6 +16,14 @@ class WBTab extends SVGSVGElement{
     return `${WBTab}{
        border: 2px solid black;
     }`;
+  }
+  render(){
+    return this.svg`<path d="M 0 12 
+    a 6 6 90 0 0 6 -6 
+    a 6 6 90 0 1 6 -6
+    h 16
+    a 6 6 90 0 1 6 6
+    a 6 6 90 0 0 6 6"></path>`;
   }
 }
 
@@ -78,16 +86,5 @@ define(WBStep);
 
 Step Structure
 
-<wb-step ns="stage" fn="clearTo" class="" style="" id="ke96d2b"><svg class="tab" width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
-    a 6 6 90 0 1 6 -6
-    h 16
-    a 6 6 90 0 1 6 6
-    a 6 6 90 0 0 6 6"></path></svg><header><wb-value type="color,wb-image" class="">clear to<input type="color" style="width: 57.7256px;" class=""></wb-value></header>
-
-                <svg class="slot" width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
-    a 6 6 90 0 1 6 -6
-    h 16
-    a 6 6 90 0 1 6 6
-    a 6 6 90 0 0 6 6"></path></svg></wb-step>
+<wb-step ns="stage" fn="clearTo" class="" style="" id="ke96d2b"><wb-tab type="tab"/><header><wb-value type="color,wb-image" class="">clear to<input type="color" style="width: 57.7256px;" class=""></wb-value></header>
+<wb-tab type="slot" /></wb-step>
