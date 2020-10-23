@@ -73,6 +73,7 @@ class WBStep extends HTMLElement {
       border-style: solid;
       margin: 5px 5px 2px 2px;
       padding-left: 10px;
+      padding-bottom: 14px;
       float: left;
       clear: left;
       position: relative;
