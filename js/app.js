@@ -1,5 +1,5 @@
 import { parse } from "./moonshine.js";
-import {define, ref, render, html} from "../lib/heresy.min.js";
+import { define, ref, render, html } from "../lib/heresy.min.js";
 import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
 import dragula from "../lib/dragula.min.js";
@@ -23,14 +23,31 @@ blockScripts.forEach(name =>
   )
 );
 
-class WBStep extends HTMLElement{
-  static get name(){ return 'WBStep'; }
-  static get tagName() { return 'wb-step'; }
-   onconnected() { console.log(this.outerHTML); }
-  static style(WBStep){
+class WBStep extends HTMLElement {
+  static get name() {
+    return "WBStep";
+  }
+  static get tagName() {
+    return "wb-step";
+  }
+  onconnected() {
+    console.log(this.outerHTML);
+  }
+  static style(WBStep) {
     return `${WBStep} {
-      border: 2px solid black;
-    }`
+      display: inline-block;
+      background-color: #EDE378;
+      border-radius: 5px;
+      border-color: #CEBD3E;
+      border-width: 2px;
+      border-style: solid;
+      margin: 5px 5px 2px 2px;
+      padding-left: 10px;
+      float: left;
+      clear: left;
+      position: relative;
+      z-index: 0;    
+    }`;
   }
 }
 define(WBStep);
