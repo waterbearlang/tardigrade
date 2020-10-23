@@ -38,10 +38,6 @@ class WBStep extends HTMLElement{
       border: 2px solid black;
     }`
   }
-  // (optional) event driven initialization that will happen only once
-  // the ideal constructor substitute for any sort of one-off init
-  // this is triggered only once the component goes live, never before *
-  // * unless explicitly dispatched, of course
   oninit(event) {
     this.ns = this.props.ns;
     this.fn = this.props.fn;
@@ -56,7 +52,10 @@ class WBStep extends HTMLElement{
   // define this to return the signature as text
   get signature(){}
   // define this to return the signature as html
-  get signatureHTML(){}
+  get signatureHTML(){
+    // fake it for now
+    return '<wb-value type="color,wb-image" class="">clear to<input type="color" style="width: 57.7256px;" class=""></wb-value>';
+  }
   render() {
     // this.html or this.svg are provided automatically
     this.html`<wb-tab type="tab"/><header>${this.signatureHTML}</header><wb-tab type="slot"/>`;

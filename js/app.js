@@ -15,10 +15,10 @@ const processError = script => {
   console.log(script);
 };
 
-const blockScripts = ["vector"];
+const blockScripts = ["vector", "stage"];
 
 blockScripts.forEach(name =>
-  fetch(`/blocks/${name}.moonshine`).then(response =>
+  fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text))
   )
 );
