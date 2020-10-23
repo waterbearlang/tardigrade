@@ -42,49 +42,26 @@ class WBStep extends HTMLElement{
   // the ideal constructor substitute for any sort of one-off init
   // this is triggered only once the component goes live, never before *
   // * unless explicitly dispatched, of course
-  oninit(event) {}
+  oninit(event) {
+    this.ns = this.props.ns;
+    this.fn = this.props.fn;
+  }
 
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
   onconnected(event) {}
   ondisconnected(event) {}
-  onattributechanged(event = {attributeName, oldValue, newValue}) {}
-
-  // (optional) attributes that can either be true or false once accessed
-  // reflected on the DOM as either present, or not
-  get booleanAttributes() { return ['checked']; }
-
-  // (optional) store any value directly and dispatch `on${name}` on changes
-  get mappedAttributes() { return ['data']; }
-  // if `ondata(event){}` is defined, event.detail will have the new value
-
-  // (optional) native Custom Elements behavior with changes dispatched
-  // through the onattributechanged callback
-  get observedAttributes() { return ['name', 'age']; }
-
-  // (optional) populate this custom element content
-  //            if the signature has at least one argument,
-  //            as in render({useState, ...}),
-  //            the render will be bound automatically
-  //            with hooks capabilities
+  onattributechanged(event) {} // event = {attributeName, oldValue, newValue}
+  // define this to return the signature as text
+  get signature(){}
+  // define this to return the signature as html
+  get signatureHTML(){}
   render() {
     // this.html or this.svg are provided automatically
-    this.html`Click ${this.props.name}!`;
+    this.html`<wb-tab type="tab"/><header>${this.signatureHTML}</header><wb-tab type="slot"/>`;
   }
-
-  // (optional) automatically defined to trigger
-  // this[`on${event.type}`](event);
-  handleEvent(event) {}
-
-  // (optional) automatically defined to return this.getAttribute('is')
-  get is () {}
 }
 
 define(WBStep);
 
-
-Step Structure
-
-<wb-step ns="stage" fn="clearTo" class="" style="" id="ke96d2b"><wb-tab type="tab"/><header><wb-value type="color,wb-image" class="">clear to<input type="color" style="width: 57.7256px;" class=""></wb-value></header>
-<wb-tab type="slot" /></wb-step>
