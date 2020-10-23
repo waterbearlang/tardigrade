@@ -96,12 +96,10 @@ class WBStep extends HTMLElement {
   // define this to return the signature as html
   get signatureHTML() {
     // fake it for now
-    return '<wb-value type="color,wb-image" class="">clear to<input type="color" style="width: 57.7256px;" class=""></wb-value>';
+    return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px;" class=""></wb-value>';
   }
   render() {
-    // this.html or this.svg are provided automatically
-    this
-      .html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
+    this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
   }
 }
 
