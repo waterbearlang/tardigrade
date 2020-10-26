@@ -33,7 +33,7 @@ class WBTab extends SVGSVGElement {
   }
 }
 define(WBTab);
-console.log('WBTab defined');
+console.log("WBTab defined");
 
 class WBSlot extends WBTab {
   static get name() {
@@ -53,7 +53,7 @@ class WBSlot extends WBTab {
   }
 }
 define(WBSlot);
-console.log('WBSlot defined');
+console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
   static get name() {
@@ -82,22 +82,19 @@ class WBStep extends HTMLElement {
       z-index: 0;    
     }`;
   }
-  oninit(event) {
-    this.ns = this.props.ns;
-    this.fn = this.props.fn;
-  }
+  get mappedAttributes() { return ['ns', 'fn']; }
 
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
   onconnected(event) {
-    console.log('connected')
+    console.log("connected");
   }
   ondisconnected(event) {
-    console.log('diconnected')
+    console.log("disconnected");
   }
   onattributechanged(event) {
-    console.log('attribute changed')
+    console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
   // define this to return the signature as text
   get signature() {}
@@ -107,9 +104,9 @@ class WBStep extends HTMLElement {
     return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>';
   }
   render() {
-    this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
+    () => this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
   }
 }
 
 define(WBStep);
-console.log('WBStep defined');
+console.log("WBStep defined");
