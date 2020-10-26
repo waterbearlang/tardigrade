@@ -4,7 +4,7 @@ import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
 import dragula from "../lib/dragula.min.js";
 
-console.log({ immer, R, parse, dragula, define, ref, render, html });
+//console.log({ immer, R, parse, dragula, define, ref, render, html });
 
 const processScript = async script => {
   const tree = await parse(script);
