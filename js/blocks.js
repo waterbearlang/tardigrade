@@ -33,6 +33,7 @@ class WBTab extends SVGSVGElement {
   }
 }
 define(WBTab);
+console.log('WBTab defined');
 
 class WBSlot extends WBTab {
   static get name() {
@@ -52,6 +53,7 @@ class WBSlot extends WBTab {
   }
 }
 define(WBSlot);
+console.log('WBSlot defined');
 
 class WBStep extends HTMLElement {
   static get name() {
@@ -96,7 +98,7 @@ class WBStep extends HTMLElement {
   // define this to return the signature as html
   get signatureHTML() {
     // fake it for now
-    return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px;" class=""></wb-value>';
+    return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>';
   }
   render() {
     this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
@@ -104,3 +106,4 @@ class WBStep extends HTMLElement {
 }
 
 define(WBStep);
+console.log('WBStep defined');
