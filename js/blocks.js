@@ -90,9 +90,15 @@ class WBStep extends HTMLElement {
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
-  onconnected(event) {}
-  ondisconnected(event) {}
-  onattributechanged(event) {} // event = {attributeName, oldValue, newValue}
+  onconnected(event) {
+    console.log('connected')
+  }
+  ondisconnected(event) {
+    console.log('diconnected')
+  }
+  onattributechanged(event) {
+    console.log('attribute changed')
+  } // event = {attributeName, oldValue, newValue}
   // define this to return the signature as text
   get signature() {}
   // define this to return the signature as html

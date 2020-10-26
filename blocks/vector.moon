@@ -17,8 +17,4 @@ Vector{
   add:Vector = (a:Vector, b:Vector) => {
     Runtime.Vector(Math.add(a.x, b.x), Math.add(a.y, b.y))
   }
-  
-  clearToColor:Color = (color:Color) => {
-    Stage.background(color);
-  }
 }

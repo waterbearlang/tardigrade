@@ -8,7 +8,7 @@ console.log({ immer, R, parse, dragula, define, ref, render, html });
 
 const processScript = async script => {
   const tree = await parse(script);
-  console.log(tree);
+  // console.log(tree);
 };
 
 const processError = script => {
@@ -23,31 +23,3 @@ blockScripts.forEach(name =>
   )
 );
 
-class WBStep extends HTMLElement {
-  static get name() {
-    return "WBStep";
-  }
-  static get tagName() {
-    return "wb-step";
-  }
-  onconnected() {
-    console.log(this.outerHTML);
-  }
-  static style(WBStep) {
-    return `${WBStep} {
-      display: inline-block;
-      background-color: #EDE378;
-      border-radius: 5px;
-      border-color: #CEBD3E;
-      border-width: 2px;
-      border-style: solid;
-      margin: 5px 5px 2px 2px;
-      padding-left: 10px;
-      float: left;
-      clear: left;
-      position: relative;
-      z-index: 0;    
-    }`;
-  }
-}
-define(WBStep);
