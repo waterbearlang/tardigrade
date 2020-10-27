@@ -116,13 +116,12 @@ class WBStep extends HTMLElement {
   onattributechanged(event) {
     console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
+  onclick(){
+    alert('clicked');
+  }
   // define this to return the signature as text
   get signature() {}
   // define this to return the signature as html
-  get signatureHTML() {
-    // fake it for now
-    return `<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
-  }
   render() {
     return this
       .html`<wb-tab/><header><wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value></header><wb-slot/>`;
