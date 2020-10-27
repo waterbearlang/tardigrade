@@ -1,22 +1,20 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
 // generic event handler
-class Handler{
+class Handler extends HTMLElement{
 
   constructor() {
-    // super();
-    console.log('Handler constructor called');
-    console.log('Handler: %o', this);
-    console.log('Prototype: %o', this.prototype);
+    super();
+    console.log('events: %o', this.events);
     this.events.forEach(evt => this.addEventListener(evt, this));
   }
 
   // lazy static list definition
   get events() {
-    console.log(this);
-    return this.prototype._events || Object.defineProperty(
-      this.prototype, '_events',
-      {value: Object.getOwnPropertyNames(this.prototype)
+    let proto = Object.getPrototypeOf(this);
+    return proto._events || Object.defineProperty(
+      proto, '_events',
+      {value: Object.getOwnPropertyNames(proto)
                     .filter(type => /^on/.test(type))
                     .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
                     .map(type => type.slice(2))}
