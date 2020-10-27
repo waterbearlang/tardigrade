@@ -1,10 +1,10 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
-class WBValue extends HTMLElement{
-  static get name(){
+class WBValue extends HTMLElement {
+  static get name() {
     return "WBValue";
   }
-  static get tagName(){
+  static get tagName() {
     return "wb-value";
   }
   static style(WBValue) {
@@ -26,6 +26,8 @@ class WBTab extends HTMLElement {
     return `${WBTab}{
       display: inline-block;
       position: absolute;
+      margin: 0;
+      padding: 0;
       left: 25px;
       top: -12px;
     }`;
@@ -54,9 +56,11 @@ class WBSlot extends HTMLElement {
       position: absolute;
       margin: 0;
       padding: 0;
-      display: inline-block;
+      display: block;
+      width: 40px;
+      height: 12px;
       left: 25px;
-      bottom: -4px;
+      bottom: 0px;
       fill: white;
     }`;
   }
@@ -96,7 +100,9 @@ class WBStep extends HTMLElement {
       z-index: 0;    
     }`;
   }
-  get mappedAttributes() { return ['ns', 'fn']; }
+  get mappedAttributes() {
+    return ["ns", "fn"];
+  }
 
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
@@ -118,7 +124,8 @@ class WBStep extends HTMLElement {
     return `<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
   }
   render() {
-    return this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
+    return this
+      .html`<wb-tab/><header><wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value></header><wb-slot/>`;
   }
 }
 
