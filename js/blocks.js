@@ -77,11 +77,17 @@ define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
+  oninit(){
+    this.addEventListener('click', this);
+  }
   static get name() {
     return "WBStep";
   }
   static get tagName() {
     return "wb-step";
+  }
+  static get events(){
+   return ['onclick'];
   }
   static style(WBStep) {
     return `${WBStep} {
@@ -107,9 +113,6 @@ class WBStep extends HTMLElement {
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
-  handleEvent(event) {
-    this['on' + event.type](event);
-  }
   onconnected(event) {
     console.log("connected");
   }
