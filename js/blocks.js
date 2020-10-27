@@ -15,6 +15,8 @@ class Handler extends HTMLElement{
   }
 
   constructor() {
+    super();
+    console.log('Handler constructor called');
     this.events.forEach(evt => this.addEventListener(evt, this));
   }
 
@@ -99,6 +101,11 @@ define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends Handler {
+
+  constructor(){
+    super();
+    console.log('Step constructor called')
+  }
   
   static get name() {
     return "WBStep";
