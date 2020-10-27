@@ -1,5 +1,14 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
+class WBValue extends HTMLSpanElement{
+  static get name(){
+    return "WBValue";
+  }
+  static get tagName(){
+    return "wb-value";
+  }
+}
+
 class WBTab extends SVGSVGElement {
   static get name() {
     return "WBTab";
@@ -104,7 +113,7 @@ class WBStep extends HTMLElement {
     return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>';
   }
   render() {
-    () => this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
+    this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
   }
 }
 
