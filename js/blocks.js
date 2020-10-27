@@ -1,62 +1,72 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
-class WBValue extends HTMLSpanElement{
+class WBValue extends HTMLElement{
   static get name(){
     return "WBValue";
   }
   static get tagName(){
-    return "span";
+    return "wb-value";
+  }
+  static style(WBValue) {
+    return `${WBValue} {
+      display: inline-block;
+    }`;
   }
 }
 define(WBValue);
 
-class WBTab extends SVGSVGElement {
+class WBTab extends HTMLElement {
   static get name() {
     return "WBTab";
   }
   static get tagName() {
-    return "svg";
-  }
-  oninit() {
-    this.setAttribute("width", "40");
-    this.setAttribute("height", "12");
-    // this.width = 40;
-    // this.height = 12;
-  }
-  onconnected() {
-    console.log(this.outerHTML);
+    return "wb-tab";
   }
   static style(WBTab) {
     return `${WBTab}{
+      display: inline-block;
       position: absolute;
       left: 25px;
       top: -12px;
     }`;
   }
   render() {
-    return this.svg`<path d="M 0 12 
+    return this.svg`<svg width="40" height="12"><path d="M 0 12 
     a 6 6 90 0 0 6 -6 
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
-    a 6 6 90 0 0 6 6"></path>`;
+    a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
 define(WBTab);
 console.log("WBTab defined");
 
-class WBSlot extends WBTab {
+class WBSlot extends HTMLElement {
   static get name() {
     return "WBSlot";
   }
+  static get tagName() {
+    return "wb-slot";
+  }
   static style(WBSlot) {
-    return `${WBTab}{
+    return `${WBSlot}{
       position: absolute;
-      display: block;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
       left: 25px;
-      bottom: -2px;
+      bottom: -4px;
       fill: white;
     }`;
+  }
+  render() {
+    return this.svg`<svg width="40" height="12"><path d="M 0 12 
+    a 6 6 90 0 0 6 -6 
+    a 6 6 90 0 1 6 -6
+    h 16
+    a 6 6 90 0 1 6 6
+    a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
 define(WBSlot);
@@ -68,9 +78,6 @@ class WBStep extends HTMLElement {
   }
   static get tagName() {
     return "wb-step";
-  }
-  onconnected() {
-    console.log(this.outerHTML);
   }
   static style(WBStep) {
     return `${WBStep} {
@@ -108,7 +115,7 @@ class WBStep extends HTMLElement {
   // define this to return the signature as html
   get signatureHTML() {
     // fake it for now
-    return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>';
+    return `<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
   }
   render() {
     return this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
