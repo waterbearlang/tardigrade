@@ -4,22 +4,18 @@ import { define, ref, render, html } from "../lib/heresy.min.js";
 class Handler extends HTMLElement{
 
   // lazy static list definition
-  static get events() {
-    return this._events || Object.defineProperty(
-      this, '_events',
+  get events() {
+    return this.prototype._events || Object.defineProperty(
+      this.prototype, '_events',
       {value: Object.getOwnPropertyNames(this.prototype)
                     .filter(type => /^on/.test(type))
+                    .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
                     .map(type => type.slice(2))}
     )._events;
   }
 
-  constructor(node) {
-    for (let
-      events = this.constructor.events,
-      i = events.length;
-      i--;
-      node.addEventListener(events[i], this)
-    );
+  constructor() {
+    this.events.forEach(evt => this.addEventListener(evt, this));
   }
 
   handleEvent(event) {
