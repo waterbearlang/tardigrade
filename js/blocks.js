@@ -107,6 +107,9 @@ class WBStep extends HTMLElement {
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
+  handleEvent(event) {
+    this['on' + event.type](event);
+  }
   onconnected(event) {
     console.log("connected");
   }
