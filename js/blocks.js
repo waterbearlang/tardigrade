@@ -1,5 +1,27 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
+class Handler extends HTMLElement{
+  get events() {
+    return (
+      this._events ||
+      Object.defineProperty(this, "_events", {
+        value: Object.getOwnPropertyNames(this)
+          .filter(type => /^on/.test(type))
+          .map(type => type.slice(2))
+      })._events
+    );
+  }
+
+  oninit() {
+    for (
+      let events = this.events, i = events.length;
+      i--;
+      this.addEventListener(events[i], this)
+    );
+  }
+
+}
+
 class WBValue extends HTMLElement {
   static get name() {
     return "WBValue";
@@ -76,18 +98,13 @@ class WBSlot extends HTMLElement {
 define(WBSlot);
 console.log("WBSlot defined");
 
-class WBStep extends HTMLElement {
-  oninit(){
-    this.addEventListener('click', this);
-  }
+class WBStep extends Handler {
+  
   static get name() {
     return "WBStep";
   }
   static get tagName() {
     return "wb-step";
-  }
-  static get events(){
-   return ['onclick'];
   }
   static style(WBStep) {
     return `${WBStep} {
@@ -122,8 +139,8 @@ class WBStep extends HTMLElement {
   onattributechanged(event) {
     console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
-  onclick(){
-    alert('clicked');
+  onclick() {
+    alert("clicked");
   }
   // define this to return the signature as text
   get signature() {}
