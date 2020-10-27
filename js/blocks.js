@@ -5,16 +5,17 @@ class WBValue extends HTMLSpanElement{
     return "WBValue";
   }
   static get tagName(){
-    return "wb-value";
+    return "span";
   }
 }
+define(WBValue);
 
 class WBTab extends SVGSVGElement {
   static get name() {
     return "WBTab";
   }
   static get tagName() {
-    return "wb-tab";
+    return "svg";
   }
   oninit() {
     this.setAttribute("width", "40");
@@ -47,9 +48,6 @@ console.log("WBTab defined");
 class WBSlot extends WBTab {
   static get name() {
     return "WBSlot";
-  }
-  static get tagName() {
-    return "wb-slot";
   }
   static style(WBSlot) {
     return `${WBTab}{
@@ -113,7 +111,7 @@ class WBStep extends HTMLElement {
     return '<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>';
   }
   render() {
-    this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
+    return this.html`<wb-tab/><header>${this.signatureHTML}</header><wb-slot/>`;
   }
 }
 
