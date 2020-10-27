@@ -1,27 +1,31 @@
 import { define, ref, render, html } from "../lib/heresy.min.js";
 
+// generic event handler
 class Handler extends HTMLElement{
-  get events() {
-    return (
-      this._events ||
-      Object.defineProperty(this, "_events", {
-        value: Object.getOwnPropertyNames(this)
-          .filter(type => /^on/.test(type))
-          .map(type => type.slice(2))
-      })._events
-    );
+
+  // lazy static list definition
+  static get events() {
+    return this._events || Object.defineProperty(
+      this, '_events',
+      {value: Object.getOwnPropertyNames(this.prototype)
+                    .filter(type => /^on/.test(type))
+                    .map(type => type.slice(2))}
+    )._events;
   }
 
-  oninit() {
-    for (
-      let events = this.events, i = events.length;
+  constructor(node) {
+    for (let
+      events = this.constructor.events,
+      i = events.length;
       i--;
-      this.addEventListener(events[i], this)
+      node.addEventListener(events[i], this)
     );
   }
 
+  handleEvent(event) {
+    this['on' + event.type](event);
+  }
 }
-
 class WBValue extends HTMLElement {
   static get name() {
     return "WBValue";
@@ -130,20 +134,26 @@ class WBStep extends Handler {
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
+  
   onconnected(event) {
     console.log("connected");
   }
+  
   ondisconnected(event) {
     console.log("disconnected");
   }
+  
   onattributechanged(event) {
     console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
+  
   onclick() {
     alert("clicked");
   }
+  
   // define this to return the signature as text
   get signature() {}
+  
   // define this to return the signature as html
   render() {
     return this
