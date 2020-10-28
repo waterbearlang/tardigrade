@@ -23,7 +23,6 @@ class Handler extends HTMLElement{
   get events() {
     let proto = Object.getPrototypeOf(this);
     // console.log(proto);
-    console.log('properties: %o', Object.getOwnPropertyNames(proto));
     return proto._events || Object.defineProperty(
       proto, '_events',
       {value: getMethods(this)
@@ -115,6 +114,7 @@ class WBStep extends HTMLElement {
   constructor(){
     super();
     console.log('Step constructor called')
+    console.log(this._events);
   }
   
   static get name() {
@@ -176,3 +176,4 @@ class WBStep extends HTMLElement {
 
 heresy.define(WBStep);
 console.log("WBStep defined");
+console.log("WBStep events: %o", getMethods(WBStep));
