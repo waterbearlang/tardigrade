@@ -1,4 +1,4 @@
-import { define, render } from "../lib/heresy.min.js";
+import heresy from "../lib/heresy.min.js";
 
 // generic event handler
 class Handler extends HTMLElement{
@@ -38,7 +38,7 @@ class WBValue extends HTMLElement {
     }`;
   }
 }
-define(WBValue);
+heresy.define(WBValue);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -66,7 +66,7 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-define(WBTab);
+heresy.define(WBTab);
 console.log("WBTab defined");
 
 class WBSlot extends HTMLElement {
@@ -98,7 +98,7 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-define(WBSlot);
+heresy.define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
@@ -152,7 +152,7 @@ class WBStep extends HTMLElement {
   } // event = {attributeName, oldValue, newValue}
   
   onclick() {
-    alert("clicked");
+    alert(`clicked ${this.name}`);
   }
   
   // define this to return the signature as text
@@ -165,5 +165,5 @@ class WBStep extends HTMLElement {
   }
 }
 
-define(WBStep);
+heresy.define(WBStep);
 console.log("WBStep defined");

@@ -1,5 +1,5 @@
 import { parse } from "./moonshine.js";
-import { define, render} from "../lib/heresy.min.js";
+import heresy from "../lib/heresy.min.js";
 import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
 import dragula from "../lib/dragula.min.js";
