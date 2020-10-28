@@ -1,4 +1,4 @@
-import { define, ref, render, html } from "../lib/heresy.min.js";
+import { define, render } from "../lib/heresy.min.js";
 
 // generic event handler
 class Handler extends HTMLElement{
@@ -101,7 +101,7 @@ class WBSlot extends HTMLElement {
 define(WBSlot);
 console.log("WBSlot defined");
 
-class WBStep extends Handler {
+class WBStep extends HTMLElement {
 
   constructor(){
     super();
