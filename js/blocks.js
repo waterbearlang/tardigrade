@@ -1,21 +1,21 @@
 import heresy from "../lib/heresy.min.js";
 
-const getMethods = (obj) => {
-  let properties = new Set()
-  let currentObj = obj
+const getMethods = obj => {
+  let properties = new Set();
+  let currentObj = obj;
   do {
-    Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
-  } while ((currentObj = Object.getPrototypeOf(currentObj)))
-  return [...properties.keys()].filter(item => typeof obj[item] === 'function')
-}
-
+    Object.getOwnPropertyNames(currentObj).map(item => properties.add(item));
+  } while ((currentObj = Object.getPrototypeOf(currentObj)));
+  return [...properties.keys()]
+    .filter(item => !["caller", "callee", "arguments"].includes(item))
+    .filter(item => typeof obj[item] === "function");
+};
 
 // generic event handler
-class Handler extends HTMLElement{
-
+class Handler extends HTMLElement {
   constructor() {
     super();
-    console.log('events: %o', this.events);
+    console.log("events: %o", this.events);
     this.events.forEach(evt => this.addEventListener(evt, this));
   }
 
@@ -23,15 +23,16 @@ class Handler extends HTMLElement{
   get events() {
     let proto = Object.getPrototypeOf(this);
     // console.log(proto);
-    return proto._events || Object.defineProperty(
-      proto, '_events',
-      {value: getMethods(this)
-                    .filter(type => /^on/.test(type))
-                    // .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
-                    .map(type => type.slice(2))}
-    )._events;
+    return (
+      proto._events ||
+      Object.defineProperty(proto, "_events", {
+        value: getMethods(this)
+          .filter(type => /^on/.test(type))
+          // .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
+          .map(type => type.slice(2))
+      })._events
+    );
   }
-
 }
 class WBValue extends HTMLElement {
   static get name() {
@@ -109,14 +110,13 @@ class WBSlot extends HTMLElement {
 heresy.define(WBSlot);
 console.log("WBSlot defined");
 
-class WBStep extends HTMLElement {
-
-  constructor(){
+class WBStep extends Handler {
+  constructor() {
     super();
-    console.log('Step constructor called')
+    console.log("Step constructor called");
     console.log(this._events);
   }
-  
+
   static get name() {
     return "WBStep";
   }
@@ -147,26 +147,26 @@ class WBStep extends HTMLElement {
   // (optional) event driven lifecycle methods, added automatically when
   // no Custom Elements native methods such as connectedCallback, and others
   // have been explicitly set as methods
-  
+
   onconnected(event) {
     console.log("connected");
   }
-  
+
   ondisconnected(event) {
     console.log("disconnected");
   }
-  
+
   onattributechanged(event) {
     console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
-  
+
   onclick() {
     alert(`clicked ${this.name}`);
   }
-  
+
   // define this to return the signature as text
   get signature() {}
-  
+
   // define this to return the signature as html
   render() {
     return this
