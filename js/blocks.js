@@ -5,6 +5,7 @@ const getMethods = obj => {
   let currentObj = obj;
   do {
     Object.getOwnPropertyNames(currentObj).map(item => properties.add(item));
+    if (currentObj === Object.getPrototypeOf(currentObj)) break;
   } while ((currentObj = Object.getPrototypeOf(currentObj)));
   return [...properties.keys()]
     .filter(item => !["caller", "callee", "arguments"].includes(item))
@@ -26,7 +27,7 @@ class Handler extends HTMLElement {
     return (
       proto._events ||
       Object.defineProperty(proto, "_events", {
-        value: getMethods(this)
+        value: Object.getOwnPropertyNames(proto)
           .filter(type => /^on/.test(type))
           // .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
           .map(type => type.slice(2))
@@ -110,7 +111,7 @@ class WBSlot extends HTMLElement {
 heresy.define(WBSlot);
 console.log("WBSlot defined");
 
-class WBStep extends Handler {
+class WBStep extends HTMLElement {
   constructor() {
     super();
     console.log("Step constructor called");
@@ -160,7 +161,7 @@ class WBStep extends Handler {
     console.log("attribute changed");
   } // event = {attributeName, oldValue, newValue}
 
-  onclick() {
+  click() {
     alert(`clicked ${this.name}`);
   }
 
