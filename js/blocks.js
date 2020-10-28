@@ -12,6 +12,8 @@ class Handler extends HTMLElement{
   // lazy static list definition
   get events() {
     let proto = Object.getPrototypeOf(this);
+    console.log(proto);
+    console.log('properties: %o', Object.getOwnPropertyNames(proto));
     return proto._events || Object.defineProperty(
       proto, '_events',
       {value: Object.getOwnPropertyNames(proto)
@@ -21,9 +23,6 @@ class Handler extends HTMLElement{
     )._events;
   }
 
-  handleEvent(event) {
-    this['on' + event.type](event);
-  }
 }
 class WBValue extends HTMLElement {
   static get name() {
@@ -101,7 +100,7 @@ class WBSlot extends HTMLElement {
 heresy.define(WBSlot);
 console.log("WBSlot defined");
 
-class WBStep extends HTMLElement {
+class WBStep extends Handler {
 
   constructor(){
     super();
