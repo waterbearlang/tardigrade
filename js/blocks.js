@@ -112,11 +112,6 @@ heresy.define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
-  constructor() {
-    super();
-    console.log("Step constructor called");
-    console.log(this._events);
-  }
 
   static get name() {
     return "WBStep";
