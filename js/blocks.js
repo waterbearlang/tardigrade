@@ -145,7 +145,7 @@ class WBStep extends HTMLElement {
   // have been explicitly set as methods
 
   onconnected(event) {
-    console.log("connected");
+    console.log("connected: %o", event);
   }
 
   ondisconnected(event) {
