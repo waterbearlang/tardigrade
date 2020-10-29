@@ -1,5 +1,7 @@
 import heresy from "../lib/heresy.min.js";
 
+window.heresy = heresy;
+
 const getMethods = obj => {
   let properties = new Set();
   let currentObj = obj;
@@ -162,11 +164,14 @@ class WBStep extends HTMLElement {
 
   // define this to return the signature as text
   get signature() {}
+  get htmlSignature(){
+    return heresy.html`<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
+  }
 
   // define this to return the signature as html
   render() {
     return this
-      .html`<wb-tab/><header><wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value></header><wb-slot/>`;
+      .html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
 
