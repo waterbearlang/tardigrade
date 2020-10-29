@@ -177,4 +177,3 @@ class WBStep extends HTMLElement {
 
 heresy.define(WBStep);
 console.log("WBStep defined");
-console.log("WBStep events: %o", getMethods(WBStep));
