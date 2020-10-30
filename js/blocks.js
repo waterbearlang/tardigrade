@@ -39,6 +39,10 @@ class Handler extends HTMLElement {
 }
 
 class WBValue extends HTMLElement {
+  constructor(){
+    super();
+    this._conditionalSetAttribute('value');
+  }
   static get name() {
     return "WBValue";
   }
@@ -50,15 +54,38 @@ class WBValue extends HTMLElement {
       display: inline-block;
     }`;
   }
+  _conditionalSetAttribute(name){
+    if (this.hasAttribute(name)){
+      this._input.setAttribute(name, this.getAttribute(name));
+    }
+  }
 }
 heresy.define(WBValue);
 
 class WBNumberValue extends WBValue {
-  static get name(){ return "WBNumberValue";}
-  static get tagName(){ return "wb-number-value"}
-  get value()
-} 
+  constructor() {
+    super();
+    this._conditionalSetAttribute('min');
+    this._conditionalSetAttribute('max');
+  }
+  static get name() {
+    return "WBNumberValue";
+  }
+  static get tagName() {
+    return "wb-number-value";
+  }
+  get value() {
+    return Number(this._input.value);
+  }
+  render(){
+    return this.html`this.fn ${this._input}`;
+  }
+}
 heresy.define(WBNumberValue);
+
+class WBTextValue extends WBValue{
+  static get name(){ return "WBTextValue"}
+}
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -122,7 +149,6 @@ heresy.define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
-
   static get name() {
     return "WBStep";
   }
@@ -146,15 +172,15 @@ class WBStep extends HTMLElement {
       z-index: 0;    
     }`;
   }
-  
-  get ns(){
-    return this.getAttribute('ns');
+
+  get ns() {
+    return this.getAttribute("ns");
   }
-  
-  get fn(){
-    return this.getAttribute('fn');
+
+  get fn() {
+    return this.getAttribute("fn");
   }
-  get function(){
+  get function() {
     return window.runtime[this.ns][this.fn];
   }
 
@@ -180,14 +206,13 @@ class WBStep extends HTMLElement {
 
   // define this to return the signature as text
   get signature() {}
-  get htmlSignature(){
+  get htmlSignature() {
     return heresy.html`<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
   }
 
   // define this to return the signature as html
   render() {
-    return this
-      .html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
+    return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
 
