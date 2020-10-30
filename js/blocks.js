@@ -61,9 +61,10 @@ class WBValue extends HTMLElement {
   }
   set params(val){
     // val is array of AST parameter objects. Each object has a name and a type.
+    let block;
     this._params = val.map(param => {
       switch(param.type.lowercase()){
-        case 'text': return new WBTextValue()
+        case 'text': new WBTextValue()
       }
     });
   }
