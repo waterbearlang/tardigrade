@@ -56,17 +56,8 @@ class WBValue extends HTMLElement {
   get ns() {
     return this.getAttribute("ns");
   }
-  set body(val){
-    this._body = val; // We'll need to process this into a script later
-  }
-  set params(val){
-    // val is array of AST parameter objects. Each object has a name and a type.
-    let block;
-    this._params = val.map(param => {
-      switch(param.type.lowercase()){
-        case 'text': new WBTextValue()
-      }
-    });
+  get fn(){
+    return this.getAttribute("fn");
   }
 
   _conditionalSetAttribute(name){
@@ -227,6 +218,27 @@ class WBStep extends HTMLElement {
   }
   get function() {
     return window.runtime[this.ns][this.fn];
+  }
+    set body(val){
+    this._body = val; // We'll need to process this into a script later
+  }
+  set params(val){
+    // val is array of AST parameter objects. Each object has a name and a type.
+    this._params = val.map(param => {
+      switch(param.type.lowercase()){
+        case 'text': 
+          return heresy.html.node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
+        case 'number':
+          return heresy.html.node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
+        case 'color':
+          return heresy.html.node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
+        default:
+          throw new Error('Unrecognized parameter type: %s', param.type);
+      }
+    });
+  }
+  get params(){
+    return this._params;
   }
 
   // (optional) event driven lifecycle methods, added automatically when
