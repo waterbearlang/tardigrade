@@ -71,7 +71,7 @@ heresy.define(WBValue);
 class WBNumberValue extends WBValue {
   constructor() {
     super();
-    this.input = heresy.html.node`<input type="number"/>`;
+    this.input = this.html.node`<input type="number"/>`;
     this._conditionalSetAttribute('min');
     this._conditionalSetAttribute('max');
     this._conditionalSetAttribute('value');
@@ -96,7 +96,7 @@ heresy.define(WBNumberValue);
 class WBTextValue extends WBValue{
   constructor(){
     super();
-    this._input = heresy.html.node`<input type="text" />`;
+    this._input = this.html.node`<input type="text" />`;
     this._conditionalSetAttribute('value');
   }
   static get name(){ return "WBTextValue";}
@@ -113,7 +113,7 @@ class WBColorValue extends WBValue{
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
   constructor(){
     super();
-    this._input = heresy.html.node`<input type="color" />`;
+    this._input = this.html.node`<input type="color" />`;
     this._conditionalSetAttribute('value');
   }
   static get name(){ return "WBColorValue";}
@@ -227,11 +227,11 @@ class WBStep extends HTMLElement {
     this._params = val.map(param => {
       switch(param.type.lowercase()){
         case 'text': 
-          return heresy.html.node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
+          return this.html.node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
         case 'number':
-          return heresy.html.node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
+          return this.html.node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
         case 'color':
-          return heresy.html.node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
+          return this.html.node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
         default:
           throw new Error('Unrecognized parameter type: %s', param.type);
       }
