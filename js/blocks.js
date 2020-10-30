@@ -261,14 +261,21 @@ class WBStep extends HTMLElement {
     alert(`clicked ${this.name}`);
   }
 
-  // define this to return the signature as text
-  get signature() {}
-  get htmlSignature() {
-    return heresy.html`<wb-value type="color,wb-image" class="">clear to color <input type="color" style="width: 57.7256px" class=""></wb-value>`;
-  }
-
   // define this to return the signature as html
   render() {
+    switch(this.params.length){
+        case 0:
+          return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
+        case 1:
+          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]}</header><wb-slot/>`;
+        case 2:
+          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${this.params[1]}</header><wb-slot/>`;
+        case 3:
+          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${this.params[1]} %{this.params[2]}</header><wb-slot/>`;
+      default:
+        throw new Error('Unsupported number of parameters, use an object or array parameter instead.');
+          
+    }
     return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
