@@ -6,8 +6,10 @@ import dragula from "../lib/dragula.min.js";
 
 //console.log({ immer, R, parse, dragula, define, ref, render, html });
 
-const processScript = async script => {
-  const tree = await parse(script);
+window.runtime = {};
+
+const processScript = async (name, script) => {
+  window.runtime[name] = await parse(script);
   // console.log(tree);
 };
 
@@ -19,7 +21,7 @@ const blockScripts = ["vector", "stage"];
 
 blockScripts.forEach(name =>
   fetch(`/blocks/${name}.moon`).then(response =>
-    response.text().then(text => processScript(text))
+    response.text().then(text => processScript(name, text))
   )
 );
 

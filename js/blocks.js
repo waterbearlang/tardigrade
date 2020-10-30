@@ -138,8 +138,16 @@ class WBStep extends HTMLElement {
       z-index: 0;    
     }`;
   }
-  get mappedAttributes() {
-    return ["ns", "fn"];
+  
+  get ns(){
+    return this.getAttribute('ns');
+  }
+  
+  get fn(){
+    return this.getAttribute('fn');
+  }
+  get function(){
+    return window.runtime[this.ns][this.fn];
   }
 
   // (optional) event driven lifecycle methods, added automatically when
