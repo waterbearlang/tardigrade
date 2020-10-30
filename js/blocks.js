@@ -41,7 +41,6 @@ class Handler extends HTMLElement {
 class WBValue extends HTMLElement {
   constructor(){
     super();
-    this._conditionalSetAttribute('value');
   }
   static get name() {
     return "WBValue";
@@ -54,6 +53,14 @@ class WBValue extends HTMLElement {
       display: inline-block;
     }`;
   }
+  get ns() {
+    return this.getAttribute("ns");
+  }
+
+  get fn() {
+    return this.getAttribute("fn");
+  }
+
   _conditionalSetAttribute(name){
     if (this.hasAttribute(name)){
       this._input.setAttribute(name, this.getAttribute(name));
@@ -65,8 +72,10 @@ heresy.define(WBValue);
 class WBNumberValue extends WBValue {
   constructor() {
     super();
+    this.input = heresy.html.node`<input type="number"/>`;
     this._conditionalSetAttribute('min');
     this._conditionalSetAttribute('max');
+    this._conditionalSetAttribute('value');
   }
   static get name() {
     return "WBNumberValue";
@@ -83,8 +92,36 @@ class WBNumberValue extends WBValue {
 }
 heresy.define(WBNumberValue);
 
+
+
 class WBTextValue extends WBValue{
-  static get name(){ return "WBTextValue"}
+  constructor(){
+    super();
+    this._input = heresy.html.node`<input type="text" />`;
+    this._conditionalSetAttribute('value');
+  }
+  static get name(){ return "WBTextValue";}
+  static get tagName(){ return "wb-text-value";}
+  get value(){
+    return this._input.value;
+  }
+  render(){
+    return this.html`${this.fn} ${this._input}`;
+  }
+}
+
+class WBColorValue extends WBValue{
+  // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
+  constructor(){
+    super();
+    this._input = heresy.html.node`<input type="color" />`;
+    this._conditionalSetAttribute('value');
+  }
+  static get name(){ return "WBColorValue";}
+  static get tagName(){return "wb-color-value";}
+  render{
+    return this.html`$this.fn
+  }
 }
 
 class WBTab extends HTMLElement {
