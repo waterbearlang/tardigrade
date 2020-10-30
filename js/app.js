@@ -8,9 +8,16 @@ import dragula from "../lib/dragula.min.js";
 
 window.runtime = {};
 
-const processScript = async (name, script) => {
-  window.runtime[name] = await parse(script);
-  // console.log(tree);
+const parseTreeToAST = parseTree => {
+  console.assert(parseTree.type === 'namespace', "Parse tree must be a namespace");
+  const name = parseTree.name;
+  const AST = {};
+  parseTree.values.forEach(val => if val.type === 'function'{AST[val.name] = val;})
+}
+
+const processScript = async (script) => {
+  const parseTree = await parse(script);
+  const [name, AST] = parseTreeToAST(parseTree);
 };
 
 const processError = script => {
@@ -21,7 +28,7 @@ const blockScripts = ["vector", "stage"];
 
 blockScripts.forEach(name =>
   fetch(`/blocks/${name}.moon`).then(response =>
-    response.text().then(text => processScript(name, text))
+    response.text().then(text => processScript(text))
   )
 );
 
