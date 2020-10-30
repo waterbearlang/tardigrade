@@ -119,8 +119,8 @@ class WBColorValue extends WBValue{
   }
   static get name(){ return "WBColorValue";}
   static get tagName(){return "wb-color-value";}
-  render{
-    return this.html`$this.fn
+  render(){
+    return this.html`${this.fn} ${this._input}`;
   }
 }
 

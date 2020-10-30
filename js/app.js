@@ -25,7 +25,15 @@ const processScript = async script => {
   const parseTree = await parse(script);
   const [name, AST] = parseTreeToAST(parseTree);
   window.runtime[name] = AST;
+  buildBlockMenu(name, AST);
 };
+
+const buildBlockMenu = (name, ast) => {
+  const blockmenu = 
+  Object.keys(ast).forEach(key => {
+    
+  });
+}
 
 const processError = script => {
   console.log(script);
@@ -37,4 +45,5 @@ blockScripts.forEach(name =>
   fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text))
   )
+                     
 );
