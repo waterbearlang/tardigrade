@@ -56,9 +56,16 @@ class WBValue extends HTMLElement {
   get ns() {
     return this.getAttribute("ns");
   }
-
-  get fn() {
-    return this.getAttribute("fn");
+  set body(val){
+    this._body = val; // We'll need to process this into a script later
+  }
+  set params(val){
+    // val is array of AST parameter objects. Each object has a name and a type.
+    this._params = val.map(param => {
+      switch(param.type.lowercase()){
+        case 'text': return new WBTextValue()
+      }
+    });
   }
 
   _conditionalSetAttribute(name){
