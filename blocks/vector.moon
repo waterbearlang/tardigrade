@@ -1,4 +1,4 @@
-Vector{
+vector{
 
   // Basic constructor
   fromXY:Vector = (x:Number, y:Number) => { 

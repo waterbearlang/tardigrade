@@ -9,15 +9,22 @@ import dragula from "../lib/dragula.min.js";
 window.runtime = {};
 
 const parseTreeToAST = parseTree => {
-  console.assert(parseTree.type === 'namespace', "Parse tree must be a namespace");
+  console.assert(
+    parseTree.type === "namespace",
+    "Parse tree must be a namespace"
+  );
   const name = parseTree.name;
   const AST = {};
-  parseTree.values.forEach(val => if val.type === 'function'{AST[val.name] = val;})
-}
+  parseTree.values
+    .filter(val => val.type === "function")
+    .forEach(val => (AST[val.name] = val));
+  return [name, AST];
+};
 
-const processScript = async (script) => {
+const processScript = async script => {
   const parseTree = await parse(script);
   const [name, AST] = parseTreeToAST(parseTree);
+  window.runtime[name] = AST;
 };
 
 const processError = script => {
@@ -31,4 +38,3 @@ blockScripts.forEach(name =>
     response.text().then(text => processScript(text))
   )
 );
-
