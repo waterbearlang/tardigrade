@@ -29,9 +29,10 @@ const processScript = async script => {
 };
 
 const buildBlockMenu = (name, ast) => {
-  const blockmenu = 
+  const blockmenu = document.querySelector('.blockmenu');
   Object.keys(ast).forEach(key => {
-    
+    const fn = ast[key];
+    const heresy.html.node`<step ns="${name}" fn="${key}" type="fn.returnType" />`);
   });
 }
 
