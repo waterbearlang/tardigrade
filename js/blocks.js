@@ -37,6 +37,7 @@ class Handler extends HTMLElement {
     );
   }
 }
+
 class WBValue extends HTMLElement {
   static get name() {
     return "WBValue";
@@ -51,6 +52,13 @@ class WBValue extends HTMLElement {
   }
 }
 heresy.define(WBValue);
+
+class WBNumberValue extends WBValue {
+  static get name(){ return "WBNumberValue";}
+  static get tagName(){ return "wb-number-value"}
+  get value()
+} 
+heresy.define(WBNumberValue);
 
 class WBTab extends HTMLElement {
   static get name() {
