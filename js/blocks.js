@@ -2,18 +2,6 @@ import heresy from "../lib/heresy.min.js";
 
 window.heresy = heresy;
 
-const getMethods = obj => {
-  let properties = new Set();
-  let currentObj = obj;
-  do {
-    Object.getOwnPropertyNames(currentObj).map(item => properties.add(item));
-    if (currentObj === Object.getPrototypeOf(currentObj)) break;
-  } while ((currentObj = Object.getPrototypeOf(currentObj)));
-  return [...properties.keys()]
-    .filter(item => !["caller", "callee", "arguments"].includes(item))
-    .filter(item => typeof obj[item] === "function");
-};
-
 class WBValue extends HTMLElement {
   constructor() {
     super();
@@ -65,7 +53,7 @@ class WBNumberValue extends WBValue {
     return this.html`this.fn ${this._input}`;
   }
 }
-heresy.define(WBNumberValue);
+WBNumberValue = heresy.define(WBNumberValue);
 
 class WBTextValue extends WBValue {
   constructor() {
@@ -86,7 +74,7 @@ class WBTextValue extends WBValue {
     return this.html`${this.fn} ${this._input}`;
   }
 }
-heresy.define(WBTextValue);
+WBTextValue = heresy.define(WBTextValue);
 
 class WBColorValue extends WBValue {
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
@@ -105,7 +93,7 @@ class WBColorValue extends WBValue {
     return this.html`${this.fn} ${this._input}`;
   }
 }
-heresy.define(WBColorValue);
+WBColorValue = heresy.define(WBColorValue);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -133,8 +121,7 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-heresy.define(WBTab);
-console.log("WBTab defined");
+WBTab = heresy.define(WBTab);
 
 class WBSlot extends HTMLElement {
   static get name() {
@@ -165,7 +152,7 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-heresy.define(WBSlot);
+WBSlot = heresy.define(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
@@ -265,6 +252,7 @@ class WBStep extends HTMLElement {
 
   render() {
     const params = this.mapParams();
+    console.log('params: %o', params);
     switch (params.length) {
       case 0:
         return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
@@ -288,5 +276,5 @@ class WBStep extends HTMLElement {
     return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
-heresy.define(WBStep);
+WBStep = heresy.define(WBStep);
 console.log("WBStep defined");
