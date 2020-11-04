@@ -231,14 +231,11 @@ class WBStep extends HTMLElement {
     return this.params.map(param => {
       switch (param.type.toLowerCase()) {
         case "text":
-          return this.html
-            .node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
+          return WBTextValue.new(this.ns, param.name);
         case "number":
-          return this.html
-            .node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
+          return WBNumberValue.new(this.ns, param.name);
         case "color":
-          return this.html
-            .node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
+          return WBColorValue.new(this.ns, param.name);
         default:
           throw new Error("Unrecognized parameter type: %s", param.type);
       }
