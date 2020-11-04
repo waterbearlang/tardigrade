@@ -197,19 +197,39 @@ class WBStep extends HTMLElement {
     return this.getAttribute("ns");
   }
 
+  set ns(val) {
+    this.setAttribute("ns", val);
+  }
+
   get fn() {
     return this.getAttribute("fn");
   }
+
+  set fn(val) {
+    this.setAttribute("fn", val);
+  }
+
   get function() {
     return window.runtime[this.ns][this.fn];
   }
   set body(val) {
     this._body = val; // We'll need to process this into a script later
   }
+  get body() {
+    return this._body;
+  }
   set params(val) {
     // val is array of AST parameter objects. Each object has a name and a type.
-    this._params = val.map(param => {
-      switch (param.type.lowercase()) {
+    this._params = val;
+  }
+  get params() {
+    return this._params;
+  }
+
+  mapParams() {
+    // val is array of AST parameter objects. Each object has a name and a type.
+    return this.params.map(param => {
+      switch (param.type.toLowerCase()) {
         case "text":
           return this.html
             .node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
@@ -223,9 +243,6 @@ class WBStep extends HTMLElement {
           throw new Error("Unrecognized parameter type: %s", param.type);
       }
     });
-  }
-  get params() {
-    return this._params;
   }
 
   // (optional) event driven lifecycle methods, added automatically when
@@ -241,25 +258,31 @@ class WBStep extends HTMLElement {
   }
 
   onattributechanged(event) {
-    console.log("attribute changed: %s was %s now %s", event.attributeName, event.oldValue, event.newValue);
+    console.log(
+      "attribute changed: %s was %s now %s",
+      event.attributeName,
+      event.oldValue,
+      event.newValue
+    );
   } // event = {attributeName, oldValue, newValue}
 
   render() {
-    switch (this.params.length) {
+    const params = this.mapParams();
+    switch (params.length) {
       case 0:
         return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
       case 1:
         return this.html`<wb-tab/><header>${this.fn} ${
-          this.params[0]
+          params[0]
         }</header><wb-slot/>`;
       case 2:
-        return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${
-          this.params[1]
+        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${
+          params[1]
         }</header><wb-slot/>`;
       case 3:
-        return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${
-          this.params[1]
-        } ${this.params[2]}</header><wb-slot/>`;
+        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${
+          params[1]
+        } ${params[2]}</header><wb-slot/>`;
       default:
         throw new Error(
           "Unsupported number of parameters, use an object or array parameter instead."
