@@ -1,6 +1,5 @@
 import heresy from "../lib/heresy.min.js";
 
-window.heresy = heresy;
 
 // function makeCreate(klass, args){
 //   klass.create =  function(){
