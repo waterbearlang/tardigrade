@@ -31,6 +31,7 @@ const processScript = async script => {
 const buildBlockMenu = (name, ast) => {
   console.log("buildBlockMenu(%s, %o)", name, ast);
   const blockmenu = document.querySelector(".blockmenu");
+  const target = document.createElement('div');
   console.log("Keys: %o", Object.keys(ast));
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
@@ -42,10 +43,11 @@ const buildBlockMenu = (name, ast) => {
       fn.body,
       fn.params
     );
-    const step = heresy.render(
+    heresy.render(
+      target,
       heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`
     );
-    blockmenu.appendChild(step);
+    blockmenu.appendChild(target.firstChild);
   });
 };
 

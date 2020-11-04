@@ -264,7 +264,7 @@ class WBStep extends HTMLElement {
       case 3:
         return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${
           this.params[1]
-        } %{this.params[2]}</header><wb-slot/>`;
+        } ${this.params[2]}</header><wb-slot/>`;
       default:
         throw new Error(
           "Unsupported number of parameters, use an object or array parameter instead."
