@@ -14,30 +14,6 @@ const getMethods = obj => {
     .filter(item => typeof obj[item] === "function");
 };
 
-// generic event handler
-class Handler extends HTMLElement {
-  constructor() {
-    super();
-    console.log("events: %o", this.events);
-    this.events.forEach(evt => this.addEventListener(evt, this));
-  }
-
-  // lazy static list definition
-  get events() {
-    let proto = Object.getPrototypeOf(this);
-    // console.log(proto);
-    return (
-      proto._events ||
-      Object.defineProperty(proto, "_events", {
-        value: Object.getOwnPropertyNames(proto)
-          .filter(type => /^on/.test(type))
-          // .filter(type => !['onconnected', 'ondisconnected', 'onattributechange', 'oninit'].includes(type))
-          .map(type => type.slice(2))
-      })._events
-    );
-  }
-}
-
 class WBValue extends HTMLElement {
   constructor(){
     super();
@@ -66,7 +42,7 @@ class WBValue extends HTMLElement {
     }
   }
 }
-heresy.define(WBValue);
+//heresy.define(WBValue);
 
 class WBNumberValue extends WBValue {
   constructor() {
@@ -108,6 +84,7 @@ class WBTextValue extends WBValue{
     return this.html`${this.fn} ${this._input}`;
   }
 }
+heresy.define(WBTextValue);
 
 class WBColorValue extends WBValue{
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
@@ -122,6 +99,7 @@ class WBColorValue extends WBValue{
     return this.html`${this.fn} ${this._input}`;
   }
 }
+heresy.define(WBColorValue);
 
 class WBTab extends HTMLElement {
   static get name() {

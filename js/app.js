@@ -29,15 +29,25 @@ const processScript = async script => {
 };
 
 const buildBlockMenu = (name, ast) => {
-  console.log('buildBlockMenu(%s, %o)', name, ast);
-  const blockmenu = document.querySelector('.blockmenu');
+  console.log("buildBlockMenu(%s, %o)", name, ast);
+  const blockmenu = document.querySelector(".blockmenu");
+  console.log("Keys: %o", Object.keys(ast));
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
-    console.log('<wb=step ns="%s" fn="%s" type="%s" body=%o params=%o', name, key, fn.returnType, fn.body, fn.params);
-    const step = heresy.render(heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`);
+    console.log(
+      '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
+      name,
+      key,
+      fn.returnType,
+      fn.body,
+      fn.params
+    );
+    const step = heresy.render(
+      heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+    );
     blockmenu.appendChild(step);
   });
-}
+};
 
 const processError = script => {
   console.log(script);
@@ -49,5 +59,4 @@ blockScripts.forEach(name =>
   fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text))
   )
-                     
 );
