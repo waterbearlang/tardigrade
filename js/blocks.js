@@ -2,13 +2,13 @@ import heresy from "../lib/heresy.min.js";
 
 window.heresy = heresy;
 
-function makeCreate(klass, args){
-  klass.create =  function(){
-    const obj = klass.new();
-    Object.keys(args).forEach(prop => obj[prop] = args[prop]);
-  }
-  return heresy.define(klass);
-}
+// function makeCreate(klass, args){
+//   klass.create =  function(){
+//     const obj = klass.new();
+//     Object.keys(args).forEach(prop => obj[prop] = args[prop]);
+//   }
+//   return heresy.define(klass);
+// }
 
 class WBValue extends HTMLElement {
   constructor() {
