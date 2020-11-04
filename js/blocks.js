@@ -2,6 +2,14 @@ import heresy from "../lib/heresy.min.js";
 
 window.heresy = heresy;
 
+function makeCreate(klass, args){
+  klass.create =  function(){
+    const obj = klass.new();
+    Object.keys(args).forEach(prop => obj[prop] = args[prop]);
+  }
+  return heresy.define(klass);
+}
+
 class WBValue extends HTMLElement {
   constructor() {
     super();
@@ -53,7 +61,7 @@ class WBNumberValue extends WBValue {
     return this.html`this.fn ${this._input}`;
   }
 }
-WBNumberValue = heresy.define(WBNumberValue);
+WBNumberValue = makeCreate(WBNumberValue);
 
 class WBTextValue extends WBValue {
   constructor() {
@@ -74,7 +82,7 @@ class WBTextValue extends WBValue {
     return this.html`${this.fn} ${this._input}`;
   }
 }
-WBTextValue = heresy.define(WBTextValue);
+WBTextValue = makeCreate(WBTextValue);
 
 class WBColorValue extends WBValue {
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
@@ -93,7 +101,7 @@ class WBColorValue extends WBValue {
     return this.html`${this.fn} ${this._input}`;
   }
 }
-WBColorValue = heresy.define(WBColorValue);
+WBColorValue = makeCreate(WBColorValue);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -152,7 +160,7 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-WBSlot = heresy.define(WBSlot);
+WBSlot = makeCreate(WBSlot);
 console.log("WBSlot defined");
 
 class WBStep extends HTMLElement {
@@ -276,5 +284,5 @@ class WBStep extends HTMLElement {
     return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
-WBStep = heresy.define(WBStep);
+WBStep = makeCreate(WBStep);
 console.log("WBStep defined");
