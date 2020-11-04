@@ -15,7 +15,7 @@ const getMethods = obj => {
 };
 
 class WBValue extends HTMLElement {
-  constructor(){
+  constructor() {
     super();
   }
   static get name() {
@@ -32,12 +32,12 @@ class WBValue extends HTMLElement {
   get ns() {
     return this.getAttribute("ns");
   }
-  get fn(){
+  get fn() {
     return this.getAttribute("fn");
   }
 
-  _conditionalSetAttribute(name){
-    if (this.hasAttribute(name)){
+  _conditionalSetAttribute(name) {
+    if (this.hasAttribute(name)) {
       this._input.setAttribute(name, this.getAttribute(name));
     }
   }
@@ -48,9 +48,9 @@ class WBNumberValue extends WBValue {
   constructor() {
     super();
     this.input = this.html.node`<input type="number"/>`;
-    this._conditionalSetAttribute('min');
-    this._conditionalSetAttribute('max');
-    this._conditionalSetAttribute('value');
+    this._conditionalSetAttribute("min");
+    this._conditionalSetAttribute("max");
+    this._conditionalSetAttribute("value");
   }
   static get name() {
     return "WBNumberValue";
@@ -61,41 +61,47 @@ class WBNumberValue extends WBValue {
   get value() {
     return Number(this._input.value);
   }
-  render(){
+  render() {
     return this.html`this.fn ${this._input}`;
   }
 }
 heresy.define(WBNumberValue);
 
-
-
-class WBTextValue extends WBValue{
-  constructor(){
+class WBTextValue extends WBValue {
+  constructor() {
     super();
     this._input = this.html.node`<input type="text" />`;
-    this._conditionalSetAttribute('value');
+    this._conditionalSetAttribute("value");
   }
-  static get name(){ return "WBTextValue";}
-  static get tagName(){ return "wb-text-value";}
-  get value(){
+  static get name() {
+    return "WBTextValue";
+  }
+  static get tagName() {
+    return "wb-text-value";
+  }
+  get value() {
     return this._input.value;
   }
-  render(){
+  render() {
     return this.html`${this.fn} ${this._input}`;
   }
 }
 heresy.define(WBTextValue);
 
-class WBColorValue extends WBValue{
+class WBColorValue extends WBValue {
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
-  constructor(){
+  constructor() {
     super();
     this._input = this.html.node`<input type="color" />`;
-    this._conditionalSetAttribute('value');
+    this._conditionalSetAttribute("value");
   }
-  static get name(){ return "WBColorValue";}
-  static get tagName(){return "wb-color-value";}
-  render(){
+  static get name() {
+    return "WBColorValue";
+  }
+  static get tagName() {
+    return "wb-color-value";
+  }
+  render() {
     return this.html`${this.fn} ${this._input}`;
   }
 }
@@ -197,25 +203,28 @@ class WBStep extends HTMLElement {
   get function() {
     return window.runtime[this.ns][this.fn];
   }
-    set body(val){
+  set body(val) {
     this._body = val; // We'll need to process this into a script later
   }
-  set params(val){
+  set params(val) {
     // val is array of AST parameter objects. Each object has a name and a type.
     this._params = val.map(param => {
-      switch(param.type.lowercase()){
-        case 'text': 
-          return this.html.node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
-        case 'number':
-          return this.html.node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
-        case 'color':
-          return this.html.node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
+      switch (param.type.lowercase()) {
+        case "text":
+          return this.html
+            .node`<wb-text-value ns="${this.ns}" fn="${param.name}" />`;
+        case "number":
+          return this.html
+            .node`<wb-number-value ns="${this.ns}" fn="${param.name}" />`;
+        case "color":
+          return this.html
+            .node`<wb-color-value ns="${this.ns}" fn="${param.name}" />`;
         default:
-          throw new Error('Unrecognized parameter type: %s', param.type);
+          throw new Error("Unrecognized parameter type: %s", param.type);
       }
     });
   }
-  get params(){
+  get params() {
     return this._params;
   }
 
@@ -241,18 +250,25 @@ class WBStep extends HTMLElement {
 
   // define this to return the signature as html
   render() {
-    switch(this.params.length){
-        case 0:
-          return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
-        case 1:
-          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]}</header><wb-slot/>`;
-        case 2:
-          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${this.params[1]}</header><wb-slot/>`;
-        case 3:
-          return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${this.params[1]} %{this.params[2]}</header><wb-slot/>`;
+    switch (this.params.length) {
+      case 0:
+        return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
+      case 1:
+        return this.html`<wb-tab/><header>${this.fn} ${
+          this.params[0]
+        }</header><wb-slot/>`;
+      case 2:
+        return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${
+          this.params[1]
+        }</header><wb-slot/>`;
+      case 3:
+        return this.html`<wb-tab/><header>${this.fn} ${this.params[0]} ${
+          this.params[1]
+        } %{this.params[2]}</header><wb-slot/>`;
       default:
-        throw new Error('Unsupported number of parameters, use an object or array parameter instead.');
-          
+        throw new Error(
+          "Unsupported number of parameters, use an object or array parameter instead."
+        );
     }
     return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
