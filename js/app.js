@@ -32,9 +32,7 @@ const buildBlockMenu = (name, ast) => {
   const blockmenu = document.querySelector('.blockmenu');
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
-    const step = heresy.html.node`<step ns="${name}" fn="${key}" type="fn.returnType" />`;
-    step.body = fn.body;
-    step.params = fn.params;
+    const step = heresy.render(heresy.html`<step ns="${name}" fn="${key}" body=${fn.body} params=${fn.params} type="fn.returnType" />`);
     blockmenu.appendChild(step);
   });
 }
