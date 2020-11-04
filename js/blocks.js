@@ -20,6 +20,7 @@ class WBValue extends HTMLElement {
   static get tagName() {
     return "wb-value";
   }
+  get observedAttributes(){ return ['ns', 'fn'];}
   static style(WBValue) {
     return `${WBValue} {
       display: inline-block;
@@ -170,6 +171,8 @@ class WBStep extends HTMLElement {
   static get tagName() {
     return "wb-step";
   }
+  get observedAttributes(){ return ['ns', 'fn'];}
+  get mappedAttributes(){ return ['params', 'body'];}
   static style(WBStep) {
     return `${WBStep} {
       display: inline-block;
