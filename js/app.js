@@ -29,10 +29,12 @@ const processScript = async script => {
 };
 
 const buildBlockMenu = (name, ast) => {
+  console.log('buildBlockMenu(%s, %o)', name, ast);
   const blockmenu = document.querySelector('.blockmenu');
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
-    const step = heresy.render(heresy.html`<step ns="${name}" fn="${key}" body=${fn.body} params=${fn.params} type="fn.returnType" />`);
+    console.log('<wb=step ns="%s" fn="%s" type="%s" body=%o params=%o', name, key, fn.returnType, fn.body, fn.params);
+    const step = heresy.render(heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`);
     blockmenu.appendChild(step);
   });
 }
