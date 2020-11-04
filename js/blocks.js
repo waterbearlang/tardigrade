@@ -241,14 +241,9 @@ class WBStep extends HTMLElement {
   }
 
   onattributechanged(event) {
-    console.log("attribute changed");
+    console.log("attribute changed: %s was %s now %s", event.attributeName, event.oldValue, event.newValue);
   } // event = {attributeName, oldValue, newValue}
 
-  click() {
-    alert(`clicked ${this.name}`);
-  }
-
-  // define this to return the signature as html
   render() {
     switch (this.params.length) {
       case 0:
@@ -273,6 +268,5 @@ class WBStep extends HTMLElement {
     return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
-
 heresy.define(WBStep);
 console.log("WBStep defined");
