@@ -1,9 +1,8 @@
 import heresy from "../lib/heresy.min.js";
-const {define, html, render} = heresy;
+const { define, html, render } = heresy;
 
-const {WBStep} = (function(){
 class WBBlock extends HTMLElement {
-  static create(props){
+  static create(props) {
     props = props || {};
     const obj = this.new();
     Object.keys(props).forEach(key => {
@@ -19,19 +18,19 @@ class WBBlock extends HTMLElement {
   get ns() {
     return this.getAttribute("ns");
   }
-  set ns(val){
-    this.setAttribute('ns', val);
+  set ns(val) {
+    this.setAttribute("ns", val);
   }
   get fn() {
     return this.getAttribute("fn");
   }
-  set fn(val){
-    this.setAttribute('fn', val);
+  set fn(val) {
+    this.setAttribute("fn", val);
   }
-  get value(){
+  get value() {
     return this._value;
   }
-  set value(val){
+  set value(val) {
     this._value = val;
   }
 
@@ -41,7 +40,6 @@ class WBBlock extends HTMLElement {
     }
   }
 }
-//define(WBValue);
 
 class WBNumberValue extends WBBlock {
   static get name() {
@@ -84,33 +82,34 @@ class WBColorValue extends WBBlock {
 WBColorValue = define(WBColorValue);
 
 class WBAngleUnit extends WBBlock {
-  static get name(){
+  static get name() {
     return "WBAngleUnit";
   }
-  static get tagName(){
+  static get tagName() {
     return "wb-angle-unit";
   }
-  render(){
-    return this.html`<select><option value="deg" selected>degrees</option><option value="rad">radians</option></select>`;
+  render() {
+    return this
+      .html`<select><option value="deg" selected>degrees</option><option value="rad">radians</option></select>`;
   }
 }
 WBAngleUnit = define(WBAngleUnit);
 
-class WBBlockValue extends WBBlock{
-  static get name(){
+class WBBlockValue extends WBBlock {
+  static get name() {
     return "WBBlockValue";
   }
-  static get tagName(){
+  static get tagName() {
     return "wb-block-value";
   }
-  get blocktype(){
-    return this.getAttribute('blocktype');
+  get blocktype() {
+    return this.getAttribute("blocktype");
   }
-  set blocktype(val){
-    this.setAttribute('blocktype', val);
+  set blocktype(val) {
+    this.setAttribute("blocktype", val);
   }
-  render(){
-    return this.html`${this.fn} <input type="${this.type}" readonly>`; 
+  render() {
+    return this.html`${this.fn} <input type="${this.blocktype}" readonly title="drag a ${this.blocktype} block here">`;
   }
 }
 WBBlockValue = define(WBBlockValue);
@@ -200,12 +199,12 @@ class WBStep extends WBBlock {
     }`;
   }
 
-  get returntype(){
+  get returntype() {
     return this.getAttribute("returntype");
   }
 
-  set returntype(val){
-    this.setAttribute('returntype', val);
+  set returntype(val) {
+    this.setAttribute("returntype", val);
   }
 
   get function() {
@@ -216,7 +215,7 @@ class WBStep extends WBBlock {
     return this._body;
   }
 
-  set body(val){
+  set body(val) {
     this._body = val;
   }
 
@@ -224,7 +223,7 @@ class WBStep extends WBBlock {
     return this._params;
   }
 
-  set params(val){
+  set params(val) {
     this._params = val;
   }
 
@@ -234,15 +233,15 @@ class WBStep extends WBBlock {
       console.log("map parameter: %o", param);
       switch (param.type.toLowerCase()) {
         case "text":
-          return WBTextValue.create({fn: param.name}); // FIXME: Passing values to new doesn't actually do anything
+          return WBTextValue.create({ fn: param.name }); // FIXME: Passing values to new doesn't actually do anything
         case "number":
-          return WBNumberValue.create({fn: param.name});
+          return WBNumberValue.create({ fn: param.name });
         case "color":
-          return WBColorValue.create({fn: param.name});
+          return WBColorValue.create({ fn: param.name });
         case "angleunit":
-          return WBAngleUnit.create({fn: param.name});
+          return WBAngleUnit.create({ fn: param.name });
         case "vector":
-          return WBBlockValue.create({fn: param.name, blocktype: "vector"});
+          return WBBlockValue.create({ fn: param.name, blocktype: "vector" });
         default:
           console.error("Unrecognized parameter type: %s", param.type);
           throw new Error("Unrecognized parameter type: %s", param.type);
@@ -256,17 +255,18 @@ class WBStep extends WBBlock {
       case 0:
         return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
       case 1:
-        return this.html`<wb-tab/><header>${this.fn} ${
-          params[0]
-        }</header><wb-slot/>`;
+        return this
+          .html`<wb-tab/><header>${this.fn} ${params[0]}</header><wb-slot/>`;
       case 2:
-        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${
-          params[1]
-        }</header><wb-slot/>`;
+        return this
+          .html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]}</header><wb-slot/>`;
       case 3:
-        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header><wb-slot/>`;
+        return this
+          .html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header><wb-slot/>`;
       default:
-        console.error('Unsupported number of parameters, use an object or array parameter instaed.');
+        console.error(
+          "Unsupported number of parameters, use an object or array parameter instaed."
+        );
         throw new Error(
           "Unsupported number of parameters, use an object or array parameter instead."
         );
@@ -274,6 +274,3 @@ class WBStep extends WBBlock {
   }
 }
 WBStep = define(WBStep);
-return {WBStep};
-)();
-export {WBStep};
