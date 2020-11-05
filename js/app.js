@@ -29,22 +29,22 @@ const processScript = async script => {
 };
 
 const buildBlockMenu = (name, ast) => {
-  console.log("buildBlockMenu(%s, %o)", name, ast);
   const blockmenu = document.querySelector(".blockmenu");
   const target = document.createElement('div');
-  console.log("Keys: %o", Object.keys(ast));
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
-    console.log(
-      '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
-      name,
-      key,
-      fn.returnType,
-      fn.body,
-      fn.params
-    );
+    // console.log(
+    //   '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
+    //   name,
+    //   key,
+    //   fn.returnType,
+    //   fn.body,
+    //   fn.params
+    // );
+    const params = {ns: "archon", fn:"ratify", body:{one: 1, two: 2, three: 3}, params:[1,2,3,4]};
     heresy.render(
       target,
+      // new WBStep(params);
       heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`
     );
     blockmenu.appendChild(target.firstChild);
@@ -52,7 +52,7 @@ const buildBlockMenu = (name, ast) => {
 };
 
 const processError = script => {
-  console.log(script);
+  console.error(script);
 };
 
 const blockScripts = ["vector", "stage"];

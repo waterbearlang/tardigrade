@@ -1,26 +1,13 @@
 import heresy from "../lib/heresy.min.js";
-
-window.heresy = heresy;
-
-// function makeCreate(klass, args){
-//   klass.create =  function(){
-//     const obj = klass.new();
-//     Object.keys(args).forEach(prop => obj[prop] = args[prop]);
-//   }
-//   return heresy.define(klass);
-// }
+const {define, html, render} = heresy;
 
 class WBValue extends HTMLElement {
-  constructor() {
-    super();
-  }
   static get name() {
     return "WBValue";
   }
   static get tagName() {
     return "wb-value";
   }
-  get observedAttributes(){ return ['ns', 'fn'];}
   static style(WBValue) {
     return `${WBValue} {
       display: inline-block;
@@ -29,8 +16,20 @@ class WBValue extends HTMLElement {
   get ns() {
     return this.getAttribute("ns");
   }
+  set ns(val){
+    this.setAttribute('ns', val);
+  }
   get fn() {
     return this.getAttribute("fn");
+  }
+  set fn(val){
+    this.setAttribute('fn', val);
+  }
+  get value(){
+    return this._value;
+  }
+  set value(val){
+    this._value = val;
   }
 
   _conditionalSetAttribute(name) {
@@ -39,59 +38,36 @@ class WBValue extends HTMLElement {
     }
   }
 }
-//heresy.define(WBValue);
+//define(WBValue);
 
 class WBNumberValue extends WBValue {
-  constructor() {
-    super();
-    this.input = this.html.node`<input type="number"/>`;
-    this._conditionalSetAttribute("min");
-    this._conditionalSetAttribute("max");
-    this._conditionalSetAttribute("value");
-  }
   static get name() {
     return "WBNumberValue";
   }
   static get tagName() {
     return "wb-number-value";
   }
-  get value() {
-    return Number(this._input.value);
-  }
   render() {
-    return this.html`this.fn ${this._input}`;
+    return this.html`this.fn <input type="number" value="${this.value}" >`;
   }
 }
-WBNumberValue = makeCreate(WBNumberValue);
+WBNumberValue = define(WBNumberValue);
 
 class WBTextValue extends WBValue {
-  constructor() {
-    super();
-    this._input = this.html.node`<input type="text" />`;
-    this._conditionalSetAttribute("value");
-  }
   static get name() {
     return "WBTextValue";
   }
   static get tagName() {
     return "wb-text-value";
   }
-  get value() {
-    return this._input.value;
-  }
   render() {
-    return this.html`${this.fn} ${this._input}`;
+    return this.html`${this.fn} <input type="text" value="${this.value} >`;
   }
 }
-WBTextValue = makeCreate(WBTextValue);
+WBTextValue = define(WBTextValue);
 
 class WBColorValue extends WBValue {
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
-  constructor() {
-    super();
-    this._input = this.html.node`<input type="color" />`;
-    this._conditionalSetAttribute("value");
-  }
   static get name() {
     return "WBColorValue";
   }
@@ -99,10 +75,10 @@ class WBColorValue extends WBValue {
     return "wb-color-value";
   }
   render() {
-    return this.html`${this.fn} ${this._input}`;
+    return this.html`${this.fn} <input type="color" value="${this.value}" >`;
   }
 }
-WBColorValue = makeCreate(WBColorValue);
+WBColorValue = define(WBColorValue);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -130,7 +106,7 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-WBTab = heresy.define(WBTab);
+WBTab = define(WBTab);
 
 class WBSlot extends HTMLElement {
   static get name() {
@@ -161,8 +137,7 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-WBSlot = makeCreate(WBSlot);
-console.log("WBSlot defined");
+WBSlot = define(WBSlot);
 
 class WBStep extends HTMLElement {
   static get name() {
@@ -171,8 +146,6 @@ class WBStep extends HTMLElement {
   static get tagName() {
     return "wb-step";
   }
-  get observedAttributes(){ return ['ns', 'fn'];}
-  get mappedAttributes(){ return ['params', 'body'];}
   static style(WBStep) {
     return `${WBStep} {
       display: inline-block;
@@ -195,38 +168,50 @@ class WBStep extends HTMLElement {
     return this.getAttribute("ns");
   }
 
-  set ns(val) {
-    this.setAttribute("ns", val);
+  set ns(val){
+    this.setAttribute('ns', val);
   }
 
   get fn() {
     return this.getAttribute("fn");
   }
 
-  set fn(val) {
-    this.setAttribute("fn", val);
+  set fn(val){
+    this.setAttribute('fn', val);
+  }
+
+  get type(){
+    return this.getAttribute("type");
+  }
+
+  set type(val){
+    this.setAttribute('type', val);
   }
 
   get function() {
     return window.runtime[this.ns][this.fn];
   }
-  set body(val) {
-    this._body = val; // We'll need to process this into a script later
-  }
+
   get body() {
     return this._body;
   }
-  set params(val) {
-    // val is array of AST parameter objects. Each object has a name and a type.
-    this._params = val;
+
+  set body(val){
+    this._body = val;
   }
+
   get params() {
     return this._params;
+  }
+
+  set params(val){
+    this._params = val;
   }
 
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
     return this.params.map(param => {
+      console.log("map parameter: %o", param);
       switch (param.type.toLowerCase()) {
         case "text":
           return WBTextValue.new(this.ns, param.name);
@@ -240,30 +225,8 @@ class WBStep extends HTMLElement {
     });
   }
 
-  // (optional) event driven lifecycle methods, added automatically when
-  // no Custom Elements native methods such as connectedCallback, and others
-  // have been explicitly set as methods
-
-  onconnected(event) {
-    console.log("connected: %o", event);
-  }
-
-  ondisconnected(event) {
-    console.log("disconnected");
-  }
-
-  onattributechanged(event) {
-    console.log(
-      "attribute changed: %s was %s now %s",
-      event.attributeName,
-      event.oldValue,
-      event.newValue
-    );
-  } // event = {attributeName, oldValue, newValue}
-
   render() {
     const params = this.mapParams();
-    console.log('params: %o', params);
     switch (params.length) {
       case 0:
         return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
@@ -284,8 +247,6 @@ class WBStep extends HTMLElement {
           "Unsupported number of parameters, use an object or array parameter instead."
         );
     }
-    return this.html`<wb-tab/><header>${this.htmlSignature}</header><wb-slot/>`;
   }
 }
-WBStep = makeCreate(WBStep);
-console.log("WBStep defined");
+WBStep = define(WBStep);
