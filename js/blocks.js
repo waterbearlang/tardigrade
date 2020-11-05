@@ -1,12 +1,15 @@
 import heresy from "../lib/heresy.min.js";
 const {define, html, render} = heresy;
 
-class WBValue extends HTMLElement {
-  static get name() {
-    return "WBValue";
-  }
-  static get tagName() {
-    return "wb-value";
+const {WBStep} = (function(){
+class WBBlock extends HTMLElement {
+  static create(props){
+    props = props || {};
+    const obj = this.new();
+    Object.keys(props).forEach(key => {
+      obj[key] = props[key];
+    });
+    return obj;
   }
   static style(WBValue) {
     return `${WBValue} {
@@ -40,7 +43,7 @@ class WBValue extends HTMLElement {
 }
 //define(WBValue);
 
-class WBNumberValue extends WBValue {
+class WBNumberValue extends WBBlock {
   static get name() {
     return "WBNumberValue";
   }
@@ -48,12 +51,12 @@ class WBNumberValue extends WBValue {
     return "wb-number-value";
   }
   render() {
-    return this.html`this.fn <input type="number" value="${this.value}" >`;
+    return this.html`${this.fn} <input type="number" value="${this.value}" >`;
   }
 }
 WBNumberValue = define(WBNumberValue);
 
-class WBTextValue extends WBValue {
+class WBTextValue extends WBBlock {
   static get name() {
     return "WBTextValue";
   }
@@ -66,7 +69,7 @@ class WBTextValue extends WBValue {
 }
 WBTextValue = define(WBTextValue);
 
-class WBColorValue extends WBValue {
+class WBColorValue extends WBBlock {
   // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
   static get name() {
     return "WBColorValue";
@@ -79,6 +82,38 @@ class WBColorValue extends WBValue {
   }
 }
 WBColorValue = define(WBColorValue);
+
+class WBAngleUnit extends WBBlock {
+  static get name(){
+    return "WBAngleUnit";
+  }
+  static get tagName(){
+    return "wb-angle-unit";
+  }
+  render(){
+    return this.html`<select><option value="deg" selected>degrees</option><option value="rad">radians</option></select>`;
+  }
+}
+WBAngleUnit = define(WBAngleUnit);
+
+class WBBlockValue extends WBBlock{
+  static get name(){
+    return "WBBlockValue";
+  }
+  static get tagName(){
+    return "wb-block-value";
+  }
+  get blocktype(){
+    return this.getAttribute('blocktype');
+  }
+  set blocktype(val){
+    this.setAttribute('blocktype', val);
+  }
+  render(){
+    return this.html`${this.fn} <input type="${this.type}" readonly>`; 
+  }
+}
+WBBlockValue = define(WBBlockValue);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -139,13 +174,14 @@ class WBSlot extends HTMLElement {
 }
 WBSlot = define(WBSlot);
 
-class WBStep extends HTMLElement {
+class WBStep extends WBBlock {
   static get name() {
     return "WBStep";
   }
   static get tagName() {
     return "wb-step";
   }
+
   static style(WBStep) {
     return `${WBStep} {
       display: inline-block;
@@ -164,28 +200,12 @@ class WBStep extends HTMLElement {
     }`;
   }
 
-  get ns() {
-    return this.getAttribute("ns");
+  get returntype(){
+    return this.getAttribute("returntype");
   }
 
-  set ns(val){
-    this.setAttribute('ns', val);
-  }
-
-  get fn() {
-    return this.getAttribute("fn");
-  }
-
-  set fn(val){
-    this.setAttribute('fn', val);
-  }
-
-  get type(){
-    return this.getAttribute("type");
-  }
-
-  set type(val){
-    this.setAttribute('type', val);
+  set returntype(val){
+    this.setAttribute('returntype', val);
   }
 
   get function() {
@@ -214,12 +234,17 @@ class WBStep extends HTMLElement {
       console.log("map parameter: %o", param);
       switch (param.type.toLowerCase()) {
         case "text":
-          return WBTextValue.new(this.ns, param.name);
+          return WBTextValue.create({fn: param.name}); // FIXME: Passing values to new doesn't actually do anything
         case "number":
-          return WBNumberValue.new(this.ns, param.name);
+          return WBNumberValue.create({fn: param.name});
         case "color":
-          return WBColorValue.new(this.ns, param.name);
+          return WBColorValue.create({fn: param.name});
+        case "angleunit":
+          return WBAngleUnit.create({fn: param.name});
+        case "vector":
+          return WBBlockValue.create({fn: param.name, blocktype: "vector"});
         default:
+          console.error("Unrecognized parameter type: %s", param.type);
           throw new Error("Unrecognized parameter type: %s", param.type);
       }
     });
@@ -239,10 +264,9 @@ class WBStep extends HTMLElement {
           params[1]
         }</header><wb-slot/>`;
       case 3:
-        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${
-          params[1]
-        } ${params[2]}</header><wb-slot/>`;
+        return this.html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header><wb-slot/>`;
       default:
+        console.error('Unsupported number of parameters, use an object or array parameter instaed.');
         throw new Error(
           "Unsupported number of parameters, use an object or array parameter instead."
         );
@@ -250,3 +274,6 @@ class WBStep extends HTMLElement {
   }
 }
 WBStep = define(WBStep);
+return {WBStep};
+)();
+export {WBStep};

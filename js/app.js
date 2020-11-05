@@ -1,5 +1,6 @@
 import { parse } from "./moonshine.js";
 import heresy from "../lib/heresy.min.js";
+import {WBStep} from "./blocks.js";
 import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
 import dragula from "../lib/dragula.min.js";
@@ -33,21 +34,25 @@ const buildBlockMenu = (name, ast) => {
   const target = document.createElement('div');
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
-    // console.log(
-    //   '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
-    //   name,
-    //   key,
-    //   fn.returnType,
-    //   fn.body,
-    //   fn.params
-    // );
-    const params = {ns: "archon", fn:"ratify", body:{one: 1, two: 2, three: 3}, params:[1,2,3,4]};
+    console.warn(
+      '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
+      name,
+      key,
+      fn.returnType,
+      fn.body,
+      fn.params
+    );
     heresy.render(
       target,
-      // new WBStep(params);
-      heresy.html`<wb-step ns="${name}" fn="${key}" type="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+      WBStep.create({ns: name, fn: key, returntype: fn.returnType, body: fn.body, params: fn.params}) // just pass fn?
+      // heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+      // heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=$fn.body} params=${[]} />`
     );
-    blockmenu.appendChild(target.firstChild);
+    if (target.firstChild){
+      blockmenu.appendChild(target.firstChild);
+    }else{
+      console.error('Failed to build step for %o', fn);
+    }
   });
 };
 
