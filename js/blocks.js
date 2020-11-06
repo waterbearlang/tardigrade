@@ -1,6 +1,13 @@
 import heresy from "../lib/heresy.min.js";
 const { define, html, render } = heresy;
 
+// FIXME: These should be extracted from .moon files
+const selectChoices = {
+  angleunit: ["degrees", "radians"],
+  edgechoice:  ["pass", "bounce", "wrap", "stop"],
+  wavechoice: ["sine", "saw", "square", "triangle", "pulse"]
+};
+
 class WBBlock extends HTMLElement {
   static create(props) {
     props = props || {};
@@ -41,72 +48,50 @@ class WBBlock extends HTMLElement {
   }
 }
 
-class WBNumberValue extends WBBlock {
+class WBInputValue extends WBBlock {
   static get name() {
-    return "WBNumberValue";
+    return "WBInputValue";
   }
   static get tagName() {
-    return "wb-number-value";
-  }
-  render() {
-    return this.html`${this.fn} <input type="number" value="${this.value}" >`;
-  }
-}
-WBNumberValue = define(WBNumberValue);
-
-class WBTextValue extends WBBlock {
-  static get name() {
-    return "WBTextValue";
-  }
-  static get tagName() {
-    return "wb-text-value";
-  }
-  render() {
-    return this.html`${this.fn} <input type="text" value="${this.value}" >`;
-  }
-}
-WBTextValue = define(WBTextValue);
-
-class WBColorValue extends WBBlock {
-  // FIXME: Implement cross-platform color picker based on hsluv perceptually consistent colors
-  static get name() {
-    return "WBColorValue";
-  }
-  static get tagName() {
-    return "wb-color-value";
-  }
-  render() {
-    return this.html`${this.fn} <input type="color" value="${this.value}" >`;
-  }
-}
-WBColorValue = define(WBColorValue);
-
-class WBBooleanValue extends WBBlock{
-  static get name(){
-    return "WBBooleanValue";
-  }
-  static get tagName(){
-    return "wb-boolean-value";
-  }
-  render(){
-    return this.html`${this.fn} <checkbox type="boolean" ${this.value ? "checked" : ""} >`;
-  }
-}
-WBBooleanValue = define(WBBooleanValue);
-
-class WBAngleUnit extends WBBlock {
-  static get name() {
-    return "WBAngleUnit";
-  }
-  static get tagName() {
-    return "wb-angle-unit";
+    return "wb-input-value";
   }
   render() {
     return this
-      .html`<select><option value="deg" selected>degrees</option><option value="rad">radians</option></select>`;
+      .html`${this.fn} <input type="${this.type}" value="${this.value}" >`;
   }
 }
-WBAngleUnit = define(WBAngleUnit);
+WBInputValue = define(WBInputValue);
+
+
+class WBTruthValue extends WBBlock {
+  static get name() {
+    return "WBTruthValue";
+  }
+  static get tagName() {
+    return "wb-truth-value";
+  }
+  render() {
+    return this.html`${this.fn} <checkbox type="boolean" ${
+      this.value ? "checked" : ""
+    } >`;
+  }
+}
+WBTruthValue = define(WBTruthValue);
+
+class WBSelectValue extends WBBlock {
+  static get name(){
+    return "WBSelectValue";
+  }
+  static get tagName(){
+    return "wb-select-value";
+  }
+  render(){
+    const obj = document.createElement('select');
+    obj.innerHTML = this.choices.map(choice => `<option value="${choice}" ${this.value === choice ? "selected" : ""}>`).join('');
+    return obj;
+  }
+}
+WBSelectValue = define(WBSelectValue);
 
 class WBBlockValue extends WBBlock {
   static get name() {
@@ -122,7 +107,8 @@ class WBBlockValue extends WBBlock {
     this.setAttribute("blocktype", val);
   }
   render() {
-    return this.html`${this.fn} <input type="${this.blocktype}" readonly title="drag a ${this.blocktype} block here">`;
+    return this
+      .html`${this.fn} <input type="${this.blocktype}" readonly title="drag a ${this.blocktype} block here">`;
   }
 }
 WBBlockValue = define(WBBlockValue);
@@ -242,25 +228,27 @@ class WBStep extends WBBlock {
     // val is array of AST parameter objects. Each object has a name and a type.
     return this.params.map(param => {
       console.log("map parameter: %o", param);
-      switch (param.type.toLowerCase()) {
-        case "text":
-          return WBTextValue.create({ fn: param.name }); // FIXME: Passing values to new doesn't actually do anything
-        case "number":
-          return WBNumberValue.create({ fn: param.name });
-        case "color":
-          return WBColorValue.create({ fn: param.name });
-        case "boolean":
-          return WBColorValue.create({ fn: param.name });
-        case "angleunit":
-          return WBAngleUnit.create({ fn: param.name });
-        case "vector":
-          return WBBlockValue.create({ fn: param.name, blocktype: "vector" });
-        default:
-          console.error("Unrecognized parameter type: %s", param.type);
-          throw new Error("Unrecognized parameter type: " + param.type);
+      const type = param.type.toLowerCase();
+      if (["text", "number", "color"].includes(type)) {
+        return WBInputValue.create({ fn: param.name, type: type });
       }
+      if (type === "truth") {
+        return WBTruthValue({ fn: param.name, type: type });
+      }
+      if (["angleunit", "edgechoice", "wavechoice"].includes(type)){
+        return WBSelectValue.create({
+          fn: param.name,
+          choices: selectChoices[type]
+        });
+      }
+      if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
+        return WBBlockValue.create({ fn: param.name, blocktype: type });
+      }
+      console.error("Unrecognized parameter type: %s", param.type);
+      throw new Error("Unrecognized parameter type: " + param.type);
     });
   }
+
 
   render() {
     const params = this.mapParams();

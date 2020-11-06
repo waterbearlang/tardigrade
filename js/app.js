@@ -56,7 +56,7 @@ const processError = script => {
   console.error(script);
 };
 
-const blockScripts = ["control", "vector", "stage"];
+const blockScripts = ["control", "sprite", "sound", "vector", "stage", "angle"];
 const blockmenu = document.querySelector('.blockmenu');
 
 blockScripts.forEach(name => {
