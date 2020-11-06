@@ -1,14 +1,17 @@
 control {
-  
-  log:String = (string:String) => {
+
+  // basic access to logging
+  log:Text = (string:Text) => {
     Control.log(string)
   }
 
-  comment:String = (string:String) => {
+  // A note for the coder, ignored by the runtime
+  comment:Text = (string:Text) => {
     Control.comment(string)
   }
 
-  alert:Boolean = (string:String) => {
-    Control.alert(string);
+  // First boolean, but haven't implemented return values yet, so shouldn't matter?
+  alert:Truth = (string:Text) => {
+    Control.alert(string)
   }
 }

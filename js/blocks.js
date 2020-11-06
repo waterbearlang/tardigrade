@@ -62,7 +62,7 @@ class WBTextValue extends WBBlock {
     return "wb-text-value";
   }
   render() {
-    return this.html`${this.fn} <input type="text" value="${this.value} >`;
+    return this.html`${this.fn} <input type="text" value="${this.value}" >`;
   }
 }
 WBTextValue = define(WBTextValue);
@@ -80,6 +80,19 @@ class WBColorValue extends WBBlock {
   }
 }
 WBColorValue = define(WBColorValue);
+
+class WBBooleanValue extends WBBlock{
+  static get name(){
+    return "WBBooleanValue";
+  }
+  static get tagName(){
+    return "wb-boolean-value";
+  }
+  render(){
+    return this.html`${this.fn} <checkbox type="boolean" ${this.value ? "checked" : ""} >`;
+  }
+}
+WBBooleanValue = define(WBBooleanValue);
 
 class WBAngleUnit extends WBBlock {
   static get name() {
@@ -192,8 +205,6 @@ class WBStep extends WBBlock {
       margin: 5px 5px 2px 2px;
       padding-left: 10px;
       padding-bottom: 14px;
-      float: left;
-      clear: left;
       position: relative;
       z-index: 0;    
     }`;
@@ -238,13 +249,15 @@ class WBStep extends WBBlock {
           return WBNumberValue.create({ fn: param.name });
         case "color":
           return WBColorValue.create({ fn: param.name });
+        case "boolean":
+          return WBColorValue.create({ fn: param.name });
         case "angleunit":
           return WBAngleUnit.create({ fn: param.name });
         case "vector":
           return WBBlockValue.create({ fn: param.name, blocktype: "vector" });
         default:
           console.error("Unrecognized parameter type: %s", param.type);
-          throw new Error("Unrecognized parameter type: %s", param.type);
+          throw new Error("Unrecognized parameter type: " + param.type);
       }
     });
   }

@@ -9,3 +9,15 @@ h1 {
   font-style: italic;
   color: #373fff;
 }
+
+.blockmenu{
+  max-width: 20%;
+}
+
+.menu_title{
+  display: block;
+  background-color: #234;
+  color: #CED;
+  font-size: 150%;
+  font-family: sans-serif;
+}

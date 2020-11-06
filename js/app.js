@@ -61,7 +61,7 @@ const blockmenu = document.querySelector('.blockmenu');
 
 blockScripts.forEach(name => {
   let menu = document.createElement("div");
-  menu.innerHTML = `<heading class="${name}_title">${name}</heading>`;
+  menu.innerHTML = `<header class="menu_title">${name}</header>`;
   blockmenu.appendChild(menu);
   fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text, menu))
