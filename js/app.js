@@ -21,15 +21,14 @@ const parseTreeToAST = parseTree => {
   return [name, AST];
 };
 
-const processScript = async script => {
+const processScript = async (script, menu) => {
   const parseTree = await parse(script);
   const [name, AST] = parseTreeToAST(parseTree);
   window.runtime[name] = AST;
-  buildBlockMenu(name, AST);
+  buildBlockMenu(name, AST, menu);
 };
 
-const buildBlockMenu = (name, ast) => {
-  const blockmenu = document.querySelector(".blockmenu");
+const buildBlockMenu = (name, ast, menu) => {
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
     const target = document.createElement("div");
@@ -46,7 +45,7 @@ const buildBlockMenu = (name, ast) => {
       heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
     );
     if (target.firstChild) {
-      blockmenu.appendChild(target.firstChild);
+      menu.appendChild(target.firstChild);
     } else {
       console.error("Failed to build step for %o", fn);
     }
@@ -57,10 +56,14 @@ const processError = script => {
   console.error(script);
 };
 
-const blockScripts = ["vector", "stage"];
+const blockScripts = ["control", "vector", "stage"];
+const blockmenu = document.querySelector('.blockmenu');
 
-blockScripts.forEach(name =>
+blockScripts.forEach(name => {
+  let menu = document.createElement("div");
+  menu.innerHTML = `<heading class="${name}_title">${name}</heading>`;
+  blockmenu.appendChild(menu);
   fetch(`/blocks/${name}.moon`).then(response =>
-    response.text().then(text => processScript(text))
-  )
-);
+    response.text().then(text => processScript(text, menu))
+  );
+});
