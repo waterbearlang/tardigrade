@@ -17,8 +17,8 @@ class WBBlock extends HTMLElement {
     });
     return obj;
   }
-  static style(WBValue) {
-    return `${WBValue} {
+  static style(WBParam) {
+    return `${WBParam} {
       display: inline-block;
     }`;
   }
@@ -48,9 +48,9 @@ class WBBlock extends HTMLElement {
   }
 }
 
-class WBInputValue extends WBBlock {
+class WBInputParam extends WBBlock {
   static get name() {
-    return "WBInputValue";
+    return "WBInputParam";
   }
   static get tagName() {
     return "wb-input-value";
@@ -60,12 +60,12 @@ class WBInputValue extends WBBlock {
       .html`${this.fn} <input type="${this.type}" value="${this.value}" >`;
   }
 }
-WBInputValue = define(WBInputValue);
+WBInputParam = define(WBInputParam);
 
 
-class WBTruthValue extends WBBlock {
+class WBTruthParam extends WBBlock {
   static get name() {
-    return "WBTruthValue";
+    return "WBTruthParam";
   }
   static get tagName() {
     return "wb-truth-value";
@@ -76,11 +76,11 @@ class WBTruthValue extends WBBlock {
     } >`;
   }
 }
-WBTruthValue = define(WBTruthValue);
+WBTruthParam = define(WBTruthParam);
 
-class WBSelectValue extends WBBlock {
+class WBSelectParam extends WBBlock {
   static get name(){
-    return "WBSelectValue";
+    return "WBSelectParam";
   }
   static get tagName(){
     return "wb-select-value";
@@ -91,11 +91,11 @@ class WBSelectValue extends WBBlock {
     return obj;
   }
 }
-WBSelectValue = define(WBSelectValue);
+WBSelectParam = define(WBSelectParam);
 
-class WBBlockValue extends WBBlock {
+class WBBlockParam extends WBBlock {
   static get name() {
-    return "WBBlockValue";
+    return "WBBlockParam";
   }
   static get tagName() {
     return "wb-block-value";
@@ -111,7 +111,7 @@ class WBBlockValue extends WBBlock {
       .html`${this.fn} <input type="${this.blocktype}" readonly title="drag a ${this.blocktype} block here">`;
   }
 }
-WBBlockValue = define(WBBlockValue);
+WBBlockParam = define(WBBlockParam);
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -230,19 +230,19 @@ class WBStep extends WBBlock {
       console.log("map parameter: %o", param);
       const type = param.type.toLowerCase();
       if (["text", "number", "color"].includes(type)) {
-        return WBInputValue.create({ fn: param.name, type: type });
+        return WBInputParam.create({ fn: param.name, type: type });
       }
       if (type === "truth") {
-        return WBTruthValue({ fn: param.name, type: type });
+        return WBTruthParam({ fn: param.name, type: type });
       }
       if (["angleunit", "edgechoice", "wavechoice"].includes(type)){
-        return WBSelectValue.create({
+        return WBSelectParam.create({
           fn: param.name,
           choices: selectChoices[type]
         });
       }
       if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
-        return WBBlockValue.create({ fn: param.name, blocktype: type });
+        return WBBlockParam.create({ fn: param.name, blocktype: type });
       }
       console.error("Unrecognized parameter type: %s", param.type);
       throw new Error("Unrecognized parameter type: " + param.type);
