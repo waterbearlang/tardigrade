@@ -227,7 +227,7 @@ class WBStep extends WBBlock {
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
     return this.params.map(param => {
-      console.log("map parameter: %o", param);
+      // console.log("map parameter: %o", param);
       const type = param.type.toLowerCase();
       if (["text", "number", "color"].includes(type)) {
         return WBInputParam.create({ fn: param.name, type: type });
@@ -242,6 +242,9 @@ class WBStep extends WBBlock {
         });
       }
       if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
+        return WBBlockParam.create({ fn: param.name, blocktype: type });
+      }
+      if (type.includes('list')){
         return WBBlockParam.create({ fn: param.name, blocktype: type });
       }
       console.error("Unrecognized parameter type: %s", param.type);

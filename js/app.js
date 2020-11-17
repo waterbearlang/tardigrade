@@ -15,14 +15,24 @@ const parseTreeToAST = parseTree => {
   );
   const name = parseTree.name;
   const AST = {};
+  console.log('AST %s values: %s', name, parseTree.values.map(value => value.type));
   parseTree.values
-    .filter(val => val.type === "function")
+    .filter(val => val.type === "Step")
     .forEach(val => (AST[val.name] = val));
   return [name, AST];
 };
 
 const processScript = async (script, menu) => {
-  const parseTree = await parse(script);
+  let parseTree;
+  try{
+    parseTree = await parse(script);
+  }catch(e){
+    console.error('Problem processing script %s', script.split('\n')[0].split(' ')[0]);
+    console.error('Start line %s column %s', e.location.start.line, e.location.start.column);
+    console.error('End line %s column %s', e.location.end.line, e.location.end.column);
+    console.error(e.message);
+    return;
+  }
   const [name, AST] = parseTreeToAST(parseTree);
   window.runtime[name] = AST;
   buildBlockMenu(name, AST, menu);
