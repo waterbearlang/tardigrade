@@ -38,18 +38,54 @@ const processScript = async (script, menu) => {
   buildBlockMenu(name, AST, menu);
 };
 
+
+const builder = ast => {
+  const target = document.createElement("div");
+  switch(ast.type.toLowerCase()){
+    case 'step':
+      heresy.render(
+        target,
+        heresy.html`<wb-step ns="${ast.name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+      );
+      break;
+    case 'context':
+      heresy.render(
+        target,
+        heresy.html`<wb-context ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+      );
+      break;
+    case 'trigger':
+      heresy.render(
+        target,
+        heresy.html`<wb-trigger ns="${name}" fn="${key}" body=${fn.body} params=${fn.params} />`
+      );
+      break;
+    case 'value':
+      heresy.render(
+        target,
+        heresy.html`<wb-value ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+      );
+      break;
+    case 'comment':
+      // do nothing
+      break;
+    default:
+      console.warn('Unexpected block type: %s', ast.type);
+      break;
+  }
+  if (target.firstChild) {
+    return target.firstChild;
+  } else {
+    console.error("Failed to build step for %o", ast.name);
+    throw new error('Failed to build step for ' + ast.name);
+  }
+}
+
 const buildBlockMenu = (name, ast, menu) => {
   Object.keys(ast).forEach(key => {
     const fn = ast[key];
     const target = document.createElement("div");
-    // console.warn(
-    //   '<wb-step ns="%s" fn="%s" type="%s" body=%o params=%o',
-    //   name,
-    //   key,
-    //   fn.returnType,
-    //   fn.body,
-    //   fn.params
-    // );
+
     heresy.render(
       target,
       heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`

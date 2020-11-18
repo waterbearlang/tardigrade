@@ -1,5 +1,19 @@
 control {
 
+  eachFrame(frameCount:Integer, elapsed:Float){
+    Control.eachFrame(frameCount, elapsed)
+  }
+
+  repeat "things" (index:Integer){
+    Control.repeat(index)
+  }
+
+  loopOver:Type[](list:Type[], item:Type, index:Integer){
+    Control.loopOver(list)
+  }
+
+  
+
   // basic access to logging
   log:Text(string:Text){
     Control.log(string)
