@@ -3,7 +3,7 @@ list {
     list.createListOfType(type)
   }
 
-  itemAtIndex:Type(list:Type[], index:Number){
+  itemAtIndex:Type(list:Type[], index:Integer){
     list.get(index)
   }
 
@@ -11,7 +11,7 @@ list {
     a.concat(b)
   }
 
-  joinWith:String(list:Type[], separator:String){
+  joinWith:String(list:Type[], separator:Text){
     list.join(separator)
   }
 
@@ -20,7 +20,7 @@ list {
   }
 
   prepend:List(list:List, item:Type){
-    list.prepend(item);
+    list.prepend(item)
   }
 
 }

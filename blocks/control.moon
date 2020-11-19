@@ -8,11 +8,9 @@ control {
     Control.repeat(index)
   }
 
-  loopOver:Type[](list:Type[], item:Type, index:Integer){
+  loopOver "listOfThings"(list:Type[], item:Type, index:Integer){
     Control.loopOver(list)
   }
-
-  
 
   // basic access to logging
   log:Text(string:Text){

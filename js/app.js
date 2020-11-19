@@ -17,7 +17,7 @@ const parseTreeToAST = parseTree => {
   const AST = {};
   console.log('AST %s values: %s', name, parseTree.values.map(value => value.type));
   parseTree.values
-    .filter(val => val.type === "Step")
+    .filter(val => val.type.toLowerCase() !== "comment")
     .forEach(val => (AST[val.name] = val));
   return [name, AST];
 };
@@ -39,13 +39,13 @@ const processScript = async (script, menu) => {
 };
 
 
-const builder = ast => {
+const builder = (name, key, fn) => {
   const target = document.createElement("div");
   switch(ast.type.toLowerCase()){
     case 'step':
       heresy.render(
         target,
-        heresy.html`<wb-step ns="${ast.name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
+        heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
       );
       break;
     case 'context':
@@ -74,6 +74,7 @@ const builder = ast => {
       break;
   }
   if (target.firstChild) {
+    console.log('built target: %o', target.firstChild);
     return target.firstChild;
   } else {
     console.error("Failed to build step for %o", ast.name);
@@ -83,18 +84,7 @@ const builder = ast => {
 
 const buildBlockMenu = (name, ast, menu) => {
   Object.keys(ast).forEach(key => {
-    const fn = ast[key];
-    const target = document.createElement("div");
-
-    heresy.render(
-      target,
-      heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
-    );
-    if (target.firstChild) {
-      menu.appendChild(target.firstChild);
-    } else {
-      console.error("Failed to build step for %o", fn);
-    }
+    menu.appendChild(builder(name, key, ast[key]));
   });
 };
 
@@ -102,12 +92,13 @@ const processError = script => {
   console.error(script);
 };
 
-const blockScripts = ["control", "sprite", "sound", "vector", "stage", "angle"];
+const blockScripts = ["control", "sprite", "sound", "vector", "stage", "angle", "list"];
 const blockmenu = document.querySelector('.blockmenu');
 
 blockScripts.forEach(name => {
-  let menu = document.createElement("div");
-  menu.innerHTML = `<header class="menu_title">${name}</header>`;
+  let menu = document.createElement("details");
+  // menu.setAttribute('open', 'true');
+  menu.innerHTML = `<summary class="menu_title">${name}</summary>`;
   blockmenu.appendChild(menu);
   fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text, menu))

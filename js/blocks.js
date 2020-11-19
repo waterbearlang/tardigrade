@@ -8,6 +8,13 @@ const selectChoices = {
   wavechoice: ["sine", "saw", "square", "triangle", "pulse"]
 };
 
+//
+// WBBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
+//
+// Should be refactored to use groups of functionality by composition vs. inheritance once it's clear
+// which blocks need which bits. For now, just toss it all here and we'll see what sticks.
+//
+
 class WBBlock extends HTMLElement {
   static create(props) {
     props = props || {};
@@ -46,6 +53,72 @@ class WBBlock extends HTMLElement {
       this._input.setAttribute(name, this.getAttribute(name));
     }
   }
+
+  get returntype() {
+    return this.getAttribute("returntype");
+  }
+
+  set returntype(val) {
+    this.setAttribute("returntype", val);
+  }
+
+  get function() {
+    return window.runtime[this.ns][this.fn];
+  }
+
+  get body() {
+    return this._body;
+  }
+
+  set body(val) {
+    this._body = val;
+  }
+
+  get params() {
+    return this._params;
+  }
+
+  set params(val) {
+    this._params = val;
+  }
+
+  mapParams() {
+    // val is array of AST parameter objects. Each object has a name and a type.
+    return this.params.map(param => {
+      // console.log("map parameter: %o", param);
+      const type = param.type.toLowerCase();
+      if (["text", "number", "integer", "float", "color"].includes(type)) {
+        return WBInputParam.create({ fn: param.name, type: type });
+      }
+      if (type === "truth") {
+        return WBTruthParam({ fn: param.name, type: type });
+      }
+      if (["angleunit", "edgechoice", "wavechoice"].includes(type)){
+        return WBSelectParam.create({
+          fn: param.name,
+          choices: selectChoices[type]
+        });
+      }
+      if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
+        return WBBlockParam.create({ fn: param.name, blocktype: type });
+      }
+      if (type.includes('list')){
+        // List types exist for all primitive types, for struct types, and even for other list types.
+        // Some list types can be late-bound, so "list of what" is not known until parameters
+        // are added
+        return WBBlockParam.create({ fn: param.name, blocktype: type });
+      }
+      if (type === 'type'){
+        // late bound type, depends on the type of argument used
+        // for WB this will be handled in the interface for inserting arguments 
+        // (whether by click, drag-and-drop, cut-and-paste, undo/redo or whatevs)
+        return WBBlockParam.create({ fn: param.name, blocktype: type });
+      }
+      console.error("Unrecognized parameter type: %s", param.type);
+      throw new Error("Unrecognized parameter type: " + param.type);
+    });
+  }
+
 }
 
 class WBInputParam extends WBBlock {
@@ -93,6 +166,10 @@ class WBSelectParam extends WBBlock {
 }
 WBSelectParam = define(WBSelectParam);
 
+//
+// WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
+//
+
 class WBBlockParam extends WBBlock {
   static get name() {
     return "WBBlockParam";
@@ -112,6 +189,10 @@ class WBBlockParam extends WBBlock {
   }
 }
 WBBlockParam = define(WBBlockParam);
+
+//
+// WBTab - makes the tab at the top of a block. Purely decorative.
+//
 
 class WBTab extends HTMLElement {
   static get name() {
@@ -140,6 +221,10 @@ class WBTab extends HTMLElement {
   }
 }
 WBTab = define(WBTab);
+
+//
+// WBSlot - makes the indent at the bottom of a block
+//
 
 class WBSlot extends HTMLElement {
   static get name() {
@@ -172,6 +257,10 @@ class WBSlot extends HTMLElement {
 }
 WBSlot = define(WBSlot);
 
+//
+// WBStep - the workhorse of Waterbear
+//
+
 class WBStep extends WBBlock {
   static get name() {
     return "WBStep";
@@ -195,63 +284,6 @@ class WBStep extends WBBlock {
       z-index: 0;    
     }`;
   }
-
-  get returntype() {
-    return this.getAttribute("returntype");
-  }
-
-  set returntype(val) {
-    this.setAttribute("returntype", val);
-  }
-
-  get function() {
-    return window.runtime[this.ns][this.fn];
-  }
-
-  get body() {
-    return this._body;
-  }
-
-  set body(val) {
-    this._body = val;
-  }
-
-  get params() {
-    return this._params;
-  }
-
-  set params(val) {
-    this._params = val;
-  }
-
-  mapParams() {
-    // val is array of AST parameter objects. Each object has a name and a type.
-    return this.params.map(param => {
-      // console.log("map parameter: %o", param);
-      const type = param.type.toLowerCase();
-      if (["text", "number", "color"].includes(type)) {
-        return WBInputParam.create({ fn: param.name, type: type });
-      }
-      if (type === "truth") {
-        return WBTruthParam({ fn: param.name, type: type });
-      }
-      if (["angleunit", "edgechoice", "wavechoice"].includes(type)){
-        return WBSelectParam.create({
-          fn: param.name,
-          choices: selectChoices[type]
-        });
-      }
-      if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
-        return WBBlockParam.create({ fn: param.name, blocktype: type });
-      }
-      if (type.includes('list')){
-        return WBBlockParam.create({ fn: param.name, blocktype: type });
-      }
-      console.error("Unrecognized parameter type: %s", param.type);
-      throw new Error("Unrecognized parameter type: " + param.type);
-    });
-  }
-
 
   render() {
     const params = this.mapParams();
@@ -278,3 +310,53 @@ class WBStep extends WBBlock {
   }
 }
 WBStep = define(WBStep);
+
+//
+// WBContext - a container for steps (and a step itself)
+//
+
+class WBContext extends WBBlock {
+  static get name() {
+    return "WBContext";
+  }
+  static get tagName() {
+    return "wb-context";
+  }
+
+  static style(WBContext) {
+    return `${WBContext} {
+      display: inline-block;
+      background-color: #EDE378;
+      border-radius: 5px;
+      border-color: #CEBD3E;
+      border-width: 2px;
+      border-style: solid;
+      margin: 5px 5px 2px 2px;
+      padding-left: 10px;
+      padding-bottom: 14px;
+      position: relative;
+      z-index: 0;    
+    }`;
+  }
+  render() {
+    const params = this.mapParams();
+    switch (params.length) {
+      case 0:
+        return this.html`<wb-tab/><details><summary><header>${this.fn}</header></summary></details><wb-contains /><wb-slot/>`;
+      case 1:
+        return this.html`<wb-tab/><details><summary><header>${this.fn} ${params[0]}</header></summary></details><wb-contains /><wb-slot/>`
+      case 2:
+        return this.html`<wb-tab/><details><summary><header>${this.fn} ${params[0]} ${params[1]}</header></summary></details><wb-contains /><wb-slot/>`
+      case 3:
+        return this.html`<wb-tab/><details><summary><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header></summary></details><wb-contains /><wb-slot/>`
+      default:
+        console.error(
+          "Unsupported number of parameters, use an object or array parameter instaed."
+        );
+        throw new Error(
+          "Unsupported number of parameters, use an object or array parameter instead."
+        );
+    }
+  }
+}
+WBContext = define(WBContext);
