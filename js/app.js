@@ -14,12 +14,11 @@ const parseTreeToAST = parseTree => {
     "Parse tree must be a namespace"
   );
   const name = parseTree.name;
-  const AST = {};
-  console.log('AST %s values: %s', name, parseTree.values.map(value => value.type));
+  const ast = {};
   parseTree.values
     .filter(val => val.type.toLowerCase() !== "comment")
-    .forEach(val => (AST[val.name] = val));
-  return [name, AST];
+    .forEach(val => (ast[val.name] = val));
+  return [name, ast];
 };
 
 const processScript = async (script, menu) => {
@@ -27,21 +26,22 @@ const processScript = async (script, menu) => {
   try{
     parseTree = await parse(script);
   }catch(e){
-    console.error('Problem processing script %s', script.split('\n')[0].split(' ')[0]);
+    let scriptName = script.split('\n')[0].split(' ')[0];
+    console.error('Problem processing script %s', scriptName);
     console.error('Start line %s column %s', e.location.start.line, e.location.start.column);
     console.error('End line %s column %s', e.location.end.line, e.location.end.column);
     console.error(e.message);
     return;
   }
-  const [name, AST] = parseTreeToAST(parseTree);
-  window.runtime[name] = AST;
-  buildBlockMenu(name, AST, menu);
+  const [name, ast] = parseTreeToAST(parseTree);
+  window.runtime[name] = ast;
+  buildBlockMenu(name, ast, menu);
 };
 
 
 const builder = (name, key, fn) => {
   const target = document.createElement("div");
-  switch(ast.type.toLowerCase()){
+  switch(fn.type.toLowerCase()){
     case 'step':
       heresy.render(
         target,
@@ -70,15 +70,15 @@ const builder = (name, key, fn) => {
       // do nothing
       break;
     default:
-      console.warn('Unexpected block type: %s', ast.type);
+      console.warn('Unexpected block type: %s', fn.type);
       break;
   }
   if (target.firstChild) {
-    console.log('built target: %o', target.firstChild);
+    console.info('built target: %o', target.firstChild);
     return target.firstChild;
   } else {
-    console.error("Failed to build step for %o", ast.name);
-    throw new error('Failed to build step for ' + ast.name);
+    console.error("Failed to build step for %o", fn.name);
+    throw new error(`Failed to build step for ${fn.name}`);
   }
 }
 

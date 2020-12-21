@@ -1,0 +1,11 @@
+input{
+  width: 3em;
+  margin-left: .2em;
+}
+
+wb-contains{
+  display: block;
+  min-height: 1.25em;
+  background-color: white;
+  margin-right: -3px;
+}

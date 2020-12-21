@@ -1,6 +1,6 @@
 control {
 
-  eachFrame(frameCount:Integer, elapsed:Float){
+  eachFrame "frame" (frameCount:Integer, elapsed:Float){
     Control.eachFrame(frameCount, elapsed)
   }
 
