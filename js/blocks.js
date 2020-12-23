@@ -342,13 +342,13 @@ class WBContext extends WBBlock {
     const params = this.mapParams();
     switch (params.length) {
       case 0:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn}</header></summary><wb-contains /</details><wb-slot/>`;
+        return this.html`<wb-tab/><details open><summary><header>${this.fn}</header></summary><wb-contains></wb-contains></details><wb-slot/>`;
       case 1:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]}</header></summary><wb-contains /><wb-slot/>`
+        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
       case 2:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]} ${params[1]}</header></summary></details><wb-contains /></details><wb-slot/>`
+        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]} ${params[1]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
       case 3:
-        return this.html`<wb-tab/><details><summary><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header></summary><wb-contains /></details><wb-slot/>`
+        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
       default:
         console.error(
           "Unsupported number of parameters, use an object or array parameter instaed."

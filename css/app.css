@@ -1,5 +1,3 @@
-/* CSS files add styling rules to your content */
-
 body {
   font-family: helvetica, arial, sans-serif;
   margin: 2em;
@@ -20,4 +18,10 @@ h1 {
   color: #CED;
   font-size: 150%;
   font-family: sans-serif;
+  list-style: none;
+}
+
+/* Chrome doesn't yet support list-style: none for summary*/
+summary.menu_title::-webkit-details-marker {
+  display: none;
 }

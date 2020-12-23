@@ -97,10 +97,10 @@ const blockmenu = document.querySelector('.blockmenu');
 
 blockScripts.forEach(name => {
   let menu = document.createElement("details");
-  // menu.setAttribute('open', 'true');
-  menu.innerHTML = `<summary class="menu_title">${name}</summary>`;
+  menu.setAttribute('open', 'true');
+  menu.innerHTML = `<summary class="menu_title">${name}</summary><wb-contains></wb-contains>`;
   blockmenu.appendChild(menu);
   fetch(`/blocks/${name}.moon`).then(response =>
-    response.text().then(text => processScript(text, menu))
+    response.text().then(text => processScript(text, menu.querySelector('wb-contains')))
   );
 });
