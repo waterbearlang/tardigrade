@@ -10,13 +10,13 @@ window.runtime = {};
 
 const parseTreeToAST = parseTree => {
   console.assert(
-    parseTree.type === "namespace",
+    parseTree.type === "Namespace",
     "Parse tree must be a namespace"
   );
   const name = parseTree.name;
   const ast = {};
   parseTree.values
-    .filter(val => val.type.toLowerCase() !== "comment")
+    .filter(val => val.type !== "Comment")
     .forEach(val => (ast[val.name] = val));
   return [name, ast];
 };
@@ -77,8 +77,8 @@ const builder = (name, key, fn) => {
     console.info('built target: %o', target.firstChild);
     return target.firstChild;
   } else {
-    console.error("Failed to build step for %o", fn.name);
-    throw new error(`Failed to build step for ${fn.name}`);
+    console.error("Failed to build step for %s: %o", fn.name, fn);
+    throw new Error(`Failed to build step for ${fn.name}`);
   }
 }
 

@@ -1,15 +1,26 @@
 control {
 
-  eachFrame "frame" (frameCount:Integer, elapsed:Float){
-    Control.eachFrame(frameCount, elapsed)
+  context eachFrame (){
+    locals{
+      frameCount:Integer <= runtime.frameCount
+      elapsed:Float <= runtime.elapsed
+    }
+    Control.eachFrame(expressions)
   }
 
-  repeat "things" (index:Integer){
-    Control.repeat(index)
+  context repeat (){
+    locals{
+      index:Integer <= Loop.index
+    }
+    Control.repeat(expressions)
   }
 
-  loopOver "listOfThings"(list:Type[], item:Type, index:Integer){
-    Control.loopOver(list)
+  context loopOver (list:Type[]){
+    locals{
+      index:Integer <= Loop.index
+      item:Type <= list[Loop.index]
+    }
+    Control.loopOver(expressions)
   }
 
   // basic access to logging
