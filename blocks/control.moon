@@ -1,24 +1,24 @@
 control {
 
-  context eachFrame (){
+  trigger eachFrame (){
     locals{
-      frameCount:Integer <= runtime.frameCount
-      elapsed:Float <= runtime.elapsed
+      frameCount:Integer <= runtime.frameCount;
+      elapsed:Float <= runtime.elapsed;
     }
     Control.eachFrame(expressions)
   }
 
   context repeat (){
     locals{
-      index:Integer <= Loop.index
+      index:Integer <= Loop.index;
     }
     Control.repeat(expressions)
   }
 
   context loopOver (list:Type[]){
     locals{
-      index:Integer <= Loop.index
-      item:Type <= list[Loop.index]
+      index:Integer <= Loop.index;
+      item:Type <= list[Loop.index];
     }
     Control.loopOver(expressions)
   }

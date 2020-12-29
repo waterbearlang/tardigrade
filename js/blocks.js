@@ -223,6 +223,33 @@ class WBTab extends HTMLElement {
 WBTab = define(WBTab);
 
 //
+// WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
+//
+
+class WBHat extends HTMLElement {
+  static get name() {
+    return "WBHat";
+  }
+  static get tagName() {
+    return "wb-hat";
+  }
+  static style(WBHat) {
+    return `${WBHat}{
+      display: inline-block;
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      left: 25px;
+      top: -12px;
+    }`;
+  }
+  render() {
+    return this.svg`<svg width="40" height="12"><path d="M 0 0 c 20 -7 11 0 40 0"></path></svg>`;
+  }
+}
+WBHat = define(WBHat);
+
+//
 // WBSlot - makes the indent at the bottom of a block
 //
 
@@ -360,3 +387,36 @@ class WBContext extends WBBlock {
   }
 }
 WBContext = define(WBContext);
+
+//
+// WBTrigger - a starting point for a script, fired by an event occurring
+//
+
+class WBTrigger extends WBBlock {
+  static get name() {
+    return "WBTrigger";
+  }
+  static get tagName() {
+    return "wb-trigger";
+  }
+
+  static style(WBTrigger) {
+    return `${WBTrigger} {
+      display: inline-block;
+      background-color: #EDE378;
+      border-radius: 5px;
+      border-color: #CEBD3E;
+      border-width: 2px;
+      border-style: solid;
+      margin: 5px 5px 2px 2px;
+      padding-left: 10px;
+      padding-bottom: 14px;
+      position: relative;
+      z-index: 0;    
+    }`;
+  }
+  render() {
+    return this.html`<wb-hat/><details open><summary><header>${this.fn}</header></summary><wb-contains></wb-contains></details>`;
+  }
+}
+WBTrigger = define(WBTrigger);

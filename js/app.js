@@ -24,7 +24,7 @@ const parseTreeToAST = parseTree => {
 const processScript = async (script, menu) => {
   let parseTree;
   try{
-    parseTree = await parse(script);
+    parseTree = parse(script);
   }catch(e){
     let scriptName = script.split('\n')[0].split(' ')[0];
     console.error('Problem processing script %s', scriptName);
@@ -57,7 +57,7 @@ const builder = (name, key, fn) => {
     case 'trigger':
       heresy.render(
         target,
-        heresy.html`<wb-trigger ns="${name}" fn="${key}" body=${fn.body} params=${fn.params} />`
+        heresy.html`<wb-trigger ns="${name}" fn="${key}" body=${fn.body} />`
       );
       break;
     case 'value':
