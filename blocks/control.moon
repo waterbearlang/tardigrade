@@ -24,17 +24,17 @@ control {
   }
 
   // basic access to logging
-  log:Text(string:Text){
-    Control.log(string)
+  log:Text(text:Text){
+    Control.log(text)
   }
 
   // A note for the coder, ignored by the runtime
-  comment:Text(string:Text){
-    Control.comment(string)
+  comment:Text(text:Text){
+    Control.comment(text)
   }
 
   // First boolean, but haven't implemented return values yet, so shouldn't matter?
-  alert:Truth(string:Text){
-    Control.alert(string)
+  alert:Truth(text:Text){
+    Control.alert(text)
   }
 }

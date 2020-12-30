@@ -134,7 +134,7 @@ class WBInputParam extends WBBlock {
     return "WBInputParam";
   }
   static get tagName() {
-    return "wb-input-value";
+    return "wb-input-param";
   }
   render() {
     return this
@@ -149,7 +149,7 @@ class WBTruthParam extends WBBlock {
     return "WBTruthParam";
   }
   static get tagName() {
-    return "wb-truth-value";
+    return "wb-truth-param";
   }
   render() {
     return this.html`${this.fn} <checkbox type="boolean" ${
@@ -164,7 +164,7 @@ class WBSelectParam extends WBBlock {
     return "WBSelectParam";
   }
   static get tagName(){
-    return "wb-select-value";
+    return "wb-select-param";
   }
   render(){
     const obj = document.createElement('select');
@@ -183,7 +183,7 @@ class WBBlockParam extends WBBlock {
     return "WBBlockParam";
   }
   static get tagName() {
-    return "wb-block-value";
+    return "wb-block-param";
   }
   get blocktype() {
     return this.getAttribute("blocktype");
@@ -428,3 +428,8 @@ class WBTrigger extends WBBlock {
   }
 }
 WBTrigger = define(WBTrigger);
+
+// Attribution for Font Awesome icons
+console.log(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
+License - https://fontawesome.com/license (Commercial License)
+`)

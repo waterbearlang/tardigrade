@@ -1,6 +1,7 @@
 input{
-  width: 3em;
-  margin-left: .2em;
+  width: 5em;
+  margin-left: .4em;
+  padding-left: 1.5em;
 }
 
 wb-contains{
@@ -53,3 +54,21 @@ wb-step header, wb-context header, wb-trigger header, wb-value header{
   display: inline-block;
   padding: 0.3em 0.5em;
 }
+
+/* Icons for types */
+
+wb-block-param > input, wb-input-param > input{
+  background: left / contain no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
+}
+
+input[type=text]{background-image: url(../images/fa-svg/regular/text.svg);}
+input[type=integer]{background-image: url(../images/fa-svg/regular/abacus.svg);}
+input[type=float]{background-image: url(../images/fa-svg/regular/calculator.svg);}
+input[type=number]{background-image: url(../images/fa-svg/regular/sigma.svg);}
+input[type=color]{background-image: url(../images/fa-svg/regular/palette.svg);}
+input[type=vector]{background-image: url(../images/fa-svg/regular/crosshairs.svg);}
+input[type=image]{background-image: url(../images/fa-svg/regular/image.svg);}
+input[type=sprite]{background-image: url(../images/fa-svg/regular/images.svg);}
+input[type=angle]{background-image: url(../images/fa-svg/regular/drafting-compass.svg);}
+input[type=shape]{background-image: url(../images/fa-svg/regular/shapes.svg);}
+input[type$=list]{background-image: url(../images/fa-svg/regular/list.svg);}
