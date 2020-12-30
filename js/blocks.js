@@ -66,6 +66,14 @@ class WBBlock extends HTMLElement {
     return window.runtime[this.ns][this.fn];
   }
 
+  get locals(){
+    return this._locals;
+  }
+
+  set locals(val){
+    this._locals = val;
+  }
+
   get body() {
     return this._body;
   }
@@ -239,12 +247,12 @@ class WBHat extends HTMLElement {
       position: absolute;
       margin: 0;
       padding: 0;
-      left: 25px;
+      width: 100px;
+      height: 12px;
+      left: 5px;
       top: -12px;
+      overflow: hidden;
     }`;
-  }
-  render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 0 c 20 -7 11 0 40 0"></path></svg>`;
   }
 }
 WBHat = define(WBHat);
@@ -408,7 +416,7 @@ class WBTrigger extends WBBlock {
       border-color: #CEBD3E;
       border-width: 2px;
       border-style: solid;
-      margin: 5px 5px 2px 2px;
+      margin: 5px 5px 12px 2px;
       padding-left: 10px;
       padding-bottom: 14px;
       position: relative;

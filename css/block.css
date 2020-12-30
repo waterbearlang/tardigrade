@@ -12,6 +12,8 @@ wb-contains{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 /* Context has disclosure twisties, so a little different from other blocks */
@@ -29,3 +31,25 @@ wb-step header, wb-value header, wb-trigger header{
   display: inline;
 }
 
+/* wb-hat needs ::before */
+
+wb-hat::before{
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 100px;
+  left: -15px;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 100%;
+}
+
+/* header within a block */
+
+wb-step header, wb-context header, wb-trigger header, wb-value header{
+  display: inline-block;
+  padding: 0.3em 0.5em;
+}
