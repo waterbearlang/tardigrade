@@ -6,7 +6,7 @@ sound{
   // and synths differently from instrumetal
   // notes and chords. Gah!
 
-  synth:Sound(wave:WaveChoice, attack:Number, release:Number){
+  synth:Sound(wave:WaveChoice, attack:Float, release:Float){
     Sound.synth(wave, attack, release)
   }
 

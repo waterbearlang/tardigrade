@@ -3,9 +3,9 @@ const { define, html, render } = heresy;
 
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
-  angleunit: ["degrees", "radians"],
-  edgechoice:  ["pass", "bounce", "wrap", "stop"],
-  wavechoice: ["sine", "saw", "square", "triangle", "pulse"]
+  AngleUnit: ["degrees", "radians"],
+  EdgeChoice: ["pass", "bounce", "wrap", "stop"],
+  WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
 
 //
@@ -18,7 +18,7 @@ const selectChoices = {
 class WBBlock extends HTMLElement {
   static create(props) {
     props = props || {};
-    const obj = this.new();
+    const obj = document.createElement(this.tagName);
     Object.keys(props).forEach(key => {
       obj[key] = props[key];
     });
@@ -35,11 +35,11 @@ class WBBlock extends HTMLElement {
   set ns(val) {
     this.setAttribute("ns", val);
   }
-  get fn() {
-    return this.getAttribute("fn");
+  get name() {
+    return this.getAttribute("name");
   }
-  set fn(val) {
-    this.setAttribute("fn", val);
+  set name(val) {
+    this.setAttribute("name", val);
   }
   get value() {
     return this._value;
@@ -63,14 +63,14 @@ class WBBlock extends HTMLElement {
   }
 
   get function() {
-    return window.runtime[this.ns][this.fn];
+    return window.runtime[this.ns][this.name];
   }
 
-  get locals(){
+  get locals() {
     return this._locals;
   }
 
-  set locals(val){
+  set locals(val) {
     this._locals = val;
   }
 
@@ -90,43 +90,44 @@ class WBBlock extends HTMLElement {
     this._params = val;
   }
 
+  get choices(){
+    return selectChoices[this.type];
+  }
+
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
     return this.params.map(param => {
       // console.log("map parameter: %o", param);
-      const type = param.type.toLowerCase();
-      if (["text", "number", "integer", "float", "color"].includes(type)) {
-        return WBInputParam.create({ fn: param.name, type: type });
+      const type = param.type;
+      if (["Text", "Integer", "Float", "Colour"].includes(type)) {
+        return WBInputParam.create(param);
       }
-      if (type === "truth") {
-        return WBTruthParam({ fn: param.name, type: type });
+      if (type === "Truth") {
+        return WBTruthParam.create(param);
       }
-      if (["angleunit", "edgechoice", "wavechoice"].includes(type)){
-        return WBSelectParam.create({
-          fn: param.name,
-          choices: selectChoices[type]
-        });
+      if (["AngleUnit", "EdgeChoice", "WaveChoice"].includes(type)) {
+        // console.log("%s: %s", type, selectChoices[type]);
+        return WBSelectParam.create(param);
       }
-      if (["vector", "image", "sprite", "angle", "shape"].includes(type)) {
-        return WBBlockParam.create({ fn: param.name, blocktype: type });
+      if (["Vector", "Image", "Sprite", "Angle", "Shape"].includes(type)) {
+        return WBBlockParam.create(param);
       }
-      if (type.includes('list')){
+      if (type.includes("List")) {
         // List types exist for all primitive types, for struct types, and even for other list types.
         // Some list types can be late-bound, so "list of what" is not known until parameters
         // are added
-        return WBBlockParam.create({ fn: param.name, blocktype: type });
+        return WBBlockParam.create(param);
       }
-      if (type === 'type'){
+      if (type === "Type") {
         // late bound type, depends on the type of argument used
-        // for WB this will be handled in the interface for inserting arguments 
+        // for WB this will be handled in the interface for inserting arguments
         // (whether by click, drag-and-drop, cut-and-paste, undo/redo or whatevs)
-        return WBBlockParam.create({ fn: param.name, blocktype: type });
+        return WBBlockParam.create(param);
       }
       console.error("Unrecognized parameter type: %s", param.type);
       throw new Error("Unrecognized parameter type: " + param.type);
     });
   }
-
 }
 
 class WBInputParam extends WBBlock {
@@ -138,11 +139,15 @@ class WBInputParam extends WBBlock {
   }
   render() {
     return this
-      .html`${this.fn} <input type="${this.type}" value="${this.value}" >`;
+      .html`${this.name} <input type="${this.type}" value="${this.value}" >`;
   }
 }
-WBInputParam = define(WBInputParam);
-
+try{
+  WBInputParam = define(WBInputParam);
+}catch(e){
+  console.error('problem defining WBInputParam');
+  console.trace(e);
+}
 
 class WBTruthParam extends WBBlock {
   static get name() {
@@ -152,28 +157,45 @@ class WBTruthParam extends WBBlock {
     return "wb-truth-param";
   }
   render() {
-    return this.html`${this.fn} <checkbox type="boolean" ${
+    return this.html`${this.name} <checkbox type="boolean" ${
       this.value ? "checked" : ""
     } >`;
   }
 }
-WBTruthParam = define(WBTruthParam);
+try{
+  WBTruthParam = define(WBTruthParam);
+}catch(e){
+  console.error('problem defining WBTruthParam');
+  console.trace(e);
+}
 
 class WBSelectParam extends WBBlock {
-  static get name(){
+  static get name() {
     return "WBSelectParam";
   }
-  static get tagName(){
+  static get tagName() {
     return "wb-select-param";
   }
-  render(){
-    const obj = document.createElement('select');
-    obj.innerHTML = this.choices.map(choice => `<option value="${choice}" ${this.value === choice ? "selected" : ""}>`).join('');
+  render() {
+    const obj = document.createElement("select");
+    obj.innerHTML = this.choices
+      .map(
+        choice =>
+          `<option value="${choice}" ${
+            this.value === choice ? "selected" : ""
+          }>`
+      )
+      .join("");
     return obj;
   }
 }
-WBSelectParam = define(WBSelectParam);
-
+try{
+  WBSelectParam = define(WBSelectParam);
+}catch(e){
+  console.error('problem defining WBTruthParam');
+  console.trace(e);
+}
+  
 //
 // WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
 //
@@ -185,18 +207,17 @@ class WBBlockParam extends WBBlock {
   static get tagName() {
     return "wb-block-param";
   }
-  get blocktype() {
-    return this.getAttribute("blocktype");
-  }
-  set blocktype(val) {
-    this.setAttribute("blocktype", val);
-  }
   render() {
     return this
-      .html`${this.fn} <input type="${this.blocktype}" readonly title="drag a ${this.blocktype} block here">`;
+      .html`${this.name} <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
   }
 }
-WBBlockParam = define(WBBlockParam);
+try{
+  WBBlockParam = define(WBBlockParam);
+}catch(e){
+  console.error('problem defining WBBlockParam');
+  console.trace(e);
+}
 
 //
 // WBTab - makes the tab at the top of a block. Purely decorative.
@@ -215,7 +236,7 @@ class WBTab extends HTMLElement {
       position: absolute;
       margin: 0;
       padding: 0;
-      left: 25px;
+      left: 15px;
       top: -12px;
     }`;
   }
@@ -228,7 +249,12 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-WBTab = define(WBTab);
+try{
+  WBTab = define(WBTab);
+}catch(e){
+  console.error('problem defining WBTab');
+  console.trace(e);
+}
 
 //
 // WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
@@ -255,7 +281,12 @@ class WBHat extends HTMLElement {
     }`;
   }
 }
-WBHat = define(WBHat);
+try{
+  WBHat = define(WBHat);
+}catch(e){
+  console.error('problem defining WBHat');
+  console.trace(e);
+}
 
 //
 // WBSlot - makes the indent at the bottom of a block
@@ -276,7 +307,7 @@ class WBSlot extends HTMLElement {
       display: block;
       width: 40px;
       height: 12px;
-      left: 25px;
+      left: 15px;
       bottom: 0px;
       fill: white;
     }`;
@@ -290,7 +321,97 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-WBSlot = define(WBSlot);
+try{
+  WBSlot = define(WBSlot);
+}catch(e){
+  console.error('problem defining WBSlot');
+  console.trace(e);
+}
+
+//
+// WBLocals - holds variables that are local to a block
+//
+
+class WBLocals extends HTMLElement {
+  static get name() {
+    return "WBLocals";
+  }
+  static get tagName() {
+    return "wb-locals";
+  }
+  static style(WBLocals) {
+    return `${WBLocals}{
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      background-color: white;
+      padding: 1px;
+      border-radius: 5px;
+    }`;
+  }
+}
+try{
+  WBLocals = define(WBLocals);
+}catch(e){
+  console.error('problem defining WBLocals');
+  console.trace(e);
+}
+
+//
+// WBReturns - holds the result of a block that can be used by subsequent blocks
+//
+class WBReturns extends HTMLElement {
+  static get name(){
+    return "WBReturns";
+  }
+  static get tagName(){
+    return "wb-returns";
+  }
+  static style(WBReturns){
+    return `${WBReturns}{
+      position: relative;
+      display: inline-block;
+      padding: 1px;
+      background-color: white;
+      border-radius: 5px;
+    }`;
+  }
+}
+
+//
+// WBValue - standalone values
+//
+
+class WBValue extends WBBlock {
+  static get name() {
+    return "WBValue";
+  }
+  static get tagName() {
+    return "wb-value";
+  }
+
+  static style(WBValue) {
+    return `${WBValue}{
+      display: inline-block;
+      border-radius: 5px;
+      border-style: solid;
+      padding: 5px;
+      padding-left: 1.5em;
+      background: left / 1em no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
+      margin-bottom: 5px;
+    }`;
+  }
+
+  render() {
+    return this.html`${this.name}`;
+  }
+}
+try{
+  window.WBValue = define(WBValue);
+}catch(e){
+  console.error('problem defining WBValue');
+  console.trace(e);
+}
 
 //
 // WBStep - the workhorse of Waterbear
@@ -321,30 +442,17 @@ class WBStep extends WBBlock {
   }
 
   render() {
-    const params = this.mapParams();
-    switch (params.length) {
-      case 0:
-        return this.html`<wb-tab/><header>${this.fn}</header><wb-slot/>`;
-      case 1:
-        return this
-          .html`<wb-tab/><header>${this.fn} ${params[0]}</header><wb-slot/>`;
-      case 2:
-        return this
-          .html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]}</header><wb-slot/>`;
-      case 3:
-        return this
-          .html`<wb-tab/><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header><wb-slot/>`;
-      default:
-        console.error(
-          "Unsupported number of parameters, use an object or array parameter instaed."
-        );
-        throw new Error(
-          "Unsupported number of parameters, use an object or array parameter instead."
-        );
-    }
+    return this.html`<wb-tab/><header>${
+      this.name
+    } ${this.mapParams()}</header><wb-slot/>`;
   }
 }
-WBStep = define(WBStep);
+try{
+  window.WBStep = define(WBStep);
+}catch(e){
+  console.error('problem defining WBStep');
+  console.trace(e);
+}
 
 //
 // WBContext - a container for steps (and a step itself)
@@ -374,27 +482,17 @@ class WBContext extends WBBlock {
     }`;
   }
   render() {
-    const params = this.mapParams();
-    switch (params.length) {
-      case 0:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn}</header></summary><wb-contains></wb-contains></details><wb-slot/>`;
-      case 1:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
-      case 2:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]} ${params[1]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
-      case 3:
-        return this.html`<wb-tab/><details open><summary><header>${this.fn} ${params[0]} ${params[1]} ${params[2]}</header></summary><wb-contains></wb-contains></details><wb-slot/>`
-      default:
-        console.error(
-          "Unsupported number of parameters, use an object or array parameter instaed."
-        );
-        throw new Error(
-          "Unsupported number of parameters, use an object or array parameter instead."
-        );
-    }
+    return this.html`<wb-tab/><details open><summary><header>${
+      this.name
+    } ${this.mapParams()}</header><wb-slot/></summary><wb-contains /></details><wb-slot/>`;
   }
 }
-WBContext = define(WBContext);
+try{
+  window.WBContext = define(WBContext);
+}catch(e){
+  console.error('problem defining WBContext');
+  console.trace(e);
+}
 
 //
 // WBTrigger - a starting point for a script, fired by an event occurring
@@ -424,12 +522,26 @@ class WBTrigger extends WBBlock {
     }`;
   }
   render() {
-    return this.html`<wb-hat/><details open><summary><header>${this.fn}</header></summary><wb-contains></wb-contains></details>`;
+    let locals;
+    if (this.locals.length){
+      locals = new WBLocals();
+      this.locals.forEach(value => {
+        value.ns = this.ns;
+        locals.appendChild(WBValue.create(value));
+      });
+    }
+    return this
+      .html`<wb-hat/><details open><summary><header>${this.name}</header>${locals}<wb-slot/></summary><wb-contains></wb-contains></details>`;
   }
 }
-WBTrigger = define(WBTrigger);
+try{
+  window.WBTrigger = define(WBTrigger);
+}catch(e){
+  console.error('problem defining WBTrigger');
+  console.trace(e);
+}
 
 // Attribution for Font Awesome icons
-console.log(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
+console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license (Commercial License)
-`)
+`);

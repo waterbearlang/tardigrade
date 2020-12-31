@@ -1,6 +1,6 @@
 stage {
   // Static method
-  clearToColor:Color(color:Color){
+  clearToColor:Colour(color:Colour){
     Stage.background(color)
   }
 }

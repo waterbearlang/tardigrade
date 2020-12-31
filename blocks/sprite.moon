@@ -1,6 +1,6 @@
 sprite{
 
-  spriteFromImages:Sprite(images:Image[]){
+  spriteFrom:Sprite(images:Image[]){
     Sprite.spriteFromImages(images)
   }
 
@@ -86,7 +86,7 @@ sprite{
     sprite.applyForce(force)
   }
 
-  setEdgeBehavior:Sprite(sprite:Sprite, behavior:edgeChoice){
+  setEdgeBehavior:Sprite(sprite:Sprite, behavior:EdgeChoice){
     sprite.setEdgeBehavior(behavior)
   }
 

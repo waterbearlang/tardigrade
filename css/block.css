@@ -19,15 +19,16 @@ wb-contains{
 
 /* Context has disclosure twisties, so a little different from other blocks */
 
-wb-context header{
+wb-context header, wb-trigger header{
   display: inline;
 }
 
-wb-context summary{
+wb-context summary, wb-trigger summary{
   padding: 0.2em;
+  padding-bottom: 1em;
 }
 
-wb-step header, wb-value header, wb-trigger header{
+wb-step header, wb-value header{
   padding: 0.2em;
   display: inline;
 }
@@ -48,11 +49,31 @@ wb-hat::before{
   border-radius: 100%;
 }
 
+/* slot within details */
+summary{
+  position: relative;
+}
+
+summary > wb-slot{
+  display: none;
+}
+
+details[open] > summary > wb-slot{
+  display: inline-block;
+  bottom: 2px;
+}
+
 /* header within a block */
 
 wb-step header, wb-context header, wb-trigger header, wb-value header{
   display: inline-block;
   padding: 0.3em 0.5em;
+}
+
+/* values within locals */
+wb-locals > wb-value{
+  margin-bottom: 0;
+  margin-right: 1px;
 }
 
 /* Icons for types */
@@ -61,14 +82,14 @@ wb-block-param > input, wb-input-param > input{
   background: left / contain no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
 }
 
-input[type=text]{background-image: url(../images/fa-svg/regular/text.svg);}
-input[type=integer]{background-image: url(../images/fa-svg/regular/abacus.svg);}
-input[type=float]{background-image: url(../images/fa-svg/regular/calculator.svg);}
-input[type=number]{background-image: url(../images/fa-svg/regular/sigma.svg);}
-input[type=color]{background-image: url(../images/fa-svg/regular/palette.svg);}
-input[type=vector]{background-image: url(../images/fa-svg/regular/crosshairs.svg);}
-input[type=image]{background-image: url(../images/fa-svg/regular/image.svg);}
-input[type=sprite]{background-image: url(../images/fa-svg/regular/images.svg);}
-input[type=angle]{background-image: url(../images/fa-svg/regular/drafting-compass.svg);}
-input[type=shape]{background-image: url(../images/fa-svg/regular/shapes.svg);}
-input[type$=list]{background-image: url(../images/fa-svg/regular/list.svg);}
+input[type=Text],wb-value[returnType=Text]{background-image: url(../images/fa-svg/regular/text.svg);}
+input[type=Integer],wb-value[returnType=Integer]{background-image: url(../images/fa-svg/regular/abacus.svg);}
+input[type=Float],wb-value[returnType=Float]{background-image: url(../images/fa-svg/regular/calculator.svg);}
+input[type=Truth],wb-value[returnType=Truth]{background-image: url(../images/fa-svg/regular/light-switch.svg);}
+input[type=Colour],wb-value[returnType=Colour]{background-image: url(../images/fa-svg/regular/palette.svg);}
+input[type=Vector],wb-value[returnType=Vector]{background-image: url(../images/fa-svg/regular/crosshairs.svg);}
+input[type=Image],wb-value[returnType=Image]{background-image: url(../images/fa-svg/regular/image.svg);}
+input[type=Sprite],wb-value[returnType=Sprite]{background-image: url(../images/fa-svg/regular/images.svg);}
+input[type=Angle],wb-value[returnType=Angle]{background-image: url(../images/fa-svg/regular/drafting-compass.svg);}
+input[type=Shape],wb-value[returnType=Shape]{background-image: url(../images/fa-svg/regular/shapes.svg);}
+input[type$=List],wb-value[returnType$=List]{background-image: url(../images/fa-svg/regular/list.svg);}

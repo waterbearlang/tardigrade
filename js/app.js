@@ -3,28 +3,27 @@ import heresy from "../lib/heresy.min.js";
 import * as R from "../lib/ramda.min.js";
 import * as immer from "../lib/immer.min.js";
 import dragula from "../lib/dragula.min.js";
+// import { WBStep, WBContext, WBTrigger, WBValue } from "./blocks.js";
+
+const blocks = {
+  Step: window.WBStep,
+  Context: window.WBContext,
+  Trigger: window.WBTrigger,
+  Value: window.WBValue
+};
 
 //console.log({ immer, R, parse, dragula, define, ref, render, html });
 
 window.runtime = {};
 
-const parseTreeToAST = parseTree => {
-  console.assert(
-    parseTree.type === "Namespace",
-    "Parse tree must be a namespace"
-  );
-  const name = parseTree.name;
-  const ast = {};
-  parseTree.values
-    .filter(val => val.type !== "Comment")
-    .forEach(val => (ast[val.name] = val));
-  return [name, ast];
-};
-
 const processScript = async (script, menu) => {
-  let parseTree;
+  let parseList;
   try{
-    parseTree = parse(script);
+    parseList = parse(script);
+  console.assert(
+    parseList.type === "Namespace",
+    "Parse list must be a namespace"
+  );
   }catch(e){
     let scriptName = script.split('\n')[0].split(' ')[0];
     console.error('Problem processing script %s', scriptName);
@@ -33,59 +32,23 @@ const processScript = async (script, menu) => {
     console.error(e.message);
     return;
   }
-  const [name, ast] = parseTreeToAST(parseTree);
-  window.runtime[name] = ast;
-  buildBlockMenu(name, ast, menu);
+  const ns = parseList.name;
+  const blocks = parseList.values.filter(block => block.type !== 'Comment');
+  window.runtime[ns] = blocks;
+  buildBlockMenu(ns, blocks, menu);
 };
 
 
-const builder = (name, key, fn) => {
+const builder = (ns, block) => {
   const target = document.createElement("div");
-  switch(fn.type.toLowerCase()){
-    case 'step':
-      heresy.render(
-        target,
-        heresy.html`<wb-step ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
-      );
-      break;
-    case 'context':
-      heresy.render(
-        target,
-        heresy.html`<wb-context ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
-      );
-      break;
-    case 'trigger':
-      heresy.render(
-        target,
-        heresy.html`<wb-trigger ns="${name}" fn="${key}" body=${fn.body} />`
-      );
-      break;
-    case 'value':
-      heresy.render(
-        target,
-        heresy.html`<wb-value ns="${name}" fn="${key}" returntype="${fn.returnType}" body=${fn.body} params=${fn.params} />`
-      );
-      break;
-    case 'comment':
-      // do nothing
-      break;
-    default:
-      console.warn('Unexpected block type: %s', fn.type);
-      break;
-  }
-  if (target.firstChild) {
-    console.info('built target: %o', target.firstChild);
-    return target.firstChild;
-  } else {
-    console.error("Failed to build step for %s: %o", fn.name, fn);
-    throw new Error(`Failed to build step for ${fn.name}`);
-  }
+  block.ns = ns;
+  return blocks[block.type].create(block);
 }
 
-const buildBlockMenu = (name, ast, menu) => {
-  Object.keys(ast).forEach(key => {
-    menu.appendChild(builder(name, key, ast[key]));
-  });
+const buildBlockMenu = (ns, parseList, menu) => {
+  const frag = document.createDocumentFragment();
+  parseList.forEach(block=> frag.appendChild(builder(ns, block)));
+  menu.appendChild(frag);
 };
 
 const processError = script => {

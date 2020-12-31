@@ -28,6 +28,8 @@
 [ns="geolocation"]{ --hue: 300; }
 [ns="size"]{ --hue: 45; }
 [ns="date"]{ --hue: 55; }
+[ns="angle"]{ --hue: 68; }
+[ns="list"]{ --hue: 288; }
 
 [ns]{
     --color: hsl(var(--hue), 50%, 50%);

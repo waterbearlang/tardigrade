@@ -15,6 +15,11 @@ control {
     Control.repeat(expressions)
   }
 
+  pi:Float <= Math.PI();
+
+  true:Truth <= Truth.true();
+  false:Truth <= Truth.false();
+
   context loopOver (list:Type[]){
     locals{
       index:Integer <= Loop.index;
