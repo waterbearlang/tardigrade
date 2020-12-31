@@ -90,8 +90,22 @@ class WBBlock extends HTMLElement {
     this._params = val;
   }
 
-  get choices(){
+  get choices() {
     return selectChoices[this.type];
+  }
+
+  wrappedLocals() {
+    // returns locals as elements, wrapped in a <wb-locals> block
+    // if there are no locals, returns undefined
+    let locals;
+    if (this.locals.length) {
+      locals = new WBLocals();
+      this.locals.forEach(value => {
+        value.ns = this.ns;
+        locals.appendChild(WBValue.create(value));
+      });
+    }
+    return locals;
   }
 
   mapParams() {
@@ -142,10 +156,10 @@ class WBInputParam extends WBBlock {
       .html`${this.name} <input type="${this.type}" value="${this.value}" >`;
   }
 }
-try{
+try {
   WBInputParam = define(WBInputParam);
-}catch(e){
-  console.error('problem defining WBInputParam');
+} catch (e) {
+  console.error("problem defining WBInputParam");
   console.trace(e);
 }
 
@@ -162,10 +176,10 @@ class WBTruthParam extends WBBlock {
     } >`;
   }
 }
-try{
+try {
   WBTruthParam = define(WBTruthParam);
-}catch(e){
-  console.error('problem defining WBTruthParam');
+} catch (e) {
+  console.error("problem defining WBTruthParam");
   console.trace(e);
 }
 
@@ -189,13 +203,13 @@ class WBSelectParam extends WBBlock {
     return obj;
   }
 }
-try{
+try {
   WBSelectParam = define(WBSelectParam);
-}catch(e){
-  console.error('problem defining WBTruthParam');
+} catch (e) {
+  console.error("problem defining WBTruthParam");
   console.trace(e);
 }
-  
+
 //
 // WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
 //
@@ -212,10 +226,10 @@ class WBBlockParam extends WBBlock {
       .html`${this.name} <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
   }
 }
-try{
+try {
   WBBlockParam = define(WBBlockParam);
-}catch(e){
-  console.error('problem defining WBBlockParam');
+} catch (e) {
+  console.error("problem defining WBBlockParam");
   console.trace(e);
 }
 
@@ -249,10 +263,10 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-try{
+try {
   WBTab = define(WBTab);
-}catch(e){
-  console.error('problem defining WBTab');
+} catch (e) {
+  console.error("problem defining WBTab");
   console.trace(e);
 }
 
@@ -281,10 +295,10 @@ class WBHat extends HTMLElement {
     }`;
   }
 }
-try{
+try {
   WBHat = define(WBHat);
-}catch(e){
-  console.error('problem defining WBHat');
+} catch (e) {
+  console.error("problem defining WBHat");
   console.trace(e);
 }
 
@@ -321,10 +335,10 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-try{
+try {
   WBSlot = define(WBSlot);
-}catch(e){
-  console.error('problem defining WBSlot');
+} catch (e) {
+  console.error("problem defining WBSlot");
   console.trace(e);
 }
 
@@ -350,10 +364,10 @@ class WBLocals extends HTMLElement {
     }`;
   }
 }
-try{
+try {
   WBLocals = define(WBLocals);
-}catch(e){
-  console.error('problem defining WBLocals');
+} catch (e) {
+  console.error("problem defining WBLocals");
   console.trace(e);
 }
 
@@ -361,13 +375,13 @@ try{
 // WBReturns - holds the result of a block that can be used by subsequent blocks
 //
 class WBReturns extends HTMLElement {
-  static get name(){
+  static get name() {
     return "WBReturns";
   }
-  static get tagName(){
+  static get tagName() {
     return "wb-returns";
   }
-  static style(WBReturns){
+  static style(WBReturns) {
     return `${WBReturns}{
       position: relative;
       display: inline-block;
@@ -406,10 +420,10 @@ class WBValue extends WBBlock {
     return this.html`${this.name}`;
   }
 }
-try{
+try {
   window.WBValue = define(WBValue);
-}catch(e){
-  console.error('problem defining WBValue');
+} catch (e) {
+  console.error("problem defining WBValue");
   console.trace(e);
 }
 
@@ -447,10 +461,10 @@ class WBStep extends WBBlock {
     } ${this.mapParams()}</header><wb-slot/>`;
   }
 }
-try{
+try {
   window.WBStep = define(WBStep);
-}catch(e){
-  console.error('problem defining WBStep');
+} catch (e) {
+  console.error("problem defining WBStep");
   console.trace(e);
 }
 
@@ -484,13 +498,13 @@ class WBContext extends WBBlock {
   render() {
     return this.html`<wb-tab/><details open><summary><header>${
       this.name
-    } ${this.mapParams()}</header><wb-slot/></summary><wb-contains /></details><wb-slot/>`;
+    } ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
   }
 }
-try{
+try {
   window.WBContext = define(WBContext);
-}catch(e){
-  console.error('problem defining WBContext');
+} catch (e) {
+  console.error("problem defining WBContext");
   console.trace(e);
 }
 
@@ -522,22 +536,15 @@ class WBTrigger extends WBBlock {
     }`;
   }
   render() {
-    let locals;
-    if (this.locals.length){
-      locals = new WBLocals();
-      this.locals.forEach(value => {
-        value.ns = this.ns;
-        locals.appendChild(WBValue.create(value));
-      });
-    }
-    return this
-      .html`<wb-hat/><details open><summary><header>${this.name}</header>${locals}<wb-slot/></summary><wb-contains></wb-contains></details>`;
+    return this.html`<wb-hat/><details open><summary><header>${
+      this.name
+    }</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
   }
 }
-try{
+try {
   window.WBTrigger = define(WBTrigger);
-}catch(e){
-  console.error('problem defining WBTrigger');
+} catch (e) {
+  console.error("problem defining WBTrigger");
   console.trace(e);
 }
 

@@ -8,35 +8,35 @@ sprite{
     sprite.copy()
   }
 
-  accelerateBy:Sprite(sprite:Sprite, vector:Vector){
+  accelerate:Sprite(sprite:Sprite, by:Vector){
     sprite.accelerateBy(vector)
   }
 
-  setVelocityTo:Sprite(sprite:Sprite, vector:Vector){
+  setVelocityFor:Sprite(sprite:Sprite, to:Vector){
     sprite.setVelocityTo(vector)
   }
 
-  getVelocity:Vector(sprite:Sprite){
+  getVelocityOf:Vector(sprite:Sprite){
     sprite.getVelocity()
   }
 
-  getSpeed:Vector(sprite:Sprite){
+  getSpeedOf:Vector(sprite:Sprite){
     sprite.getSpeed()
   }
 
-  getPosition:Vector(sprite:Sprite){
+  getPositionOf:Vector(sprite:Sprite){
     sprite.getPosition()
   }
 
-  getAngle:Angle(sprite:Sprite){
+  getAngleOf:Angle(sprite:Sprite){
     sprite.angle()
   }
 
-  rotateBy:Sprite(sprite:Sprite, angle:Angle){
+  rotate:Sprite(sprite:Sprite, by:Angle){
     sprite.rotateBy(angle)
   }
 
-  rotateTo:Sprite(sprite:Sprite){
+  rotate:Sprite(to:Sprite){
     sprite.rotateTo(angle)
   }
 
