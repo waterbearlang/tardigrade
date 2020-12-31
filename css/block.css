@@ -1,7 +1,12 @@
 input{
-  width: 5em;
+  width: 4em;
   margin-left: .4em;
   padding-left: 1.5em;
+  border: 2px inset #333;
+}
+
+input[readonly]{
+  background-color: #CCC;
 }
 
 wb-contains{
@@ -69,6 +74,10 @@ wb-step header, wb-context header, wb-trigger header, wb-value header{
   display: inline-block;
   padding: 0.3em 0.5em;
 }
+
+wb-step > header,
+  display: flex;
+  flex-wrap: nowrap;
 
 /* values within locals */
 wb-locals > wb-value{

@@ -54,13 +54,15 @@ class WBBlock extends HTMLElement {
     }
   }
 
-  get returntype() {
-    return this.getAttribute("returntype");
+  get returnType() {
+    return this.getAttribute("returnType");
   }
 
-  set returntype(val) {
-    this.setAttribute("returntype", val);
+  set returnType(val) {
+    this.setAttribute("returnType", val);
   }
+
+
 
   get function() {
     return window.runtime[this.ns][this.name];
@@ -92,6 +94,10 @@ class WBBlock extends HTMLElement {
 
   get choices() {
     return selectChoices[this.type];
+  }
+
+  returnsElement(){
+    return WBValue.create({type: 'Value', returnType: this.returnType, name: this.returnName || this.name, value: 'TBD'});
   }
 
   wrappedLocals() {
@@ -388,6 +394,7 @@ class WBReturns extends HTMLElement {
       padding: 1px;
       background-color: white;
       border-radius: 5px;
+      margin-left: 1em;
     }`;
   }
 }
@@ -458,7 +465,7 @@ class WBStep extends WBBlock {
   render() {
     return this.html`<wb-tab/><header>${
       this.name
-    } ${this.mapParams()}</header><wb-slot/>`;
+    } ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
   }
 }
 try {
