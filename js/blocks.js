@@ -24,11 +24,6 @@ class WBBlock extends HTMLElement {
     });
     return obj;
   }
-  static style(WBParam) {
-    return `${WBParam} {
-      display: inline-block;
-    }`;
-  }
   get ns() {
     return this.getAttribute("ns");
   }
@@ -61,8 +56,6 @@ class WBBlock extends HTMLElement {
   set returnType(val) {
     this.setAttribute("returnType", val);
   }
-
-
 
   get function() {
     return window.runtime[this.ns][this.name];
@@ -97,7 +90,7 @@ class WBBlock extends HTMLElement {
   }
 
   returnsElement(){
-    return WBValue.create({type: 'Value', returnType: this.returnType, name: this.returnName || this.name, value: 'TBD'});
+    return WBValue.create({type: 'Value', returnType: this.returnType, ns: this.ns, name: this.returnName || this.name, value: 'TBD'});
   }
 
   wrappedLocals() {
@@ -162,12 +155,7 @@ class WBInputParam extends WBBlock {
       .html`${this.name} <input type="${this.type}" value="${this.value}" >`;
   }
 }
-try {
-  WBInputParam = define(WBInputParam);
-} catch (e) {
-  console.error("problem defining WBInputParam");
-  console.trace(e);
-}
+WBInputParam = define(WBInputParam);
 
 class WBTruthParam extends WBBlock {
   static get name() {
@@ -182,12 +170,7 @@ class WBTruthParam extends WBBlock {
     } >`;
   }
 }
-try {
-  WBTruthParam = define(WBTruthParam);
-} catch (e) {
-  console.error("problem defining WBTruthParam");
-  console.trace(e);
-}
+WBTruthParam = define(WBTruthParam);
 
 class WBSelectParam extends WBBlock {
   static get name() {
@@ -209,12 +192,7 @@ class WBSelectParam extends WBBlock {
     return obj;
   }
 }
-try {
-  WBSelectParam = define(WBSelectParam);
-} catch (e) {
-  console.error("problem defining WBTruthParam");
-  console.trace(e);
-}
+WBSelectParam = define(WBSelectParam);
 
 //
 // WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
@@ -232,12 +210,7 @@ class WBBlockParam extends WBBlock {
       .html`${this.name} <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
   }
 }
-try {
-  WBBlockParam = define(WBBlockParam);
-} catch (e) {
-  console.error("problem defining WBBlockParam");
-  console.trace(e);
-}
+WBBlockParam = define(WBBlockParam);
 
 //
 // WBTab - makes the tab at the top of a block. Purely decorative.
@@ -250,16 +223,6 @@ class WBTab extends HTMLElement {
   static get tagName() {
     return "wb-tab";
   }
-  static style(WBTab) {
-    return `${WBTab}{
-      display: inline-block;
-      position: absolute;
-      margin: 0;
-      padding: 0;
-      left: 15px;
-      top: -12px;
-    }`;
-  }
   render() {
     return this.svg`<svg width="40" height="12"><path d="M 0 12 
     a 6 6 90 0 0 6 -6 
@@ -269,12 +232,7 @@ class WBTab extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-try {
-  WBTab = define(WBTab);
-} catch (e) {
-  console.error("problem defining WBTab");
-  console.trace(e);
-}
+WBTab = define(WBTab);
 
 //
 // WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
@@ -287,26 +245,8 @@ class WBHat extends HTMLElement {
   static get tagName() {
     return "wb-hat";
   }
-  static style(WBHat) {
-    return `${WBHat}{
-      display: inline-block;
-      position: absolute;
-      margin: 0;
-      padding: 0;
-      width: 100px;
-      height: 12px;
-      left: 5px;
-      top: -12px;
-      overflow: hidden;
-    }`;
-  }
 }
-try {
-  WBHat = define(WBHat);
-} catch (e) {
-  console.error("problem defining WBHat");
-  console.trace(e);
-}
+WBHat = define(WBHat);
 
 //
 // WBSlot - makes the indent at the bottom of a block
@@ -319,19 +259,6 @@ class WBSlot extends HTMLElement {
   static get tagName() {
     return "wb-slot";
   }
-  static style(WBSlot) {
-    return `${WBSlot}{
-      position: absolute;
-      margin: 0;
-      padding: 0;
-      display: block;
-      width: 40px;
-      height: 12px;
-      left: 15px;
-      bottom: 0px;
-      fill: white;
-    }`;
-  }
   render() {
     return this.svg`<svg width="40" height="12"><path d="M 0 12 
     a 6 6 90 0 0 6 -6 
@@ -341,15 +268,10 @@ class WBSlot extends HTMLElement {
     a 6 6 90 0 0 6 6"></path></svg>`;
   }
 }
-try {
-  WBSlot = define(WBSlot);
-} catch (e) {
-  console.error("problem defining WBSlot");
-  console.trace(e);
-}
+WBSlot = define(WBSlot);
 
 //
-// WBLocals - holds variables that are local to a block
+// WBLocals - holds values that are local to a block
 //
 
 class WBLocals extends HTMLElement {
@@ -359,23 +281,8 @@ class WBLocals extends HTMLElement {
   static get tagName() {
     return "wb-locals";
   }
-  static style(WBLocals) {
-    return `${WBLocals}{
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      background-color: white;
-      padding: 1px;
-      border-radius: 5px;
-    }`;
-  }
 }
-try {
-  WBLocals = define(WBLocals);
-} catch (e) {
-  console.error("problem defining WBLocals");
-  console.trace(e);
-}
+WBLocals = define(WBLocals);
 
 //
 // WBReturns - holds the result of a block that can be used by subsequent blocks
@@ -386,16 +293,6 @@ class WBReturns extends HTMLElement {
   }
   static get tagName() {
     return "wb-returns";
-  }
-  static style(WBReturns) {
-    return `${WBReturns}{
-      position: relative;
-      display: inline-block;
-      padding: 1px;
-      background-color: white;
-      border-radius: 5px;
-      margin-left: 1em;
-    }`;
   }
 }
 
@@ -410,29 +307,11 @@ class WBValue extends WBBlock {
   static get tagName() {
     return "wb-value";
   }
-
-  static style(WBValue) {
-    return `${WBValue}{
-      display: inline-block;
-      border-radius: 5px;
-      border-style: solid;
-      padding: 5px;
-      padding-left: 1.5em;
-      background: left / 1em no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
-      margin-bottom: 5px;
-    }`;
-  }
-
   render() {
     return this.html`${this.name}`;
   }
 }
-try {
-  window.WBValue = define(WBValue);
-} catch (e) {
-  console.error("problem defining WBValue");
-  console.trace(e);
-}
+window.WBValue = define(WBValue);
 
 //
 // WBStep - the workhorse of Waterbear
@@ -445,35 +324,13 @@ class WBStep extends WBBlock {
   static get tagName() {
     return "wb-step";
   }
-
-  static style(WBStep) {
-    return `${WBStep} {
-      display: inline-block;
-      background-color: #EDE378;
-      border-radius: 5px;
-      border-color: #CEBD3E;
-      border-width: 2px;
-      border-style: solid;
-      margin: 5px 5px 2px 2px;
-      padding-left: 10px;
-      padding-bottom: 14px;
-      position: relative;
-      z-index: 0;    
-    }`;
-  }
-
   render() {
     return this.html`<wb-tab/><header>${
       this.name
     } ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
   }
 }
-try {
-  window.WBStep = define(WBStep);
-} catch (e) {
-  console.error("problem defining WBStep");
-  console.trace(e);
-}
+window.WBStep = define(WBStep);
 
 //
 // WBContext - a container for steps (and a step itself)
@@ -486,34 +343,13 @@ class WBContext extends WBBlock {
   static get tagName() {
     return "wb-context";
   }
-
-  static style(WBContext) {
-    return `${WBContext} {
-      display: inline-block;
-      background-color: #EDE378;
-      border-radius: 5px;
-      border-color: #CEBD3E;
-      border-width: 2px;
-      border-style: solid;
-      margin: 5px 5px 2px 2px;
-      padding-left: 10px;
-      padding-bottom: 14px;
-      position: relative;
-      z-index: 0;    
-    }`;
-  }
   render() {
     return this.html`<wb-tab/><details open><summary><header>${
       this.name
     } ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
   }
 }
-try {
-  window.WBContext = define(WBContext);
-} catch (e) {
-  console.error("problem defining WBContext");
-  console.trace(e);
-}
+window.WBContext = define(WBContext);
 
 //
 // WBTrigger - a starting point for a script, fired by an event occurring
@@ -526,34 +362,13 @@ class WBTrigger extends WBBlock {
   static get tagName() {
     return "wb-trigger";
   }
-
-  static style(WBTrigger) {
-    return `${WBTrigger} {
-      display: inline-block;
-      background-color: #EDE378;
-      border-radius: 5px;
-      border-color: #CEBD3E;
-      border-width: 2px;
-      border-style: solid;
-      margin: 5px 5px 12px 2px;
-      padding-left: 10px;
-      padding-bottom: 14px;
-      position: relative;
-      z-index: 0;    
-    }`;
-  }
   render() {
     return this.html`<wb-hat/><details open><summary><header>${
       this.name
     }</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
   }
 }
-try {
-  window.WBTrigger = define(WBTrigger);
-} catch (e) {
-  console.error("problem defining WBTrigger");
-  console.trace(e);
-}
+window.WBTrigger = define(WBTrigger);
 
 // Attribution for Font Awesome icons
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com

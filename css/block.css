@@ -1,3 +1,64 @@
+/* Value blocks */
+wb-value{
+  display: inline-block;
+  border-radius: 5px;
+  border-style: solid;
+  padding: 5px;
+  padding-left: 1.5em;
+  background: left / 1em no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
+  margin-bottom: 5px;
+}
+
+/* Step blocks */
+wb-step{
+  display: inline-block;
+  background-color: #EDE378;
+  border-radius: 5px;
+  border-color: #CEBD3E;
+  border-width: 2px;
+  border-style: solid;
+  margin: 5px 5px 2px 2px;
+  padding-left: 10px;
+  padding-bottom: 14px;
+  position: relative;
+  z-index: 0;    
+}
+
+/* Context blocks */
+wb-context{
+  display: inline-block;
+  background-color: #EDE378;
+  border-radius: 5px;
+  border-color: #CEBD3E;
+  border-width: 2px;
+  border-style: solid;
+  margin: 5px 5px 2px 2px;
+  padding-left: 10px;
+  padding-bottom: 14px;
+  position: relative;
+  z-index: 0;    
+}
+
+/* Trigger blocks */
+wb-trigger{
+  display: inline-block;
+  background-color: #EDE378;
+  border-radius: 5px;
+  border-color: #CEBD3E;
+  border-width: 2px;
+  border-style: solid;
+  margin: 5px 5px 12px 2px;
+  padding-left: 10px;
+  padding-bottom: 14px;
+  position: relative;
+  z-index: 0;    
+}
+
+/* Parameters */
+wb-param{
+  display: inline-block;
+}
+
 input{
   width: 4em;
   margin-left: .4em;
@@ -102,3 +163,61 @@ input[type=Sprite],wb-value[returnType=Sprite]{background-image: url(../images/f
 input[type=Angle],wb-value[returnType=Angle]{background-image: url(../images/fa-svg/regular/drafting-compass.svg);}
 input[type=Shape],wb-value[returnType=Shape]{background-image: url(../images/fa-svg/regular/shapes.svg);}
 input[type$=List],wb-value[returnType$=List]{background-image: url(../images/fa-svg/regular/list.svg);}
+
+/* Accessories for blocks */
+
+/* top decoration for steps and contexts */
+wb-tab{
+  display: inline-block;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  left: 15px;
+  top: -12px;
+}
+
+/* top decoration for triggers */
+wb-hat{
+  display: inline-block;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100px;
+  height: 12px;
+  left: 5px;
+  top: -12px;
+  overflow: hidden;
+}
+
+/* Indicator for a next block for after steps and contexts and inside contexts and triggers */
+wb-slot{
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  display: block;
+  width: 40px;
+  height: 12px;
+  left: 15px;
+  bottom: 0px;
+  fill: white;
+}
+
+/* Container for values local to a block */
+wb-locals{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  padding: 1px;
+  border-radius: 5px;
+}
+
+/* Container for the single result block of a step or context */
+wb-returns{
+  position: relative;
+  display: inline-block;
+  padding: 1px;
+  background-color: white;
+  border-radius: 5px;
+  margin-left: 1em;
+}
