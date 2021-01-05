@@ -207,7 +207,7 @@ class WBBlockParam extends WBBlock {
   }
   render() {
     return this
-      .html`${this.name} <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
+      .html`<label>${this.name}</label> <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
   }
 }
 WBBlockParam = define(WBBlockParam);
@@ -325,9 +325,9 @@ class WBStep extends WBBlock {
     return "wb-step";
   }
   render() {
-    return this.html`<wb-tab/><header>${
+    return this.html`<wb-tab/><header><span>${
       this.name
-    } ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
+    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
   }
 }
 window.WBStep = define(WBStep);
@@ -344,9 +344,9 @@ class WBContext extends WBBlock {
     return "wb-context";
   }
   render() {
-    return this.html`<wb-tab/><details open><summary><header>${
+    return this.html`<wb-tab/><details open><summary><header><span>${
       this.name
-    } ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
+    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
   }
 }
 window.WBContext = define(WBContext);
@@ -363,9 +363,9 @@ class WBTrigger extends WBBlock {
     return "wb-trigger";
   }
   render() {
-    return this.html`<wb-hat/><details open><summary><header>${
+    return this.html`<wb-hat/><details open><summary><header><span>${
       this.name
-    }</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
+    }</span> </header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
   }
 }
 window.WBTrigger = define(WBTrigger);
