@@ -6,7 +6,16 @@ wb-value{
   padding: 5px;
   padding-left: 1.5em;
   background: left / 1em no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
+}
+
+wb-contains > wb-value{
   margin-bottom: 5px;
+}
+
+wb-returns > wb-value{
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 80%;
 }
 
 /* Step blocks */
@@ -17,11 +26,14 @@ wb-step{
   border-color: #CEBD3E;
   border-width: 2px;
   border-style: solid;
-  margin: 5px 5px 2px 2px;
   padding-left: 10px;
   padding-bottom: 14px;
   position: relative;
   z-index: 0;    
+}
+
+wb-contains > wb-step{
+  margin: 5px 5px 2px 2px;
 }
 
 /* Context blocks */
@@ -32,11 +44,14 @@ wb-context{
   border-color: #CEBD3E;
   border-width: 2px;
   border-style: solid;
-  margin: 5px 5px 2px 2px;
   padding-left: 10px;
   padding-bottom: 14px;
   position: relative;
   z-index: 0;    
+}
+
+wb-contains > wb-context{
+  margin: 5px 5px 2px 2px;
 }
 
 /* Trigger blocks */
@@ -47,11 +62,14 @@ wb-trigger{
   border-color: #CEBD3E;
   border-width: 2px;
   border-style: solid;
-  margin: 5px 5px 12px 2px;
   padding-left: 10px;
   padding-bottom: 14px;
   position: relative;
   z-index: 0;    
+}
+
+wb-contains > wb-trigger{
+  margin: 5px 5px 12px 2px;
 }
 
 /* Parameters */
@@ -219,5 +237,6 @@ wb-returns{
   padding: 1px;
   background-color: white;
   border-radius: 5px;
-  margin-left: 1em;
+  border: 3px inset grey;
+  margin-left: 2em;
 }
