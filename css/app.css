@@ -7,6 +7,8 @@ body {
     "blockmenu script moonshine";
   grid-template-columns: 1fr 2fr 2fr;
   grid-template-rows: 1.6em 1fr 1fr;
+  background-color: black;
+  color: white;
 }
 
 html, body{
@@ -29,6 +31,8 @@ h1{
   display: inline;
   font-size: 1em;
   font-weight: normal;
+  line-height: .4em;
+  vertical-align: text-top;
 }
 
 .filemenu{
