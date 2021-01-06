@@ -56,10 +56,15 @@ const processError = script => {
 const blockScripts = ["control", "sprite", "sound", "vector", "stage", "angle", "list"];
 const blockmenu = document.querySelector('.blockmenu');
 
+function capitalize(word){
+  return word[0].toUpperCase() + word.slice(1);
+}
+
 blockScripts.forEach(name => {
   let menu = document.createElement("details");
+  let title = capitalize(name);
   menu.setAttribute('open', 'true');
-  menu.innerHTML = `<summary class="menu_title">${name}</summary><wb-contains></wb-contains>`;
+  menu.innerHTML = `<summary class="menu_title" ns="${name}" type="${title}">${title}</summary><wb-contains></wb-contains>`;
   blockmenu.appendChild(menu);
   fetch(`/blocks/${name}.moon`).then(response =>
     response.text().then(text => processScript(text, menu.querySelector('wb-contains')))

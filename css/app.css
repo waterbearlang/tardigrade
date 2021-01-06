@@ -102,17 +102,32 @@ h1{
   grid-area: moonshine;
   background-color: #f2eff5;
   background-image: url(/images/backgrounds/graph-paper.svg);
+}
 
 .menu_title{
   display: block;
-  background-color: #234;
-  color: #CED;
+  padding-left: 1.5em;
+  color: #123;
   font-size: 150%;
   font-family: sans-serif;
   list-style: none;
+  background: left / contain no-repeat #CCC url(../images/fa-svg/regular/question-circle.svg);
+  background-image: var(--image);
+  border-bottom: 1px solid #666;
 }
 
 /* Chrome doesn't yet support list-style: none for summary*/
 summary.menu_title::-webkit-details-marker {
   display: none;
+}
+
+.menu_title::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1em;
+  height: 100%;
+  display: inline-block;
+  background-color: var(--color);
 }

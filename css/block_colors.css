@@ -61,10 +61,10 @@
  * and highlighting selected blocks.
  */
 
-[type=number]{ --hue: 225; }
 [type="color"]{ --hue: 15; }
+[type="colour"]{ --hue: 15; }
 [type="text"]{ --hue: 150; }
-[type="boolean"]{ --hue: 165; }
+[type="truth"]{ --hue: 165; }
 [type="sprite"]{ --hue: 105; }
 [type="any"]{ --hue: 0; }
 [type="sound"]{ --hue: 315; }
@@ -98,4 +98,22 @@ wb-expression,
     background-color: hsl(var(--hue), 50%, 75%);
     border-color: hsl(var(--hue), 9%, 52%);
 }
+
+/* And hey, icons too! */
+
+[type=Text],[returnType=Text]{ --image: url(../images/fa-svg/regular/text.svg);}
+[type=Integer],[returnType=Integer]{ --image: url(../images/fa-svg/regular/abacus.svg);}
+[type=Float],[returnType=Float]{ --image: url(../images/fa-svg/regular/calculator.svg);}
+[type=Truth],[returnType=Truth]{ --image: url(../images/fa-svg/regular/light-switch.svg);}
+[type=Colour],[returnType=Colour]{ --image: url(../images/fa-svg/regular/palette.svg);}
+[type=Vector],[returnType=Vector]{ --image: url(../images/fa-svg/regular/crosshairs.svg);}
+[type=Image],[returnType=Image]{ --image: url(../images/fa-svg/regular/image.svg);}
+[type=Sprite],[returnType=Sprite]{ --image: url(../images/fa-svg/regular/images.svg);}
+[type=Angle],[returnType=Angle]{ --image: url(../images/fa-svg/regular/drafting-compass.svg);}
+[type=Shape],[returnType=Shape]{ --image: url(../images/fa-svg/regular/shapes.svg);}
+[type$=List],[returnType$=List]{ --image: url(../images/fa-svg/regular/list.svg);}
+[type=Control]{ --image: url(../images/fa-svg/regular/cogs.svg);}
+[type=Sound],[returnType=Sound]{ --image: url(../images/fa-svg/regular/waveform-path.svg);}
+[type=Stage],[returnType=Stage]{ --image: url(../images/fa-svg/regular/cube.svg);}
+ 
 

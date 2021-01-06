@@ -166,17 +166,7 @@ wb-block-param > input, wb-input-param > input{
   background: left / contain no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
 }
 
-input[type=Text],wb-value[returnType=Text]{background-image: url(../images/fa-svg/regular/text.svg);}
-input[type=Integer],wb-value[returnType=Integer]{background-image: url(../images/fa-svg/regular/abacus.svg);}
-input[type=Float],wb-value[returnType=Float]{background-image: url(../images/fa-svg/regular/calculator.svg);}
-input[type=Truth],wb-value[returnType=Truth]{background-image: url(../images/fa-svg/regular/light-switch.svg);}
-input[type=Colour],wb-value[returnType=Colour]{background-image: url(../images/fa-svg/regular/palette.svg);}
-input[type=Vector],wb-value[returnType=Vector]{background-image: url(../images/fa-svg/regular/crosshairs.svg);}
-input[type=Image],wb-value[returnType=Image]{background-image: url(../images/fa-svg/regular/image.svg);}
-input[type=Sprite],wb-value[returnType=Sprite]{background-image: url(../images/fa-svg/regular/images.svg);}
-input[type=Angle],wb-value[returnType=Angle]{background-image: url(../images/fa-svg/regular/drafting-compass.svg);}
-input[type=Shape],wb-value[returnType=Shape]{background-image: url(../images/fa-svg/regular/shapes.svg);}
-input[type$=List],wb-value[returnType$=List]{background-image: url(../images/fa-svg/regular/list.svg);}
+input,wb-value{background-image: var(--image);}
 
 /* Accessories for blocks */
 
