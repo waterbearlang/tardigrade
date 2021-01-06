@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Waterbear Playground</title>
+    <title>Waterbear</title>
     <!-- import library stylesheets -->
     <link rel="stylesheet" href="lib/dragula.min.css" />
     <!-- import the webpage's stylesheets -->
@@ -15,7 +15,22 @@
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
-    <div class="blockmenu"></div>
+    <section class="branding">
+      <img class="logo" src="images/waterbear_icon_logo.svg">
+      <h1>Waterbear</h1>
+    </section>
+    <section class="filemenu">
+      <button class="file" onclick="openFileMenu()">File</button>
+      <button class="examples" onclick="openExamples()">Examples</button>
+    </section>
+    <section class="runmenu">
+      <button class="run" onclick="runScript()">Run</button>
+      <button class="stop" onclick="stopScript()">Stop</button>
+    </section>
+    <section class="blocks"><div class="blockmenu"></div></div></section>
+    <section class="target"><div class="script"></div></section>
+    <section class="stage"></section>
+    <section class="moonshine"></section>
     <!-- import the webpage's javascript files -->
     <script type="module" src="js/blocks.js"></script>
     <script type="module" src="js/dragging.js"></script>

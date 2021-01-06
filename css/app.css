@@ -1,16 +1,103 @@
 body {
   font-family: helvetica, arial, sans-serif;
-  margin: 2em;
+  display: grid;
+  grid-template-areas:
+    "branding filemenu runmenu"
+    "blockmenu script stage"
+    "blockmenu script moonshine";
+  grid-template-columns: 1fr 2fr 2fr;
+  grid-template-rows: 1.6em 1fr 1fr;
 }
 
-h1 {
-  font-style: italic;
-  color: #373fff;
+html, body{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.branding{
+  grid-area: branding;
+}
+
+img.logo{
+  height: 1.6em;
+}
+
+h1{
+  display: inline;
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.filemenu{
+  grid-area: filemenu;
+}
+
+.runmenu{
+  grid-area: runmenu;
+}
+
+.runmenu button, .filement button{
+  height: 100%;
+  border-radius: 5px;
+  border: 3px outset grey;
+}
+
+.blocks{
+  grid-area: blockmenu;
+  overflow: hidden;
 }
 
 .blockmenu{
-  max-width: 20%;
+  height: 100%;
+  overflow: auto;
+  background-color: #f2eff5;
+  background-image: url(/images/backgrounds/floating-cogs.svg);
 }
+
+.blockmenu > details > wb-contains{
+  background-color: transparent;
+}
+
+.target{
+  grid-area: script;
+  overflow: auto;
+}
+
+.script{
+  height: 100%;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: auto;
+  background-color: #f2eff5;
+  background-image: url(/images/backgrounds/jigsaw.svg);
+}
+
+.script:empty{
+  align-items: center;
+  justify-content: center;
+}
+
+.script:empty::before{
+  flex: 0 0 auto;
+  content: "Drag Blocks Here";
+  color: #668;
+  font-size: 2em;
+}
+
+.stage{
+  grid-area: stage;
+  background-color: #f2eff5;
+  background-image: url(/images/backgrounds/topography.svg);
+}
+
+.moonshine{
+  grid-area: moonshine;
+  background-color: #f2eff5;
+  background-image: url(/images/backgrounds/graph-paper.svg);
 
 .menu_title{
   display: block;

@@ -13,3 +13,7 @@ NOTE: This is a very early stage work in progress. See the link above for a work
 These both link to other, related documentation.
 
 This work is being sponsored by my employer, [Richmond Public Library](https://yourlibrary.com/)
+
+Credits:
+
+Background patterns via [Hero Patterns](http://www.heropatterns.com/)
