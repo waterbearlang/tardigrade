@@ -90,6 +90,7 @@ class WBBlock extends HTMLElement {
   }
 
   returnsElement(){
+    if (!this.returnType){ return; }
     return WBValue.create({type: 'Value', returnType: this.returnType, ns: this.ns, name: this.returnName || this.name, value: 'TBD'});
   }
 
@@ -97,7 +98,7 @@ class WBBlock extends HTMLElement {
     // returns locals as elements, wrapped in a <wb-locals> block
     // if there are no locals, returns undefined
     let locals;
-    if (this.locals.length) {
+    if (this.locals && this.locals.length) {
       locals = new WBLocals();
       this.locals.forEach(value => {
         value.ns = this.ns;
@@ -109,6 +110,7 @@ class WBBlock extends HTMLElement {
 
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
+    if (! this.params){ return []; }
     return this.params.map(param => {
       // console.log("map parameter: %o", param);
       const type = param.type;

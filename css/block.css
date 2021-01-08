@@ -8,6 +8,7 @@ wb-value{
   background: left / 1em no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
 }
 
+
 wb-contains > wb-value{
   margin-bottom: 5px;
 }
@@ -95,7 +96,6 @@ input[readonly]{
 }
 
 wb-contains{
-  display: block;
   min-height: 1.25em;
   background-color: white;
   margin-right: -3px;
@@ -166,7 +166,11 @@ wb-block-param > input, wb-input-param > input{
   background: left / contain no-repeat #FFF url(../images/fa-svg/regular/question-circle.svg);
 }
 
-input,wb-value{background-image: var(--image);}
+wb-block-param > input,
+wb-input-param > input,
+wb-value{
+  background-image: var(--image);
+}
 
 /* Accessories for blocks */
 
