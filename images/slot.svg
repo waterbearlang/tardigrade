@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="40" height="12" viewBox="0 0 40 12" id="slot-cutout">
+        <path
+          id="slot-cutout-path"
+          d="M 0 12
+    a 6 6 90 0 0 6 -6
+    a 6 6 90 0 1 6 -6
+    h 16
+    a 6 6 90 0 1 6 6
+    a 6 6 90 0 0 6 6 Z"
+          fill="black"
+        ></path>
+        </svg>

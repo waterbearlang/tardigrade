@@ -15,8 +15,23 @@
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
+    <div>
+      <svg viewbox="0 0 40 12" id="slot-cutout-inline">
+        <clipPath id="slot-cutout-path-inline">
+        <path
+          d="M 0 12
+    a 6 6 90 0 0 6 -6
+    a 6 6 90 0 1 6 -6
+    h 16
+    a 6 6 90 0 1 6 6
+    a 6 6 90 0 0 6 6 Z"
+          fill="black"
+        ></path>
+        </clipPath>
+      </svg>
+    </div>
     <section class="branding">
-      <img class="logo" src="images/waterbear_icon_logo.svg">
+      <img class="logo" src="images/waterbear_icon_logo.svg" />
       <h1>Waterbear</h1>
     </section>
     <section class="filemenu">
@@ -27,7 +42,7 @@
       <button class="run" onclick="runScript()">Run</button>
       <button class="stop" onclick="stopScript()">Stop</button>
     </section>
-    <section class="blocks"><div class="blockmenu"></div></div></section>
+    <section class="blocks"><div class="blockmenu"></div></section>
     <section class="target"><div class="script"></div></section>
     <section class="stage"></section>
     <section class="moonshine"></section>

@@ -89,9 +89,17 @@ class WBBlock extends HTMLElement {
     return selectChoices[this.type];
   }
 
-  returnsElement(){
-    if (!this.returnType){ return; }
-    return WBValue.create({type: 'Value', returnType: this.returnType, ns: this.ns, name: this.returnName || this.name, value: 'TBD'});
+  returnsElement() {
+    if (!this.returnType) {
+      return;
+    }
+    return WBValue.create({
+      type: "Value",
+      returnType: this.returnType,
+      ns: this.ns,
+      name: this.returnName || this.name,
+      value: "TBD",
+    });
   }
 
   wrappedLocals() {
@@ -110,7 +118,9 @@ class WBBlock extends HTMLElement {
 
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
-    if (! this.params){ return []; }
+    if (!this.params) {
+      return [];
+    }
     return this.params.map(param => {
       // console.log("map parameter: %o", param);
       const type = param.type;
@@ -226,8 +236,8 @@ class WBTab extends HTMLElement {
     return "wb-tab";
   }
   render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
+    return this.svg`<svg width="40" height="12"><path d="M 0 12
+    a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
@@ -262,8 +272,8 @@ class WBSlot extends HTMLElement {
     return "wb-slot";
   }
   render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
+    return this.svg`<svg width="40" height="12"><path d="M 0 12
+    a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
@@ -320,6 +330,12 @@ window.WBValue = define(WBValue);
 //
 
 class WBStep extends WBBlock {
+  static create(props) {
+    const elem = super.create(props);
+    elem.classList.add("with-slot");
+    return elem;
+  }
+
   static get name() {
     return "WBStep";
   }
@@ -329,7 +345,7 @@ class WBStep extends WBBlock {
   render() {
     return this.html`<wb-tab/><header><span>${
       this.name
-    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
+    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header>`;
   }
 }
 window.WBStep = define(WBStep);
