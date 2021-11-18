@@ -60,7 +60,7 @@ h1 {
   height: 100%;
   overflow: auto;
   background-color: #f2eff5;
-  background-image: url(/images/backgrounds/floating-cogs.svg);
+  background-image: url(../images/backgrounds/floating-cogs.svg);
 }
 
 .blockmenu > details > wb-contains {
@@ -79,7 +79,7 @@ h1 {
   flex-direction: column;
   overflow: auto;
   background-color: #f2eff5;
-  background-image: url(/images/backgrounds/jigsaw.svg);
+  background-image: url(../images/backgrounds/jigsaw.svg);
   /* margin-right: -3px; */
   padding: 0.5em;
   display: flex;
@@ -103,13 +103,13 @@ h1 {
 .stage {
   grid-area: stage;
   background-color: #f2eff5;
-  background-image: url(/images/backgrounds/topography.svg);
+  background-image: url(../images/backgrounds/topography.svg);
 }
 
 .moonshine {
   grid-area: moonshine;
   background-color: #f2eff5;
-  background-image: url(/images/backgrounds/graph-paper.svg);
+  background-image: url(../images/backgrounds/graph-paper.svg);
 }
 
 .menu_title {
