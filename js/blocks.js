@@ -260,27 +260,27 @@ class WBHat extends HTMLElement {
 }
 WBHat = define(WBHat);
 
-//
-// WBSlot - makes the indent at the bottom of a block
-//
+// //
+// // WBSlot - makes the indent at the bottom of a block
+// //
 
-class WBSlot extends HTMLElement {
-  static get name() {
-    return "WBSlot";
-  }
-  static get tagName() {
-    return "wb-slot";
-  }
-  render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12
-    a 6 6 90 0 0 6 -6
-    a 6 6 90 0 1 6 -6
-    h 16
-    a 6 6 90 0 1 6 6
-    a 6 6 90 0 0 6 6"></path></svg>`;
-  }
-}
-WBSlot = define(WBSlot);
+// class WBSlot extends HTMLElement {
+//   static get name() {
+//     return "WBSlot";
+//   }
+//   static get tagName() {
+//     return "wb-slot";
+//   }
+//   render() {
+//     return this.svg`<svg width="40" height="12"><path d="M 0 12
+//     a 6 6 90 0 0 6 -6
+//     a 6 6 90 0 1 6 -6
+//     h 16
+//     a 6 6 90 0 1 6 6
+//     a 6 6 90 0 0 6 6"></path></svg>`;
+//   }
+// }
+// WBSlot = define(WBSlot);
 
 //
 // WBLocals - holds values that are local to a block
@@ -330,12 +330,6 @@ window.WBValue = define(WBValue);
 //
 
 class WBStep extends WBBlock {
-  static create(props) {
-    const elem = super.create(props);
-    elem.classList.add("with-slot");
-    return elem;
-  }
-
   static get name() {
     return "WBStep";
   }
@@ -364,7 +358,7 @@ class WBContext extends WBBlock {
   render() {
     return this.html`<wb-tab/><details open><summary><header><span>${
       this.name
-    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
+    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}</summary><wb-contains /></details>`;
   }
 }
 window.WBContext = define(WBContext);
@@ -383,7 +377,7 @@ class WBTrigger extends WBBlock {
   render() {
     return this.html`<wb-hat/><details open><summary><header><span>${
       this.name
-    }</span> </header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
+    }</span> </header>${this.wrappedLocals()}</summary><wb-contains></wb-contains></details>`;
   }
 }
 window.WBTrigger = define(WBTrigger);

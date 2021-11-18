@@ -22,16 +22,17 @@ wb-returns > wb-value {
 /* Step blocks */
 wb-step {
   display: inline-block;
-  background-color: #ede378;
   border-radius: 5px;
-  border-color: #cebd3e;
-  border-width: 2px;
-  border-style: solid;
-  padding-left: 10px;
   /* padding-bottom: 14px; */
   position: relative;
   z-index: 0;
-  overflow: visible;
+}
+
+wb-step > header {
+  background-color: var(--color);
+  border-color: var(--border);
+  border-width: 2px;
+  border-style: solid;
 }
 
 wb-contains > wb-step {
@@ -42,13 +43,6 @@ wb-contains > wb-step {
 /* Context blocks */
 wb-context {
   display: inline-block;
-  background-color: #ede378;
-  border-radius: 5px;
-  border-color: #cebd3e;
-  border-width: 2px;
-  border-style: solid;
-  padding-left: 10px;
-  padding-bottom: 14px;
   position: relative;
   z-index: 0;
 }
@@ -61,15 +55,46 @@ wb-contains > wb-context {
 /* Trigger blocks */
 wb-trigger {
   display: inline-block;
-  background-color: #ede378;
-  border-radius: 5px;
-  border-color: #cebd3e;
-  border-width: 2px;
-  border-style: solid;
-  padding-left: 10px;
-  padding-bottom: 14px;
   position: relative;
   z-index: 0;
+}
+
+wb-trigger > details::before{
+  /* Define "Hat" */
+  
+}
+
+wb-trigger::before,
+wb-context::before {
+  content: "";
+  width: 10px;
+  height: calc(100% - 15px);
+  position: absolute;
+  top: 15px;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color);
+  border-color: var(--color);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+wb-trigger::after,
+wb-context::after {
+  content: "";
+  height: 20px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 wb-contains > wb-trigger {
@@ -104,8 +129,7 @@ input[readonly] {
 
 wb-contains {
   min-height: 1.25em;
-  background-color: white;
-  margin-right: -3px;
+  padding-bottom: 14px;
   padding: 0.5em;
   display: flex;
   flex-direction: column;
@@ -113,14 +137,6 @@ wb-contains {
   align-items: flex-start;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-}
-
-/* Context has disclosure twisties, so a little different from other blocks */
-
-wb-context summary,
-wb-trigger summary {
-  padding: 0.2em;
-  padding-bottom: 1em;
 }
 
 /* wb-hat needs ::before */
@@ -139,21 +155,41 @@ wb-hat::before {
   border-radius: 100%;
 }
 
-.with-slot {
+wb-step,
+wb-context summary,
+wb-context,
+wb-trigger summary {
   /* clip-path: url("#slot-cutout-path-inline"); */
-  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#fff, #fff);
+  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
   -webkit-mask-composite: destination-out;
-  mask: url(/images/slot.svg) 40px bottom, linear-gradient(#fff, #fff);
+  mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
   mask-composite: exclude;
+  mask-position: 40px bottom, left top;
+  mask-size: 40px 12px, auto auto;
+  mask-repeat: no-repeat;
+  /* mask-clip: stroke-box; */
 }
 
 /* slot within details */
-summary {
+wb-context summary,
+wb-trigger summary {
   position: relative;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 25px;
 }
 
 summary > wb-slot {
   display: none;
+}
+
+details {
+  margin: 0;
 }
 
 details[open] > summary > wb-slot {
@@ -190,6 +226,8 @@ wb-input-param > input {
 wb-block-param > input,
 wb-input-param > input,
 wb-value {
+  background-color: var(--color);
+  border-color: var(--border);
   background-image: var(--image);
 }
 
@@ -197,26 +235,29 @@ wb-value {
 
 /* top decoration for steps and contexts */
 wb-tab {
-  display: inline-block;
-  position: absolute;
+  position: relative;
+  display: block;
+  fill: var(--color);
+  stroke: var(--border);
   margin: 0;
   padding: 0;
+  border: 0;
   width: 40px;
   height: 12px;
   left: 15px;
-  top: -15px;
 }
 
 /* top decoration for triggers */
 wb-hat {
-  display: inline-block;
-  position: absolute;
+  position: relative;
+  display: block;
+  fill: var(--color);
+  stroke: var(--color);
   margin: 0;
   padding: 0;
   width: 100px;
   height: 12px;
-  left: 5px;
-  top: -12px;
+  left: 15px;
   overflow: hidden;
 }
 
