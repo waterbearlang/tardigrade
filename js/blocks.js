@@ -89,9 +89,17 @@ class WBBlock extends HTMLElement {
     return selectChoices[this.type];
   }
 
-  returnsElement(){
-    if (!this.returnType){ return; }
-    return WBValue.create({type: 'Value', returnType: this.returnType, ns: this.ns, name: this.returnName || this.name, value: 'TBD'});
+  returnsElement() {
+    if (!this.returnType) {
+      return;
+    }
+    return WBValue.create({
+      type: "Value",
+      returnType: this.returnType,
+      ns: this.ns,
+      name: this.returnName || this.name,
+      value: "TBD",
+    });
   }
 
   wrappedLocals() {
@@ -110,7 +118,9 @@ class WBBlock extends HTMLElement {
 
   mapParams() {
     // val is array of AST parameter objects. Each object has a name and a type.
-    if (! this.params){ return []; }
+    if (!this.params) {
+      return [];
+    }
     return this.params.map(param => {
       // console.log("map parameter: %o", param);
       const type = param.type;
@@ -226,8 +236,8 @@ class WBTab extends HTMLElement {
     return "wb-tab";
   }
   render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
+    return this.svg`<svg width="40" height="12"><path d="M 0 12
+    a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
@@ -250,27 +260,27 @@ class WBHat extends HTMLElement {
 }
 WBHat = define(WBHat);
 
-//
-// WBSlot - makes the indent at the bottom of a block
-//
+// //
+// // WBSlot - makes the indent at the bottom of a block
+// //
 
-class WBSlot extends HTMLElement {
-  static get name() {
-    return "WBSlot";
-  }
-  static get tagName() {
-    return "wb-slot";
-  }
-  render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12 
-    a 6 6 90 0 0 6 -6 
-    a 6 6 90 0 1 6 -6
-    h 16
-    a 6 6 90 0 1 6 6
-    a 6 6 90 0 0 6 6"></path></svg>`;
-  }
-}
-WBSlot = define(WBSlot);
+// class WBSlot extends HTMLElement {
+//   static get name() {
+//     return "WBSlot";
+//   }
+//   static get tagName() {
+//     return "wb-slot";
+//   }
+//   render() {
+//     return this.svg`<svg width="40" height="12"><path d="M 0 12
+//     a 6 6 90 0 0 6 -6
+//     a 6 6 90 0 1 6 -6
+//     h 16
+//     a 6 6 90 0 1 6 6
+//     a 6 6 90 0 0 6 6"></path></svg>`;
+//   }
+// }
+// WBSlot = define(WBSlot);
 
 //
 // WBLocals - holds values that are local to a block
@@ -329,7 +339,7 @@ class WBStep extends WBBlock {
   render() {
     return this.html`<wb-tab/><header><span>${
       this.name
-    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header><wb-slot/>`;
+    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header>`;
   }
 }
 window.WBStep = define(WBStep);
@@ -348,7 +358,7 @@ class WBContext extends WBBlock {
   render() {
     return this.html`<wb-tab/><details open><summary><header><span>${
       this.name
-    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains /></details><wb-slot/>`;
+    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}</summary><wb-contains /></details>`;
   }
 }
 window.WBContext = define(WBContext);
@@ -367,7 +377,7 @@ class WBTrigger extends WBBlock {
   render() {
     return this.html`<wb-hat/><details open><summary><header><span>${
       this.name
-    }</span> </header>${this.wrappedLocals()}<wb-slot/></summary><wb-contains></wb-contains></details>`;
+    }</span> </header>${this.wrappedLocals()}</summary><wb-contains></wb-contains></details>`;
   }
 }
 window.WBTrigger = define(WBTrigger);

@@ -114,7 +114,8 @@ h1 {
 
 .menu_title {
   display: block;
-  padding-left: 1.5em;
+  padding: 0.5em;
+  text-align: center;
   color: #123;
   font-size: 150%;
   font-family: sans-serif;
