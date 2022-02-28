@@ -1,5 +1,13 @@
 import heresy from "../lib/heresy.min.js";
-const { define, html, render } = heresy;
+const { define, ref, render, html } = heresy;
+
+// Utility function
+function template(contents) {
+  let t = document.createElement("template");
+  t.innerHTML = contents;
+  document.body.appendChild(t);
+  return t;
+}
 
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
@@ -7,6 +15,17 @@ const selectChoices = {
   EdgeChoice: ["pass", "bounce", "wrap", "stop"],
   WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
+
+// FIXME: Adapting to pure Custom Elements
+// constructor()
+//    super()
+// connectedCallback()
+// Node.isConnected
+// disconnectedCallback()
+// adoptedCallback() // moved to a new document
+// attributeChangedCallback(name, oldValue, newValue)
+// static getObservedElements() (return list of attribute names)
+// const shadow = this.attachShadow({mode: "open"});
 
 //
 // WBBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
@@ -16,6 +35,22 @@ const selectChoices = {
 //
 
 class WBBlock extends HTMLElement {
+  constructor() {
+    super();
+    console.log("Calling WBBlock constructor");
+    let shadow = this.attachShadow({ mode: "open" });
+    this.style = document.createElement("style");
+    console.log(`this.style before: ${this.style}`);
+    this.style.innerText = this.constructor._style;
+    console.log(`this.style after => ${this.style}`);
+    shadow.appendChild(this.style);
+    this.content = this.constructor
+      .template()
+      .content.firstElementChild.cloneNode(true);
+    console.log(`this.content: ${this.content}`);
+    shadow.appendChild(this.content);
+  }
+
   static create(props) {
     props = props || {};
     const obj = document.createElement(this.tagName);
@@ -24,6 +59,14 @@ class WBBlock extends HTMLElement {
     });
     return obj;
   }
+
+  static template() {
+    if (!this._template) {
+      this._template = template(this._structure);
+    }
+    return this._template;
+  }
+
   get ns() {
     return this.getAttribute("ns");
   }
@@ -156,33 +199,39 @@ class WBBlock extends HTMLElement {
 }
 
 class WBInputParam extends WBBlock {
-  static get name() {
-    return "WBInputParam";
+  static _structure = `<span><span class="name"></span> <input type="text" wbtype="" value=""></span>`;
+  static _style = ``;
+  static tagName = "wb-input-param";
+
+  constructor() {
+    super();
+    this.update();
   }
-  static get tagName() {
-    return "wb-input-param";
-  }
-  render() {
-    return this
-      .html`${this.name} <input type="${this.type}" value="${this.value}" >`;
+
+  update() {
+    this.content.querySelector(".name").innerText = this.name;
+    let input = this.content.querySelector("input");
+    input.setAttribute("wbtype", this.type);
+    input.setAttribute("value", this.value);
   }
 }
-WBInputParam = define(WBInputParam);
+customElements.define("wb-input-param", WBInputParam);
 
 class WBTruthParam extends WBBlock {
-  static get name() {
-    return "WBTruthParam";
+  static _structure = `<span><span class="name"></span> <input type="checkbox" wbtype="truth" value=""></span>`;
+  static _style = ``;
+  static tagName = "wb-truth-param";
+  constructor() {
+    super();
+    this.update();
   }
-  static get tagName() {
-    return "wb-truth-param";
-  }
-  render() {
-    return this.html`${this.name} <checkbox type="boolean" ${
-      this.value ? "checked" : ""
-    } >`;
+  update() {
+    this.content.querySelector(".name").innerText = this.name;
+    let input = this.content.querySelector("input");
+    input.checked = this.value === "true";
   }
 }
-WBTruthParam = define(WBTruthParam);
+customElements.define("wb-truth-param", WBTruthParam);
 
 class WBSelectParam extends WBBlock {
   static get name() {
@@ -330,19 +379,22 @@ window.WBValue = define(WBValue);
 //
 
 class WBStep extends WBBlock {
-  static get name() {
-    return "WBStep";
+  static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span><wb-returns title="Returned value of this block"></wb-returns></header>`;
+  static _style = ``;
+  static tagName = "wb-step";
+  constructor() {
+    console.log("WBStep constructor called");
+    super();
+    console.log("Super constructor called");
+    this.update();
   }
-  static get tagName() {
-    return "wb-step";
-  }
-  render() {
-    return this.html`<wb-tab/><header><span>${
-      this.name
-    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header>`;
+  update() {
+    this.content.querySelector(".name").innerText = this.name;
+    this.content.querySelector(".params").innerHTML = this.mapParams();
+    this.content.querySelector("wb-returns").innerHTML = this.returnsElement();
   }
 }
-window.WBStep = define(WBStep);
+customElements.define("wb-step", WBStep);
 
 //
 // WBContext - a container for steps (and a step itself)
@@ -386,3 +438,17 @@ window.WBTrigger = define(WBTrigger);
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license (Commercial License)
 `);
+export default {
+  InputParam: WBInputParam,
+  TruthParam: WBTruthParam,
+  SelectParam: WBSelectParam,
+  BlockParam: WBBlockParam,
+  Tab: WBTab,
+  Hat: WBHat,
+  Locals: WBLocals,
+  Returns: WBReturns,
+  Value: WBValue,
+  Step: WBStep,
+  Context: WBContext,
+  Trigger: WBTrigger,
+};
