@@ -37,17 +37,11 @@ const selectChoices = {
 class WBBlock extends HTMLElement {
   constructor() {
     super();
-    console.log("Calling WBBlock constructor");
     let shadow = this.attachShadow({ mode: "open" });
-    this.style = document.createElement("style");
-    console.log(`this.style before: ${this.style}`);
-    this.style.innerText = this.constructor._style;
-    console.log(`this.style after => ${this.style}`);
-    shadow.appendChild(this.style);
-    this.content = this.constructor
-      .template()
-      .content.firstElementChild.cloneNode(true);
-    console.log(`this.content: ${this.content}`);
+    let style = document.createElement("style");
+    style.innerText = this.constructor._style;
+    shadow.appendChild(style);
+    this.content = this.template().content.cloneNode(true);
     shadow.appendChild(this.content);
   }
 
@@ -57,14 +51,17 @@ class WBBlock extends HTMLElement {
     Object.keys(props).forEach(key => {
       obj[key] = props[key];
     });
+    obj.update();
     return obj;
   }
 
-  static template() {
-    if (!this._template) {
-      this._template = template(this._structure);
+  // template method is inherited by instances, but works on class ;-)
+  template() {
+    let ctor = this.constructor;
+    if (!ctor._template) {
+      ctor._template = template(ctor._structure);
     }
-    return this._template;
+    return ctor._template;
   }
 
   get ns() {
@@ -165,7 +162,6 @@ class WBBlock extends HTMLElement {
       return [];
     }
     return this.params.map(param => {
-      // console.log("map parameter: %o", param);
       const type = param.type;
       if (["Text", "Integer", "Float", "Colour"].includes(type)) {
         return WBInputParam.create(param);
@@ -174,7 +170,6 @@ class WBBlock extends HTMLElement {
         return WBTruthParam.create(param);
       }
       if (["AngleUnit", "EdgeChoice", "WaveChoice"].includes(type)) {
-        // console.log("%s: %s", type, selectChoices[type]);
         return WBSelectParam.create(param);
       }
       if (["Vector", "Image", "Sprite", "Angle", "Shape"].includes(type)) {
@@ -203,14 +198,9 @@ class WBInputParam extends WBBlock {
   static _style = ``;
   static tagName = "wb-input-param";
 
-  constructor() {
-    super();
-    this.update();
-  }
-
   update() {
-    this.content.querySelector(".name").innerText = this.name;
-    let input = this.content.querySelector("input");
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    let input = this.shadowRoot.querySelector("input");
     input.setAttribute("wbtype", this.type);
     input.setAttribute("value", this.value);
   }
@@ -221,28 +211,20 @@ class WBTruthParam extends WBBlock {
   static _structure = `<span><span class="name"></span> <input type="checkbox" wbtype="truth" value=""></span>`;
   static _style = ``;
   static tagName = "wb-truth-param";
-  constructor() {
-    super();
-    this.update();
-  }
   update() {
-    this.content.querySelector(".name").innerText = this.name;
-    let input = this.content.querySelector("input");
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    let input = this.shadowRoot.querySelector("input");
     input.checked = this.value === "true";
   }
 }
 customElements.define("wb-truth-param", WBTruthParam);
 
 class WBSelectParam extends WBBlock {
-  static get name() {
-    return "WBSelectParam";
-  }
-  static get tagName() {
-    return "wb-select-param";
-  }
-  render() {
-    const obj = document.createElement("select");
-    obj.innerHTML = this.choices
+  static _structure = `<select></select>`;
+  static _style = ``;
+  static tagName = "wb-select-param";
+  update() {
+    this.shadowRoot.querySelector("select").innerHTML = this.choices
       .map(
         choice =>
           `<option value="${choice}" ${
@@ -250,64 +232,63 @@ class WBSelectParam extends WBBlock {
           }>`
       )
       .join("");
-    return obj;
   }
 }
-WBSelectParam = define(WBSelectParam);
+customElements.define("wb-select-param", WBSelectParam);
 
 //
 // WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
 //
 
 class WBBlockParam extends WBBlock {
-  static get name() {
-    return "WBBlockParam";
-  }
-  static get tagName() {
-    return "wb-block-param";
-  }
-  render() {
-    return this
-      .html`<label>${this.name}</label> <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
+  static _structure = `<label class="name"> <input type="text" wbtype="" readonly title=""></label>`;
+  static _style = ``;
+  static tagName = "wb-block-param";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    let input = this.shadowRoot.querySelector("input");
+    input.setAttribute("wbtype", this.type);
+    input.setAttribute("title", `drag a ${this.type} block here`);
   }
 }
-WBBlockParam = define(WBBlockParam);
+customElements.define("wb-block-param", WBBlockParam);
 
 //
 // WBTab - makes the tab at the top of a block. Purely decorative.
 //
 
 class WBTab extends HTMLElement {
-  static get name() {
-    return "WBTab";
-  }
-  static get tagName() {
-    return "wb-tab";
-  }
-  render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12
+  static _structure = `<svg width="40" height="12"><path d="M 0 12
     a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
     a 6 6 90 0 0 6 6"></path></svg>`;
+  static _style = ``;
+  static tagName = "wb-tab";
+  template = WBBlock.prototype.template;
+
+  constructor() {
+    super();
+    let shadow = this.attachShadow({ mode: "open" });
+    // let style = document.createElement("style");
+    // style.innerText = this.constructor._style;
+    // shadow.appendChild(style);
+    this.content = this.template().content.firstElementChild.cloneNode(true);
+    shadow.appendChild(this.content);
   }
 }
-WBTab = define(WBTab);
+customElements.define("wb-tab", WBTab);
 
 //
 // WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
+// Maybe move to pure CSS?
 //
 
 class WBHat extends HTMLElement {
-  static get name() {
-    return "WBHat";
-  }
-  static get tagName() {
-    return "wb-hat";
-  }
+  static tagName = "wb-hat";
 }
-WBHat = define(WBHat);
+customElements.define("wb-hat", WBHat);
 
 // //
 // // WBSlot - makes the indent at the bottom of a block
@@ -336,62 +317,46 @@ WBHat = define(WBHat);
 //
 
 class WBLocals extends HTMLElement {
-  static get name() {
-    return "WBLocals";
-  }
-  static get tagName() {
-    return "wb-locals";
-  }
+  static tagName = "wb-locals";
 }
-WBLocals = define(WBLocals);
+customElements.define("wb-locals", WBLocals);
 
 //
 // WBReturns - holds the result of a block that can be used by subsequent blocks
 //
 class WBReturns extends HTMLElement {
-  static get name() {
-    return "WBReturns";
-  }
-  static get tagName() {
-    return "wb-returns";
-  }
+  static tagName = "wb-returns";
 }
+customElements.define("wb-returns", WBReturns);
 
 //
 // WBValue - standalone values
 //
 
 class WBValue extends WBBlock {
-  static get name() {
-    return "WBValue";
-  }
-  static get tagName() {
-    return "wb-value";
-  }
-  render() {
-    return this.html`${this.name}`;
+  static _structure = `<span class="name"></span>`;
+  static _style = ``;
+  static tagName = "wb-value";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
   }
 }
-window.WBValue = define(WBValue);
+customElements.define("wb-value", WBValue);
 
 //
 // WBStep - the workhorse of Waterbear
 //
 
 class WBStep extends WBBlock {
-  static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span><wb-returns title="Returned value of this block"></wb-returns></header>`;
+  static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
   static _style = ``;
   static tagName = "wb-step";
-  constructor() {
-    console.log("WBStep constructor called");
-    super();
-    console.log("Super constructor called");
-    this.update();
-  }
   update() {
-    this.content.querySelector(".name").innerText = this.name;
-    this.content.querySelector(".params").innerHTML = this.mapParams();
-    this.content.querySelector("wb-returns").innerHTML = this.returnsElement();
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".params").innerHTML = this.mapParams();
+    this.shadowRoot.querySelector(
+      "wb-returns"
+    ).innerHTML = this.returnsElement();
   }
 }
 customElements.define("wb-step", WBStep);
@@ -401,54 +366,43 @@ customElements.define("wb-step", WBStep);
 //
 
 class WBContext extends WBBlock {
-  static get name() {
-    return "WBContext";
-  }
-  static get tagName() {
-    return "wb-context";
-  }
-  render() {
-    return this.html`<wb-tab/><details open><summary><header><span>${
-      this.name
-    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}</summary><wb-contains /></details>`;
+  static _structure = `<wb-tab/><details open><summary><header><span class="name"> <span class="params"> <wb-returns title="Returned value of this block"></wb-returns></header><span class="locals"></span></summary></details>`;
+  static _style = ``;
+  static tagName = "wb-context";
+  update() {
+    console.log(`shadowRoot: ${JSON.stringify(this.shadowRoot)}`);
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".params").innerHTML = this.mapParams();
+    this.shadowRoot.querySelector(
+      "wb-returns"
+    ).innerHTML = this.returnsElement();
+    this.shadowRoot.querySelector("locals").innerHTML = this.wrappedLocals();
   }
 }
-window.WBContext = define(WBContext);
+customElements.define("wb-context", WBContext);
 
 //
 // WBTrigger - a starting point for a script, fired by an event occurring
 //
 
 class WBTrigger extends WBBlock {
-  static get name() {
-    return "WBTrigger";
-  }
-  static get tagName() {
-    return "wb-trigger";
-  }
-  render() {
-    return this.html`<wb-hat/><details open><summary><header><span>${
-      this.name
-    }</span> </header>${this.wrappedLocals()}</summary><wb-contains></wb-contains></details>`;
+  static _structure = `<wb-hat/><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
+  static _style = ``;
+  static tagName = "wb-trigger";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".locals").innerHTML = this.wrappedLocals();
   }
 }
-window.WBTrigger = define(WBTrigger);
+customElements.define("wb-trigger", WBTrigger);
 
 // Attribution for Font Awesome icons
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license (Commercial License)
 `);
 export default {
-  InputParam: WBInputParam,
-  TruthParam: WBTruthParam,
-  SelectParam: WBSelectParam,
-  BlockParam: WBBlockParam,
-  Tab: WBTab,
-  Hat: WBHat,
-  Locals: WBLocals,
-  Returns: WBReturns,
-  Value: WBValue,
-  Step: WBStep,
-  Context: WBContext,
   Trigger: WBTrigger,
+  Context: WBContext,
+  Step: WBStep,
+  Value: WBValue,
 };

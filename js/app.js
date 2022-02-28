@@ -38,6 +38,7 @@ const processScript = async (script, menu) => {
 
 const builder = (ns, block) => {
   const target = document.createElement("div");
+  // console.log(`block: ${JSON.stringify(block)}`);
   block.ns = ns;
   return blocks[block.type].create(block);
 };
