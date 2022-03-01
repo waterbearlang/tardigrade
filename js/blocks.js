@@ -43,6 +43,7 @@ class WBBlock extends HTMLElement {
     shadow.appendChild(style);
     this.content = this.template().content.cloneNode(true);
     shadow.appendChild(this.content);
+    this.update();
   }
 
   static create(props) {
@@ -223,7 +224,24 @@ class WBSelectParam extends WBBlock {
   static _structure = `<select></select>`;
   static _style = ``;
   static tagName = "wb-select-param";
+  get choices() {
+    return this._choices;
+  }
+  set choices(list) {
+    this._choices = list;
+    this.update();
+    console.log("updated choices");
+  }
+  get choice() {
+    return this._choice;
+  }
+  set choice(item) {
+    this._choice = item;
+    this.update();
+    console.log("updated choice");
+  }
   update() {
+    if (!this.choices) return;
     this.shadowRoot.querySelector("select").innerHTML = this.choices
       .map(
         choice =>
@@ -241,7 +259,7 @@ customElements.define("wb-select-param", WBSelectParam);
 //
 
 class WBBlockParam extends WBBlock {
-  static _structure = `<label class="name"> <input type="text" wbtype="" readonly title=""></label>`;
+  static _structure = `<label class="name"></label> <input type="text" wbtype="" readonly title="">`;
   static _style = ``;
   static tagName = "wb-block-param";
   update() {
@@ -326,8 +344,41 @@ customElements.define("wb-locals", WBLocals);
 //
 class WBReturns extends HTMLElement {
   static tagName = "wb-returns";
+  static _style = `wb-value {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 80%;
+  }`;
+  constructor() {
+    super();
+    let shadow = this.attachShadow({ mode: "open" });
+    let style = document.createElement("style");
+    style.innerText = this.constructor._style;
+    shadow.appendChild(style);
+  }
 }
 customElements.define("wb-returns", WBReturns);
+
+class WBContains extends HTMLElement {
+  static tagName = "wb-contains";
+  static _style = `wb-step {
+    margin: 5px;
+    margin-top: 12px;
+  }
+  wb-context {
+    margin: 5px;
+    margin-top: 12px;
+  }
+  `;
+  constructor() {
+    super();
+    let shadow = this.attachShadow({ mode: "open" });
+    let style = document.createElement("style");
+    style.innerText = this.constructor._style;
+    shadow.appendChild(style);
+  }
+}
+customElements.define("wb-contains", WBContains);
 
 //
 // WBValue - standalone values
@@ -349,7 +400,12 @@ customElements.define("wb-value", WBValue);
 
 class WBStep extends WBBlock {
   static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
-  static _style = ``;
+  static _style = `header {
+    background-color: var(--color);
+    border-color: var(--border);
+    border-width: 2px;
+    border-style: solid;
+  }`;
   static tagName = "wb-step";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
@@ -366,17 +422,16 @@ customElements.define("wb-step", WBStep);
 //
 
 class WBContext extends WBBlock {
-  static _structure = `<wb-tab/><details open><summary><header><span class="name"> <span class="params"> <wb-returns title="Returned value of this block"></wb-returns></header><span class="locals"></span></summary></details>`;
+  static _structure = `<wb-tab/><details open><summary><header><span class="name"> </span><span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header><span class="locals"></span></summary></details>`;
   static _style = ``;
   static tagName = "wb-context";
   update() {
-    console.log(`shadowRoot: ${JSON.stringify(this.shadowRoot)}`);
     this.shadowRoot.querySelector(".name").innerText = this.name;
     this.shadowRoot.querySelector(".params").innerHTML = this.mapParams();
     this.shadowRoot.querySelector(
       "wb-returns"
     ).innerHTML = this.returnsElement();
-    this.shadowRoot.querySelector("locals").innerHTML = this.wrappedLocals();
+    this.shadowRoot.querySelector(".locals").innerHTML = this.wrappedLocals();
   }
 }
 customElements.define("wb-context", WBContext);
