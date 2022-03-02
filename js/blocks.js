@@ -40,6 +40,59 @@ const TRIGGER_STYLE = `wb-trigger {
   z-index: 0;
 }`;
 
+const HEADER_STYLE = `header {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start unsafe;
+  padding: 0.3em 0.5em;
+}`;
+
+const TAB_STYLE = `wb-tab {
+  position: relative;
+  display: block;
+  fill: var(--color);
+  stroke: var(--border);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 40px;
+  height: 12px;
+  left: 15px;
+}`;
+
+const LOCALS_STYLE = `/* Container for values local to a block */
+wb-locals {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  padding: 1px;
+  border-radius: 5px;
+}`;
+
+const RETURNS_STYLE = `/* Container for the single result block of a step or context */
+wb-returns {
+  position: relative;
+  display: inline-block;
+  padding: 1px;
+  background-color: white;
+  border-radius: 5px;
+  border: 3px inset grey;
+  margin-left: 2em;
+}`;
+
+const SUMMARY_STYLE = `summary {
+  position: relative;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 25px;
+}`;
+
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
   AngleUnit: ["degrees", "radians"],
@@ -424,12 +477,18 @@ customElements.define("wb-value", WBValue);
 
 class WBStep extends WBBlock {
   static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
-  static _style = `header {
-    background-color: var(--color);
-    border-color: var(--border);
-    border-width: 2px;
-    border-style: solid;
-  }`;
+  static _style = `
+    ${HEADER_STYLE}
+    ${TAB_STYLE}
+    ${LOCALS_STYLE}
+    ${RETURNS_STYLE}
+    header {
+      background-color: var(--color);
+      border-color: var(--border);
+      border-width: 2px;
+      border-style: solid;
+    }
+  `;
   static tagName = "wb-step";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
@@ -446,8 +505,14 @@ customElements.define("wb-step", WBStep);
 //
 
 class WBContext extends WBBlock {
-  static _structure = `<wb-tab/><details open><summary><header><span class="name"> </span><span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header><span class="locals"></span></summary></details>`;
-  static _style = ``;
+  static _structure = `<wb-tab/><details open><summary><header><span class="name"> </span><span class="params"><slot name="params"></slot></span> <wb-returns title="Returned value of this block"><slot name="returns"></wb-returns></header><span class="locals"><slot name="locals"></slot></span></summary><wb-contains><slot name="steps></slot></wb-contains></details>`;
+  static _style = `
+    ${HEADER_STYLE}
+    ${TAB_STYLE}
+    ${LOCALS_STYLE}
+    ${RETURNS_STYLE}
+    ${SUMMARY_STYLE}
+  `;
   static tagName = "wb-context";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
@@ -466,7 +531,38 @@ customElements.define("wb-context", WBContext);
 
 class WBTrigger extends WBBlock {
   static _structure = `<wb-hat></wb-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
-  static _style = ``;
+  static _style = `
+  ${HEADER_STYLE}
+  ${LOCALS_STYLE}
+  ${SUMMARY_STYLE}
+  wb-hat::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 100px;
+  left: -15px;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 100%;
+}
+/* top decoration for triggers */
+wb-hat {
+  position: relative;
+  display: block;
+  fill: var(--color);
+  stroke: var(--color);
+  margin: 0;
+  padding: 0;
+  width: 100px;
+  height: 12px;
+  left: 15px;
+  overflow: hidden;
+}
+
+`;
   static tagName = "wb-trigger";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;

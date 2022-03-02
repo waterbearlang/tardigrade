@@ -226,18 +226,6 @@ details[open] > summary > wb-slot {
   bottom: 2px;
 }
 
-/* header within a block */
-
-wb-step header,
-wb-context header,
-wb-trigger header,
-wb-value header {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start unsafe;
-  padding: 0.3em 0.5em;
-}
-
 /* values within locals */
 wb-locals > wb-value {
   margin-bottom: 0;
@@ -260,35 +248,6 @@ wb-value {
   background-image: var(--image);
 }
 
-/* Accessories for blocks */
-
-/* top decoration for steps and contexts */
-wb-tab {
-  position: relative;
-  display: block;
-  fill: var(--color);
-  stroke: var(--border);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  width: 40px;
-  height: 12px;
-  left: 15px;
-}
-
-/* top decoration for triggers */
-wb-hat {
-  position: relative;
-  display: block;
-  fill: var(--color);
-  stroke: var(--color);
-  margin: 0;
-  padding: 0;
-  width: 100px;
-  height: 12px;
-  left: 15px;
-  overflow: hidden;
-}
 
 /* Indicator for a next block for after steps and contexts and inside contexts and triggers */
 wb-slot {
@@ -303,23 +262,3 @@ wb-slot {
   fill: white;
 }
 
-/* Container for values local to a block */
-wb-locals {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  background-color: white;
-  padding: 1px;
-  border-radius: 5px;
-}
-
-/* Container for the single result block of a step or context */
-wb-returns {
-  position: relative;
-  display: inline-block;
-  padding: 1px;
-  background-color: white;
-  border-radius: 5px;
-  border: 3px inset grey;
-  margin-left: 2em;
-}
