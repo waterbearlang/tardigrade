@@ -9,6 +9,37 @@ function template(contents) {
   return t;
 }
 
+// Base styles (used in multiple places)
+
+const VALUE_STYLE = `wb-value {
+  display: inline-block;
+  border-radius: 5px;
+  border-style: solid;
+  padding: 5px;
+  padding-left: 1.5em;
+  background: left / 1em no-repeat #fff
+    url(../images/fa-svg/regular/question-circle.svg);
+}`;
+
+const STEP_STYLE = `wb-step {
+  display: inline-block;
+  border-radius: 5px;
+  position: relative;
+  z-index: 0;
+}`;
+
+const CONTEXT_STYLE = `wb-context {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+}`;
+
+const TRIGGER_STYLE = `wb-trigger {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+}`;
+
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
   AngleUnit: ["degrees", "radians"],
@@ -27,22 +58,40 @@ const selectChoices = {
 // static getObservedElements() (return list of attribute names)
 // const shadow = this.attachShadow({mode: "open"});
 
+class SimpleBlock extends HTMLElement {
+  constructor() {
+    super();
+    let shadow = this.attachShadow({ mode: "open" });
+    if (this.constructor._style) {
+      let style = document.createElement("style");
+      style.innerText = this.constructor._style;
+      shadow.appendChild(style);
+    }
+    if (this.constructor._structure) {
+      this.content = this.template().content.cloneNode(true);
+      shadow.appendChild(this.content);
+    }
+  }
+
+  // template method is inherited by instances, but works on class ;-)
+  template() {
+    let ctor = this.constructor;
+    if (!ctor._template) {
+      ctor._template = template(ctor._structure);
+    }
+    return ctor._template;
+  }
+}
+
 //
 // WBBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
 //
 // Should be refactored to use groups of functionality by composition vs. inheritance once it's clear
 // which blocks need which bits. For now, just toss it all here and we'll see what sticks.
 //
-
-class WBBlock extends HTMLElement {
+class WBBlock extends SimpleBlock {
   constructor() {
     super();
-    let shadow = this.attachShadow({ mode: "open" });
-    let style = document.createElement("style");
-    style.innerText = this.constructor._style;
-    shadow.appendChild(style);
-    this.content = this.template().content.cloneNode(true);
-    shadow.appendChild(this.content);
     this.update();
   }
 
@@ -54,15 +103,6 @@ class WBBlock extends HTMLElement {
     });
     obj.update();
     return obj;
-  }
-
-  // template method is inherited by instances, but works on class ;-)
-  template() {
-    let ctor = this.constructor;
-    if (!ctor._template) {
-      ctor._template = template(ctor._structure);
-    }
-    return ctor._template;
   }
 
   get ns() {
@@ -275,26 +315,15 @@ customElements.define("wb-block-param", WBBlockParam);
 // WBTab - makes the tab at the top of a block. Purely decorative.
 //
 
-class WBTab extends HTMLElement {
+class WBTab extends SimpleBlock {
   static _structure = `<svg width="40" height="12"><path d="M 0 12
     a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
     a 6 6 90 0 0 6 6"></path></svg>`;
-  static _style = ``;
   static tagName = "wb-tab";
   template = WBBlock.prototype.template;
-
-  constructor() {
-    super();
-    let shadow = this.attachShadow({ mode: "open" });
-    // let style = document.createElement("style");
-    // style.innerText = this.constructor._style;
-    // shadow.appendChild(style);
-    this.content = this.template().content.firstElementChild.cloneNode(true);
-    shadow.appendChild(this.content);
-  }
 }
 customElements.define("wb-tab", WBTab);
 
@@ -334,34 +363,36 @@ customElements.define("wb-hat", WBHat);
 // WBLocals - holds values that are local to a block
 //
 
-class WBLocals extends HTMLElement {
+class WBLocals extends SimpleBlock {
   static tagName = "wb-locals";
+  static _style = ``;
+  static _structure = ``;
 }
 customElements.define("wb-locals", WBLocals);
 
 //
 // WBReturns - holds the result of a block that can be used by subsequent blocks
 //
-class WBReturns extends HTMLElement {
+class WBReturns extends SimpleBlock {
   static tagName = "wb-returns";
+  static _structure = `<slot></slot>`;
   static _style = `wb-value {
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 80%;
   }`;
-  constructor() {
-    super();
-    let shadow = this.attachShadow({ mode: "open" });
-    let style = document.createElement("style");
-    style.innerText = this.constructor._style;
-    shadow.appendChild(style);
-  }
 }
 customElements.define("wb-returns", WBReturns);
 
-class WBContains extends HTMLElement {
+class WBContains extends SimpleBlock {
   static tagName = "wb-contains";
-  static _style = `wb-step {
+  static _structure = `<slot></slot>`;
+  static _style = `
+  ${STEP_STYLE}
+  ${VALUE_STYLE}
+  ${CONTEXT_STYLE}
+  ${TRIGGER_STYLE}
+  wb-step {
     margin: 5px;
     margin-top: 12px;
   }
@@ -370,13 +401,6 @@ class WBContains extends HTMLElement {
     margin-top: 12px;
   }
   `;
-  constructor() {
-    super();
-    let shadow = this.attachShadow({ mode: "open" });
-    let style = document.createElement("style");
-    style.innerText = this.constructor._style;
-    shadow.appendChild(style);
-  }
 }
 customElements.define("wb-contains", WBContains);
 
@@ -441,7 +465,7 @@ customElements.define("wb-context", WBContext);
 //
 
 class WBTrigger extends WBBlock {
-  static _structure = `<wb-hat/><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
+  static _structure = `<wb-hat></wb-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
   static _style = ``;
   static tagName = "wb-trigger";
   update() {
@@ -455,6 +479,7 @@ customElements.define("wb-trigger", WBTrigger);
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license (Commercial License)
 `);
+
 export default {
   Trigger: WBTrigger,
   Context: WBContext,
