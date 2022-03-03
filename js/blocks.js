@@ -76,6 +76,19 @@ details[open] > summary > wb-slot {
   bottom: 2px;
 }`;
 
+const SLOT_STYLE = `
+  /* clip-path: url("#slot-cutout-path-inline"); */
+  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
+  -webkit-mask-composite: destination-out;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
+  mask-composite: exclude;
+  mask-position: 40px bottom, left top;
+  mask-size: 40px 12px, auto auto;
+  mask-repeat: no-repeat;
+  /* mask-clip: stroke-box; */
+`;
+
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
   AngleUnit: ["degrees", "radians"],
@@ -418,6 +431,18 @@ customElements.define("wb-tab", WBTab);
 class WBHat extends SimpleBlock {
   static tagName = "wb-hat";
   static _style = `
+    :host{
+      position: relative;
+      display: block;
+      fill: var(--color);
+      stroke: var(--color);
+      margin: 0;
+      padding: 0;
+      width: 100px;
+      height: 12px;
+      left: 15px;
+      overflow: hidden;
+    }
     :host::before {
       content: "";
       position: absolute;
@@ -557,13 +582,14 @@ customElements.define("wb-value", WBValue);
 //
 
 class WBStep extends WBBlock {
-  static _structure = `<wb-tab/><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
+  static _structure = `<wb-tab></wb-tab><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
   static _style = `
     :host {
       display: inline-block;
       border-radius: 5px;
       position: relative;
       z-index: 0;
+      ${SLOT_STYLE}
     }
     ${HEADER_STYLE}
     ${TAB_STYLE}
@@ -598,6 +624,7 @@ class WBContext extends WBBlock {
       display: inline-block;
       position: relative;
       z-index: 0;
+      ${SLOT_STYLE}
     }
     :host::before {
       content: "";
@@ -637,19 +664,20 @@ class WBContext extends WBBlock {
     ${LOCALS_STYLE}
     ${RETURNS_STYLE}
     ${SUMMARY_STYLE}
+    summary{
+      ${SLOT_STYLE}
+    }
   `;
   static tagName = "wb-context";
-  constructor() {
-    super();
-    this.localsHolder = this.shadowRoot.querySelector(".locals");
-    this.paramsHolder = this.shadowRoot.querySelector(".params");
-    this.returnsHolder = this.shadowRoot.querySelector("wb-returns");
-  }
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
-    this.paramsHolder.replaceChildren(...this.mapParams());
-    this.returnsHolder.replaceChildren(this.returnsElement());
-    this.localsHolder.replaceWith(this.wrappedLocals());
+    this.shadowRoot
+      .querySelector(".params")
+      .replaceChildren(...this.mapParams());
+    this.shadowRoot
+      .querySelector("wb-returns")
+      .replaceChildren(this.returnsElement());
+    this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
 customElements.define("wb-context", WBContext);
@@ -702,20 +730,9 @@ class WBTrigger extends WBBlock {
     ${HEADER_STYLE}
     ${LOCALS_STYLE}
     ${SUMMARY_STYLE}
-/* top decoration for triggers */
-wb-hat {
-  position: relative;
-  display: block;
-  fill: var(--color);
-  stroke: var(--color);
-  margin: 0;
-  padding: 0;
-  width: 100px;
-  height: 12px;
-  left: 15px;
-  overflow: hidden;
-}
-
+    summary{
+      ${SLOT_STYLE}
+    }
 `;
   static tagName = "wb-trigger";
   update() {

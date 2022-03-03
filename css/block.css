@@ -13,39 +13,6 @@ wb-contains > wb-trigger {
 
 
 
-
-/* wb-hat needs ::before */
-
-wb-hat::before {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 100px;
-  height: 100px;
-  left: -15px;
-  background-color: var(--color);
-  border-color: var(--border);
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 100%;
-}
-
-wb-step,
-wb-context summary,
-wb-context,
-wb-trigger summary {
-  /* clip-path: url("#slot-cutout-path-inline"); */
-  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
-  -webkit-mask-composite: destination-out;
-  -webkit-mask-repeat: no-repeat;
-  mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
-  mask-composite: exclude;
-  mask-position: 40px bottom, left top;
-  mask-size: 40px 12px, auto auto;
-  mask-repeat: no-repeat;
-  /* mask-clip: stroke-box; */
-}
-
 /* values within locals */
 wb-locals > wb-value {
   margin-bottom: 0;
