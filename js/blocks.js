@@ -18,40 +18,6 @@ const HEADER_STYLE = `header {
   padding: 0.3em 0.5em;
 }`;
 
-const TAB_STYLE = `wb-tab {
-  position: relative;
-  display: block;
-  fill: var(--color);
-  stroke: var(--border);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  width: 40px;
-  height: 12px;
-  left: 15px;
-}`;
-
-const LOCALS_STYLE = `/* Container for values local to a block */
-wb-locals {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  background-color: white;
-  padding: 1px;
-  border-radius: 5px;
-}`;
-
-const RETURNS_STYLE = `/* Container for the single result block of a step or context */
-wb-returns {
-  position: relative;
-  display: inline-block;
-  padding: 1px;
-  background-color: white;
-  border-radius: 5px;
-  border: 3px inset grey;
-  margin-left: 2em;
-}`;
-
 const SUMMARY_STYLE = `summary {
   position: relative;
   background-color: var(--color);
@@ -122,6 +88,12 @@ class SimpleBlock extends HTMLElement {
     }
   }
 
+  connectedCallback() {
+    if (this.update) {
+      this.update();
+    }
+  }
+
   // template method is inherited by instances, but works on class ;-)
   template() {
     let ctor = this.constructor;
@@ -149,7 +121,6 @@ class WBBlock extends SimpleBlock {
     Object.keys(props).forEach(key => {
       obj[key] = props[key];
     });
-    obj.update();
     return obj;
   }
 
@@ -166,10 +137,10 @@ class WBBlock extends SimpleBlock {
     this.setAttribute("name", val);
   }
   get value() {
-    return this._value;
+    return this.getAttribute("value");
   }
   set value(val) {
-    this._value = val;
+    this.setAttribute("value", val);
   }
 
   _conditionalSetAttribute(name) {
@@ -191,27 +162,27 @@ class WBBlock extends SimpleBlock {
   }
 
   get locals() {
-    return this._locals;
+    return JSON.parse(this.getAttribute("locals"));
   }
 
   set locals(val) {
-    this._locals = val;
+    this.setAttribute("locals", JSON.stringify(val));
   }
 
   get body() {
-    return this._body;
+    return this.getAttribute("body");
   }
 
   set body(val) {
-    this._body = val;
+    this.setAttribute("body", val);
   }
 
   get params() {
-    return this._params;
+    return JSON.parse(this.getAttribute("params"));
   }
 
   set params(val) {
-    this._params = val;
+    this.setAttribute("params", JSON.stringify(val));
   }
 
   get choices() {
@@ -283,7 +254,7 @@ class WBBlock extends SimpleBlock {
 }
 
 class WBInputParam extends WBBlock {
-  static _structure = `<span><span class="name"></span> <input type="text" wbtype="" value=""></span>`;
+  static _structure = `<label class="name"> <input type="text" wbtype="" value=""></label>`;
   static _style = `
     :host{
       display: inline-flex;
@@ -305,10 +276,10 @@ class WBInputParam extends WBBlock {
   static tagName = "wb-input-param";
 
   update() {
-    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".name").firstChild.replaceWith(this.name);
     let input = this.shadowRoot.querySelector("input");
     input.setAttribute("wbtype", this.type);
-    input.setAttribute("value", this.value);
+    input.setAttribute("value", this.returnName);
   }
 }
 customElements.define("wb-input-param", WBInputParam);
@@ -353,7 +324,6 @@ class WBSelectParam extends WBBlock {
   set choices(list) {
     this._choices = list;
     this.update();
-    console.log("updated choices");
   }
   get choice() {
     return this._choice;
@@ -361,7 +331,6 @@ class WBSelectParam extends WBBlock {
   set choice(item) {
     this._choice = item;
     this.update();
-    console.log("updated choice");
   }
   update() {
     if (!this.choices) return;
@@ -429,7 +398,20 @@ class WBTab extends SimpleBlock {
     a 6 6 90 0 1 6 6
     a 6 6 90 0 0 6 6"></path></svg>`;
   static tagName = "wb-tab";
-  template = WBBlock.prototype.template;
+  static _style = `
+    :host {
+      position: relative;
+      display: block;
+      fill: var(--color);
+      stroke: var(--border);
+      margin: 0;
+      padding: 0;
+      border: 0;
+      width: 40px;
+      height: 12px;
+      left: 15px;
+    }
+  `;
 }
 customElements.define("wb-tab", WBTab);
 
@@ -498,8 +480,18 @@ customElements.define("wb-hat", WBHat);
 
 class WBLocals extends SimpleBlock {
   static tagName = "wb-locals";
-  static _style = ``;
-  static _structure = ``;
+  static _style = `
+    /* Container for values local to a block */
+    :host {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      background-color: white;
+      padding: 1px;
+      border-radius: 5px;
+    }
+  `;
+  static _structure = `<slot></slot>`;
 }
 customElements.define("wb-locals", WBLocals);
 
@@ -509,7 +501,17 @@ customElements.define("wb-locals", WBLocals);
 class WBReturns extends SimpleBlock {
   static tagName = "wb-returns";
   static _structure = `<slot></slot>`;
-  static _style = ``;
+  static _style = `
+    :host {
+      position: relative;
+      display: inline-block;
+      padding: 1px;
+      background-color: white;
+      border-radius: 5px;
+      border: 3px inset grey;
+      margin-left: 2em;
+    }
+  `;
 }
 customElements.define("wb-returns", WBReturns);
 
@@ -594,7 +596,7 @@ class WBValue extends WBBlock {
   `;
   static tagName = "wb-value";
   update() {
-    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".name").replaceChildren(this.name);
   }
 }
 customElements.define("wb-value", WBValue);
@@ -614,9 +616,6 @@ class WBStep extends WBBlock {
       ${SLOT_STYLE}
     }
     ${HEADER_STYLE}
-    ${TAB_STYLE}
-    ${LOCALS_STYLE}
-    ${RETURNS_STYLE}
     header {
       background-color: var(--color);
       border-color: var(--border);
@@ -684,9 +683,6 @@ class WBContext extends WBBlock {
       border-top-right-radius: 5px;
     }
     ${HEADER_STYLE}
-    ${TAB_STYLE}
-    ${LOCALS_STYLE}
-    ${RETURNS_STYLE}
     ${SUMMARY_STYLE}
     summary{
       ${SLOT_STYLE}
@@ -752,7 +748,6 @@ class WBTrigger extends WBBlock {
       border-top-right-radius: 5px;
     }
     ${HEADER_STYLE}
-    ${LOCALS_STYLE}
     ${SUMMARY_STYLE}
     summary{
       ${SLOT_STYLE}
