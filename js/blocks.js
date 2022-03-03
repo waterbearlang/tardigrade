@@ -295,6 +295,11 @@ class WBInputParam extends WBBlock {
       margin-left: 0.4em;
       padding-left: 1.5em;
       border: 2px inset #333;
+      background: left / contain no-repeat #fff
+        url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
     }
   `;
   static tagName = "wb-input-param";
@@ -392,6 +397,11 @@ class WBBlockParam extends WBBlock {
       margin-left: 0.4em;
       padding-left: 1.5em;
       border: 2px inset #333;
+      background: left / contain no-repeat #fff
+        url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
     }
     input[readonly] {
       background-color: #ccc;
@@ -499,11 +509,7 @@ customElements.define("wb-locals", WBLocals);
 class WBReturns extends SimpleBlock {
   static tagName = "wb-returns";
   static _structure = `<slot></slot>`;
-  static _style = `wb-value {
-    padding-top: 3px;
-    padding-bottom: 3px;
-    font-size: 80%;
-  }`;
+  static _style = ``;
 }
 customElements.define("wb-returns", WBReturns);
 
@@ -522,6 +528,10 @@ class WBContains extends SimpleBlock {
       align-items: flex-start;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
+    }
+    :host-context(wb-contains){
+      margin: 5px 5px;
+      margin-top: 12px;
     }
     :host-context(wb-context, wb-trigger)::before {
       position: absolute;
@@ -568,6 +578,18 @@ class WBValue extends WBBlock {
       padding-left: 1.5em;
       background: left / 1em no-repeat #fff
         url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
+    }
+    :host-context(wb-returns){
+      padding-top: 3px;
+      padding-bottom: 3px;
+      font-size: 80%;
+    }
+    :host-context(wb-locals){
+      margin-bottom: 0;
+      margin-right: 1px;
     }
   `;
   static tagName = "wb-value";
@@ -605,10 +627,12 @@ class WBStep extends WBBlock {
   static tagName = "wb-step";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
-    this.shadowRoot.querySelector(".params").innerHTML = this.mapParams();
-    this.shadowRoot.querySelector(
-      "wb-returns"
-    ).innerHTML = this.returnsElement();
+    this.shadowRoot
+      .querySelector(".params")
+      .replaceChildren(...this.mapParams());
+    this.shadowRoot
+      .querySelector("wb-returns")
+      .replaceChildren(this.returnsElement());
   }
 }
 customElements.define("wb-step", WBStep);
