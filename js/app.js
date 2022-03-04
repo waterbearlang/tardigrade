@@ -1,14 +1,6 @@
 import { parse } from "./moonshine.js";
-import heresy from "../lib/heresy.min.js";
-import * as R from "../lib/ramda.min.js";
-import * as immer from "../lib/immer.min.js";
-
-const blocks = {
-  Step: window.WBStep,
-  Context: window.WBContext,
-  Trigger: window.WBTrigger,
-  Value: window.WBValue,
-};
+import drag from "./dragging.js";
+import blocks from "./blocks.js";
 
 //console.log({ immer, R, parse, dragula, define, ref, render, html });
 

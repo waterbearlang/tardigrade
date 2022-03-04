@@ -1,5 +1,59 @@
 import heresy from "../lib/heresy.min.js";
-const { define, html, render } = heresy;
+const { define, ref, render, html } = heresy;
+
+// Utility function
+function template(contents) {
+  let t = document.createElement("template");
+  t.innerHTML = contents;
+  document.body.appendChild(t);
+  return t;
+}
+
+// Base styles (used in multiple places)
+
+const HEADER_STYLE = `header {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start unsafe;
+  padding: 0.3em 0.5em;
+}`;
+
+const SUMMARY_STYLE = `summary {
+  position: relative;
+  background-color: var(--color);
+  border-color: var(--border);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 25px;
+}
+summary > wb-slot {
+  display: none;
+}
+
+details {
+  margin: 0;
+}
+
+details[open] > summary > wb-slot {
+  display: inline-block;
+  bottom: 2px;
+}`;
+
+const SLOT_STYLE = `
+  /* clip-path: url("#slot-cutout-path-inline"); */
+  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
+  -webkit-mask-composite: destination-out;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
+  mask-composite: exclude;
+  mask-position: 40px bottom, left top;
+  mask-size: 40px 12px, auto auto;
+  mask-repeat: no-repeat;
+  /* mask-clip: stroke-box; */
+`;
 
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
@@ -8,14 +62,59 @@ const selectChoices = {
   WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
 
+// FIXME: Adapting to pure Custom Elements
+// constructor()
+//    super()
+// connectedCallback()
+// Node.isConnected
+// disconnectedCallback()
+// adoptedCallback() // moved to a new document
+// attributeChangedCallback(name, oldValue, newValue)
+// static getObservedElements() (return list of attribute names)
+// const shadow = this.attachShadow({mode: "open"});
+
+class SimpleBlock extends HTMLElement {
+  constructor() {
+    super();
+    let shadow = this.attachShadow({ mode: "open" });
+    if (this.constructor._style) {
+      let style = document.createElement("style");
+      style.innerText = this.constructor._style;
+      shadow.appendChild(style);
+    }
+    if (this.constructor._structure) {
+      this.content = this.template().content.cloneNode(true);
+      shadow.appendChild(this.content);
+    }
+  }
+
+  connectedCallback() {
+    if (this.update) {
+      this.update();
+    }
+  }
+
+  // template method is inherited by instances, but works on class ;-)
+  template() {
+    let ctor = this.constructor;
+    if (!ctor._template) {
+      ctor._template = template(ctor._structure);
+    }
+    return ctor._template;
+  }
+}
+
 //
 // WBBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
 //
 // Should be refactored to use groups of functionality by composition vs. inheritance once it's clear
 // which blocks need which bits. For now, just toss it all here and we'll see what sticks.
 //
+class WBBlock extends SimpleBlock {
+  constructor() {
+    super();
+  }
 
-class WBBlock extends HTMLElement {
   static create(props) {
     props = props || {};
     const obj = document.createElement(this.tagName);
@@ -24,6 +123,7 @@ class WBBlock extends HTMLElement {
     });
     return obj;
   }
+
   get ns() {
     return this.getAttribute("ns");
   }
@@ -37,10 +137,10 @@ class WBBlock extends HTMLElement {
     this.setAttribute("name", val);
   }
   get value() {
-    return this._value;
+    return this.getAttribute("value");
   }
   set value(val) {
-    this._value = val;
+    this.setAttribute("value", val);
   }
 
   _conditionalSetAttribute(name) {
@@ -62,27 +162,27 @@ class WBBlock extends HTMLElement {
   }
 
   get locals() {
-    return this._locals;
+    return JSON.parse(this.getAttribute("locals"));
   }
 
   set locals(val) {
-    this._locals = val;
+    this.setAttribute("locals", JSON.stringify(val));
   }
 
   get body() {
-    return this._body;
+    return this.getAttribute("body");
   }
 
   set body(val) {
-    this._body = val;
+    this.setAttribute("body", val);
   }
 
   get params() {
-    return this._params;
+    return JSON.parse(this.getAttribute("params"));
   }
 
   set params(val) {
-    this._params = val;
+    this.setAttribute("params", JSON.stringify(val));
   }
 
   get choices() {
@@ -122,7 +222,6 @@ class WBBlock extends HTMLElement {
       return [];
     }
     return this.params.map(param => {
-      // console.log("map parameter: %o", param);
       const type = param.type;
       if (["Text", "Integer", "Float", "Colour"].includes(type)) {
         return WBInputParam.create(param);
@@ -131,7 +230,6 @@ class WBBlock extends HTMLElement {
         return WBTruthParam.create(param);
       }
       if (["AngleUnit", "EdgeChoice", "WaveChoice"].includes(type)) {
-        // console.log("%s: %s", type, selectChoices[type]);
         return WBSelectParam.create(param);
       }
       if (["Vector", "Image", "Sprite", "Angle", "Shape"].includes(type)) {
@@ -156,44 +254,87 @@ class WBBlock extends HTMLElement {
 }
 
 class WBInputParam extends WBBlock {
-  static get name() {
-    return "WBInputParam";
-  }
-  static get tagName() {
-    return "wb-input-param";
-  }
-  render() {
-    return this
-      .html`${this.name} <input type="${this.type}" value="${this.value}" >`;
+  static _structure = `<label class="name"> <input type="text" wbtype="" value=""></label>`;
+  static _style = `
+    :host{
+      display: inline-flex;
+      flex-wrap: nowrap;
+      max-height: 1.6em;
+    }
+    input {
+      width: 4em;
+      margin-left: 0.4em;
+      padding-left: 1.5em;
+      border: 2px inset #333;
+      background: left / contain no-repeat #fff
+        url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
+    }
+  `;
+  static tagName = "wb-input-param";
+
+  update() {
+    this.shadowRoot.querySelector(".name").firstChild.replaceWith(this.name);
+    let input = this.shadowRoot.querySelector("input");
+    input.setAttribute("wbtype", this.type);
+    input.setAttribute("value", this.returnName);
   }
 }
-WBInputParam = define(WBInputParam);
+customElements.define("wb-input-param", WBInputParam);
 
 class WBTruthParam extends WBBlock {
-  static get name() {
-    return "WBTruthParam";
-  }
-  static get tagName() {
-    return "wb-truth-param";
-  }
-  render() {
-    return this.html`${this.name} <checkbox type="boolean" ${
-      this.value ? "checked" : ""
-    } >`;
+  static _structure = `<span><span class="name"></span> <input type="checkbox" wbtype="truth" value=""></span>`;
+  static _style = `
+    :host{
+      display: inline-flex;
+      flex-wrap: nowrap;
+      max-height: 1.6em;
+    }
+    input {
+      width: 4em;
+      margin-left: 0.4em;
+      padding-left: 1.5em;
+      border: 2px inset #333;
+    }
+  `;
+  static tagName = "wb-truth-param";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    let input = this.shadowRoot.querySelector("input");
+    input.checked = this.value === "true";
   }
 }
-WBTruthParam = define(WBTruthParam);
+customElements.define("wb-truth-param", WBTruthParam);
 
 class WBSelectParam extends WBBlock {
-  static get name() {
-    return "WBSelectParam";
+  static _structure = `<select></select>`;
+  static _style = `
+    :host{
+      display: inline-flex;
+      flex-wrap: nowrap;
+      max-height: 1.6em;
+    }
+  `;
+  static tagName = "wb-select-param";
+  get choices() {
+    return this._choices;
   }
-  static get tagName() {
-    return "wb-select-param";
+  set choices(list) {
+    this._choices = list;
+    this.update();
   }
-  render() {
-    const obj = document.createElement("select");
-    obj.innerHTML = this.choices
+  get choice() {
+    return this._choice;
+  }
+  set choice(item) {
+    this._choice = item;
+    this.update();
+  }
+  update() {
+    if (!this.choices) return;
+    this.shadowRoot.querySelector("select").innerHTML = this.choices
       .map(
         choice =>
           `<option value="${choice}" ${
@@ -201,64 +342,115 @@ class WBSelectParam extends WBBlock {
           }>`
       )
       .join("");
-    return obj;
   }
 }
-WBSelectParam = define(WBSelectParam);
+customElements.define("wb-select-param", WBSelectParam);
 
 //
 // WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
 //
 
 class WBBlockParam extends WBBlock {
-  static get name() {
-    return "WBBlockParam";
-  }
-  static get tagName() {
-    return "wb-block-param";
-  }
-  render() {
-    return this
-      .html`<label>${this.name}</label> <input type="${this.type}" readonly title="drag a ${this.type} block here">`;
+  static _structure = `<label class="name"></label> <input type="text" wbtype="" readonly title="">`;
+  static _style = `
+    :host{
+      display: inline-flex;
+      flex-wrap: nowrap;
+      max-height: 1.6em;
+    }
+    label {
+      margin-left: 0.2em;
+    }
+    input {
+      width: 4em;
+      margin-left: 0.4em;
+      padding-left: 1.5em;
+      border: 2px inset #333;
+      background: left / contain no-repeat #fff
+        url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
+    }
+    input[readonly] {
+      background-color: #ccc;
+    }
+  `;
+  static tagName = "wb-block-param";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    let input = this.shadowRoot.querySelector("input");
+    input.setAttribute("wbtype", this.type);
+    input.setAttribute("title", `drag a ${this.type} block here`);
   }
 }
-WBBlockParam = define(WBBlockParam);
+customElements.define("wb-block-param", WBBlockParam);
 
 //
 // WBTab - makes the tab at the top of a block. Purely decorative.
 //
 
-class WBTab extends HTMLElement {
-  static get name() {
-    return "WBTab";
-  }
-  static get tagName() {
-    return "wb-tab";
-  }
-  render() {
-    return this.svg`<svg width="40" height="12"><path d="M 0 12
+class WBTab extends SimpleBlock {
+  static _structure = `<svg width="40" height="12"><path d="M 0 12
     a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
     a 6 6 90 0 0 6 6"></path></svg>`;
-  }
+  static tagName = "wb-tab";
+  static _style = `
+    :host {
+      position: relative;
+      display: block;
+      fill: var(--color);
+      stroke: var(--border);
+      margin: 0;
+      padding: 0;
+      border: 0;
+      width: 40px;
+      height: 12px;
+      left: 15px;
+    }
+  `;
 }
-WBTab = define(WBTab);
+customElements.define("wb-tab", WBTab);
 
 //
 // WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
+// Maybe move to pure CSS?
 //
 
-class WBHat extends HTMLElement {
-  static get name() {
-    return "WBHat";
-  }
-  static get tagName() {
-    return "wb-hat";
-  }
+class WBHat extends SimpleBlock {
+  static tagName = "wb-hat";
+  static _style = `
+    :host{
+      position: relative;
+      display: block;
+      fill: var(--color);
+      stroke: var(--color);
+      margin: 0;
+      padding: 0;
+      width: 100px;
+      height: 12px;
+      left: 15px;
+      overflow: hidden;
+    }
+    :host::before {
+      content: "";
+      position: absolute;
+      display: block;
+      width: 100px;
+      height: 100px;
+      left: -15px;
+      background-color: var(--color);
+      border-color: var(--border);
+      border-width: 2px;
+      border-style: solid;
+      border-radius: 100%;
+    }
+  `;
 }
-WBHat = define(WBHat);
+customElements.define("wb-hat", WBHat);
 
 // //
 // // WBSlot - makes the indent at the bottom of a block
@@ -286,103 +478,312 @@ WBHat = define(WBHat);
 // WBLocals - holds values that are local to a block
 //
 
-class WBLocals extends HTMLElement {
-  static get name() {
-    return "WBLocals";
-  }
-  static get tagName() {
-    return "wb-locals";
-  }
+class WBLocals extends SimpleBlock {
+  static tagName = "wb-locals";
+  static _style = `
+    /* Container for values local to a block */
+    :host {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      background-color: white;
+      padding: 1px;
+      border-radius: 5px;
+    }
+    wb-value{
+      margin-bottom: 0;
+      margin-right: 1px;
+    }
+  `;
+  static _structure = `<slot></slot>`;
 }
-WBLocals = define(WBLocals);
+customElements.define("wb-locals", WBLocals);
 
 //
 // WBReturns - holds the result of a block that can be used by subsequent blocks
 //
-class WBReturns extends HTMLElement {
-  static get name() {
-    return "WBReturns";
-  }
-  static get tagName() {
-    return "wb-returns";
-  }
+class WBReturns extends SimpleBlock {
+  static tagName = "wb-returns";
+  static _structure = `<slot></slot>`;
+  static _style = `
+    :host {
+      position: relative;
+      display: inline-block;
+      padding: 1px;
+      background-color: white;
+      border-radius: 5px;
+      border: 3px inset grey;
+      margin-left: 2em;
+    }
+    wb-value{
+      padding-top: 3px;
+      padding-bottom: 3px;
+      font-size: 80%;
+    }
+  `;
 }
+customElements.define("wb-returns", WBReturns);
+
+class WBContains extends SimpleBlock {
+  static tagName = "wb-contains";
+  static _structure = `<slot></slot>`;
+  static _style = `
+    :host {
+      position: relative;
+      min-height: 1.25em;
+      padding-bottom: 14px;
+      padding: 0.5em;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    wb-step {
+      margin: 5px;
+      margin-top: 12px;
+    }
+    wb-context {
+      margin: 5px;
+      margin-top: 12px;
+    }
+    wb-value{
+      margin: 5px;
+    }
+    wb-step{
+      margin: 5px;
+      margin-top: 12px;
+    }
+  `;
+}
+customElements.define("wb-contains", WBContains);
 
 //
 // WBValue - standalone values
 //
 
 class WBValue extends WBBlock {
-  static get name() {
-    return "WBValue";
-  }
-  static get tagName() {
-    return "wb-value";
-  }
-  render() {
-    return this.html`${this.name}`;
+  static _structure = `<span class="name"></span>`;
+  static _style = `
+    :host {
+      display: inline-block;
+      border-radius: 5px;
+      border-style: solid;
+      padding: 5px;
+      padding-left: 1.5em;
+      background: left / 1em no-repeat #fff
+        url(../images/fa-svg/regular/question-circle.svg);
+      background-color: var(--color);
+      border-color: var(--border);
+      background-image: var(--image);
+    }
+  `;
+  static tagName = "wb-value";
+  update() {
+    this.shadowRoot.querySelector(".name").replaceChildren(this.name);
   }
 }
-window.WBValue = define(WBValue);
+customElements.define("wb-value", WBValue);
 
 //
 // WBStep - the workhorse of Waterbear
 //
 
 class WBStep extends WBBlock {
-  static get name() {
-    return "WBStep";
-  }
-  static get tagName() {
-    return "wb-step";
-  }
-  render() {
-    return this.html`<wb-tab/><header><span>${
-      this.name
-    }</span> ${this.mapParams()}<wb-returns title="Returned value of this block">${this.returnsElement()}</wb-returns></header>`;
+  static _structure = `<wb-tab></wb-tab><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
+  static _style = `
+    :host {
+      display: inline-block;
+      border-radius: 5px;
+      position: relative;
+      z-index: 0;
+      ${SLOT_STYLE}
+    }
+    ${HEADER_STYLE}
+    header {
+      background-color: var(--color);
+      border-color: var(--border);
+      border-width: 2px;
+      border-style: solid;
+    }
+  `;
+  static tagName = "wb-step";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot
+      .querySelector(".params")
+      .replaceChildren(...this.mapParams());
+    this.shadowRoot
+      .querySelector("wb-returns")
+      .replaceChildren(this.returnsElement());
   }
 }
-window.WBStep = define(WBStep);
+customElements.define("wb-step", WBStep);
 
 //
 // WBContext - a container for steps (and a step itself)
 //
 
 class WBContext extends WBBlock {
-  static get name() {
-    return "WBContext";
-  }
-  static get tagName() {
-    return "wb-context";
-  }
-  render() {
-    return this.html`<wb-tab/><details open><summary><header><span>${
-      this.name
-    }</span> ${this.mapParams()}</header>${this.wrappedLocals()}</summary><wb-contains /></details>`;
+  static _structure = `<wb-tab></wb-tab><details open><summary><header><span class="name"></span> <span class="params"><slot name="params"></slot></span> <wb-returns title="Returned value of this block"><slot name="returns"></wb-returns></header><span class="locals"><slot name="locals"></slot></span></summary><wb-contains><slot name="steps></slot></wb-contains></details>`;
+  static _style = `
+    :host {
+      display: inline-block;
+      position: relative;
+      z-index: 0;
+      ${SLOT_STYLE}
+    }
+    :host::before {
+      content: "";
+      width: 10px;
+      height: calc(100% - 15px);
+      position: absolute;
+      top: 15px;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color);
+      /* border-color: var(--color);
+      border-width: 2px;
+      border-style: solid; */
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    :host::after {
+      content: "";
+      height: 20px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      /* border-width: 2px;
+      border-style: solid; */
+      background-color: var(--color);
+      /* border-color: var(--border); */
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    ${HEADER_STYLE}
+    ${SUMMARY_STYLE}
+    summary{
+      ${SLOT_STYLE}
+    }
+    wb-contains::before{
+      position: absolute;
+      left: 5px;
+      top: -5px;
+      content: "";
+      height: calc(100% - 20px);
+      width: 10px;
+      display: block;
+      border-radius: 8px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--color);
+      clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+    }
+
+  `;
+  static tagName = "wb-context";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot
+      .querySelector(".params")
+      .replaceChildren(...this.mapParams());
+    this.shadowRoot
+      .querySelector("wb-returns")
+      .replaceChildren(this.returnsElement());
+    this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
-window.WBContext = define(WBContext);
+customElements.define("wb-context", WBContext);
 
 //
 // WBTrigger - a starting point for a script, fired by an event occurring
 //
 
 class WBTrigger extends WBBlock {
-  static get name() {
-    return "WBTrigger";
-  }
-  static get tagName() {
-    return "wb-trigger";
-  }
-  render() {
-    return this.html`<wb-hat/><details open><summary><header><span>${
-      this.name
-    }</span> </header>${this.wrappedLocals()}</summary><wb-contains></wb-contains></details>`;
+  static _structure = `<wb-hat></wb-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
+  static _style = `
+    :host {
+      display: inline-block;
+      position: relative;
+      z-index: 0;
+    }
+    :host::before {
+      content: "";
+      width: 10px;
+      height: calc(100% - 15px);
+      position: absolute;
+      top: 15px;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color);
+      /* border-color: var(--color);
+      border-width: 2px;
+      border-style: solid; */
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    :host::after {
+      content: "";
+      height: 20px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      /* border-width: 2px;
+      border-style: solid; */
+      background-color: var(--color);
+      /* border-color: var(--border); */
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    ${HEADER_STYLE}
+    ${SUMMARY_STYLE}
+    summary{
+      ${SLOT_STYLE}
+    }
+    wb-contains::before{
+      position: absolute;
+      left: 5px;
+      top: -5px;
+      content: "";
+      height: calc(100% - 20px);
+      width: 10px;
+      display: block;
+      border-radius: 8px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--color);
+      clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+    }
+
+`;
+  static tagName = "wb-trigger";
+  update() {
+    this.shadowRoot.querySelector(".name").innerText = this.name;
+    this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
-window.WBTrigger = define(WBTrigger);
+customElements.define("wb-trigger", WBTrigger);
 
 // Attribution for Font Awesome icons
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license (Commercial License)
 `);
+
+export default {
+  Trigger: WBTrigger,
+  Context: WBContext,
+  Step: WBStep,
+  Value: WBValue,
+};

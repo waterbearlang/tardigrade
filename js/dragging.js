@@ -1,6 +1,6 @@
 import dragula from "../lib/dragula.min.js";
 
-let drake = dragula({
+let drag = dragula({
   isContainer: function (el) {
     return el.matches("wb-contains, .script");
   },
@@ -28,5 +28,7 @@ let drake = dragula({
   revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
   removeOnSpill: true, // spilling will `.remove` the element, if this is true
 });
-// drake.on("drop", () => trigger("scriptChanged", document.body));
-// drake.on("remove", () => trigger("scriptChanged", document.body));
+// drag.on("drop", () => trigger("scriptChanged", document.body));
+// drag.on("remove", () => trigger("scriptChanged", document.body));
+
+export default drag;
