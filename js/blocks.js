@@ -490,6 +490,10 @@ class WBLocals extends SimpleBlock {
       padding: 1px;
       border-radius: 5px;
     }
+    wb-value{
+      margin-bottom: 0;
+      margin-right: 1px;
+    }
   `;
   static _structure = `<slot></slot>`;
 }
@@ -511,6 +515,11 @@ class WBReturns extends SimpleBlock {
       border: 3px inset grey;
       margin-left: 2em;
     }
+    wb-value{
+      padding-top: 3px;
+      padding-bottom: 3px;
+      font-size: 80%;
+    }
   `;
 }
 customElements.define("wb-returns", WBReturns);
@@ -531,25 +540,6 @@ class WBContains extends SimpleBlock {
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
     }
-    :host-context(wb-contains){
-      margin: 5px 5px;
-      margin-top: 12px;
-    }
-    :host-context(wb-context, wb-trigger)::before {
-      position: absolute;
-      left: 5px;
-      top: -5px;
-      content: "";
-      height: calc(100% - 20px);
-      width: 10px;
-      display: block;
-      border-radius: 8px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: var(--color);
-      clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
-    }
-
     wb-step {
       margin: 5px;
       margin-top: 12px;
@@ -558,8 +548,12 @@ class WBContains extends SimpleBlock {
       margin: 5px;
       margin-top: 12px;
     }
-    wb-value {
+    wb-value{
       margin: 5px;
+    }
+    wb-step{
+      margin: 5px;
+      margin-top: 12px;
     }
   `;
 }
@@ -583,15 +577,6 @@ class WBValue extends WBBlock {
       background-color: var(--color);
       border-color: var(--border);
       background-image: var(--image);
-    }
-    :host-context(wb-returns){
-      padding-top: 3px;
-      padding-bottom: 3px;
-      font-size: 80%;
-    }
-    :host-context(wb-locals){
-      margin-bottom: 0;
-      margin-right: 1px;
     }
   `;
   static tagName = "wb-value";
@@ -687,6 +672,21 @@ class WBContext extends WBBlock {
     summary{
       ${SLOT_STYLE}
     }
+    wb-contains::before{
+      position: absolute;
+      left: 5px;
+      top: -5px;
+      content: "";
+      height: calc(100% - 20px);
+      width: 10px;
+      display: block;
+      border-radius: 8px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--color);
+      clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+    }
+
   `;
   static tagName = "wb-context";
   update() {
@@ -752,6 +752,21 @@ class WBTrigger extends WBBlock {
     summary{
       ${SLOT_STYLE}
     }
+    wb-contains::before{
+      position: absolute;
+      left: 5px;
+      top: -5px;
+      content: "";
+      height: calc(100% - 20px);
+      width: 10px;
+      display: block;
+      border-radius: 8px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--color);
+      clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+    }
+
 `;
   static tagName = "wb-trigger";
   update() {
