@@ -69,11 +69,11 @@ blockScripts.forEach(name => {
   let menu = document.createElement("details");
   let title = capitalize(name);
   menu.setAttribute("open", "true");
-  menu.innerHTML = `<summary class="menu_title" ns="${name}" type="${title}">${title}</summary><wb-contains></wb-contains>`;
+  menu.innerHTML = `<summary class="menu_title" ns="${name}" type="${title}">${title}</summary><tg-contains></tg-contains>`;
   blockmenu.appendChild(menu);
   fetch(`blocks/${name}.moon`).then(response =>
     response
       .text()
-      .then(text => processScript(text, menu.querySelector("wb-contains")))
+      .then(text => processScript(text, menu.querySelector("tg-contains")))
   );
 });
