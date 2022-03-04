@@ -26,18 +26,11 @@ const SUMMARY_STYLE = `summary {
   padding-right: 10px;
   padding-bottom: 25px;
 }
-summary > wb-slot {
-  display: none;
-}
 
 details {
   margin: 0;
 }
-
-details[open] > summary > wb-slot {
-  display: inline-block;
-  bottom: 2px;
-}`;
+`;
 
 const SLOT_STYLE = `
   -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
@@ -56,17 +49,6 @@ const selectChoices = {
   EdgeChoice: ["pass", "bounce", "wrap", "stop"],
   WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
-
-// FIXME: Adapting to pure Custom Elements
-// constructor()
-//    super()
-// connectedCallback()
-// Node.isConnected
-// disconnectedCallback()
-// adoptedCallback() // moved to a new document
-// attributeChangedCallback(name, oldValue, newValue)
-// static getObservedElements() (return list of attribute names)
-// const shadow = this.attachShadow({mode: "open"});
 
 class SimpleBlock extends HTMLElement {
   constructor() {
@@ -100,12 +82,12 @@ class SimpleBlock extends HTMLElement {
 }
 
 //
-// WBBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
+// TGBlock - never instantiated as an element, but holds utility functionality for blocks to subclass
 //
 // Should be refactored to use groups of functionality by composition vs. inheritance once it's clear
 // which blocks need which bits. For now, just toss it all here and we'll see what sticks.
 //
-class WBBlock extends SimpleBlock {
+class TGBlock extends SimpleBlock {
   constructor() {
     super();
   }
@@ -188,7 +170,7 @@ class WBBlock extends SimpleBlock {
     if (!this.returnType) {
       return;
     }
-    return WBValue.create({
+    return TGValue.create({
       type: "Value",
       returnType: this.returnType,
       ns: this.ns,
@@ -198,14 +180,14 @@ class WBBlock extends SimpleBlock {
   }
 
   wrappedLocals() {
-    // returns locals as elements, wrapped in a <wb-locals> block
+    // returns locals as elements, wrapped in a <tg-locals> block
     // if there are no locals, returns undefined
     let locals;
     if (this.locals && this.locals.length) {
-      locals = new WBLocals();
+      locals = new TGLocals();
       this.locals.forEach(value => {
         value.ns = this.ns;
-        locals.appendChild(WBValue.create(value));
+        locals.appendChild(TGValue.create(value));
       });
     }
     return locals;
@@ -219,28 +201,28 @@ class WBBlock extends SimpleBlock {
     return this.params.map(param => {
       const type = param.type;
       if (["Text", "Integer", "Float", "Colour"].includes(type)) {
-        return WBInputParam.create(param);
+        return TGInputParam.create(param);
       }
       if (type === "Truth") {
-        return WBTruthParam.create(param);
+        return TGTruthParam.create(param);
       }
       if (["AngleUnit", "EdgeChoice", "WaveChoice"].includes(type)) {
-        return WBSelectParam.create(param);
+        return TGSelectParam.create(param);
       }
       if (["Vector", "Image", "Sprite", "Angle", "Shape"].includes(type)) {
-        return WBBlockParam.create(param);
+        return TGBlockParam.create(param);
       }
       if (type.includes("List")) {
         // List types exist for all primitive types, for struct types, and even for other list types.
         // Some list types can be late-bound, so "list of what" is not known until parameters
         // are added
-        return WBBlockParam.create(param);
+        return TGBlockParam.create(param);
       }
       if (type === "Type") {
         // late bound type, depends on the type of argument used
-        // for WB this will be handled in the interface for inserting arguments
+        // for Tardigrade this will be handled in the interface for inserting arguments
         // (whether by click, drag-and-drop, cut-and-paste, undo/redo or whatevs)
-        return WBBlockParam.create(param);
+        return TGBlockParam.create(param);
       }
       console.error("Unrecognized parameter type: %s", param.type);
       throw new Error("Unrecognized parameter type: " + param.type);
@@ -248,7 +230,7 @@ class WBBlock extends SimpleBlock {
   }
 }
 
-class WBInputParam extends WBBlock {
+class TGInputParam extends TGBlock {
   static _structure = `<label class="name"> <input type="text" wbtype="" value=""></label>`;
   static _style = `
     :host{
@@ -268,7 +250,7 @@ class WBInputParam extends WBBlock {
       background-image: var(--image);
     }
   `;
-  static tagName = "wb-input-param";
+  static tagName = "tg-input-param";
 
   update() {
     this.shadowRoot.querySelector(".name").firstChild.replaceWith(this.name);
@@ -277,9 +259,9 @@ class WBInputParam extends WBBlock {
     input.setAttribute("value", this.returnName);
   }
 }
-customElements.define("wb-input-param", WBInputParam);
+customElements.define("tg-input-param", TGInputParam);
 
-class WBTruthParam extends WBBlock {
+class TGTruthParam extends TGBlock {
   static _structure = `<span><span class="name"></span> <input type="checkbox" wbtype="truth" value=""></span>`;
   static _style = `
     :host{
@@ -294,16 +276,16 @@ class WBTruthParam extends WBBlock {
       border: 2px inset #333;
     }
   `;
-  static tagName = "wb-truth-param";
+  static tagName = "tg-truth-param";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
     let input = this.shadowRoot.querySelector("input");
     input.checked = this.value === "true";
   }
 }
-customElements.define("wb-truth-param", WBTruthParam);
+customElements.define("tg-truth-param", TGTruthParam);
 
-class WBSelectParam extends WBBlock {
+class TGSelectParam extends TGBlock {
   static _structure = `<select></select>`;
   static _style = `
     :host{
@@ -312,7 +294,7 @@ class WBSelectParam extends WBBlock {
       max-height: 1.6em;
     }
   `;
-  static tagName = "wb-select-param";
+  static tagName = "tg-select-param";
   get choices() {
     return this._choices;
   }
@@ -339,13 +321,13 @@ class WBSelectParam extends WBBlock {
       .join("");
   }
 }
-customElements.define("wb-select-param", WBSelectParam);
+customElements.define("tg-select-param", TGSelectParam);
 
 //
-// WBBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
+// TGBlockParam - A parameter socket that only takes blocks as arguments, and only if their type matches.
 //
 
-class WBBlockParam extends WBBlock {
+class TGBlockParam extends TGBlock {
   static _structure = `<label class="name"></label> <input type="text" wbtype="" readonly title="">`;
   static _style = `
     :host{
@@ -371,7 +353,7 @@ class WBBlockParam extends WBBlock {
       background-color: #ccc;
     }
   `;
-  static tagName = "wb-block-param";
+  static tagName = "tg-block-param";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
     let input = this.shadowRoot.querySelector("input");
@@ -379,20 +361,20 @@ class WBBlockParam extends WBBlock {
     input.setAttribute("title", `drag a ${this.type} block here`);
   }
 }
-customElements.define("wb-block-param", WBBlockParam);
+customElements.define("tg-block-param", TGBlockParam);
 
 //
-// WBTab - makes the tab at the top of a block. Purely decorative.
+// TGTab - makes the tab at the top of a block. Purely decorative.
 //
 
-class WBTab extends SimpleBlock {
+class TGTab extends SimpleBlock {
   static _structure = `<svg width="40" height="12"><path d="M 0 12
     a 6 6 90 0 0 6 -6
     a 6 6 90 0 1 6 -6
     h 16
     a 6 6 90 0 1 6 6
     a 6 6 90 0 0 6 6"></path></svg>`;
-  static tagName = "wb-tab";
+  static tagName = "tg-tab";
   static _style = `
     :host {
       position: relative;
@@ -408,15 +390,15 @@ class WBTab extends SimpleBlock {
     }
   `;
 }
-customElements.define("wb-tab", WBTab);
+customElements.define("tg-tab", TGTab);
 
 //
-// WBHat - makes the bulge on top of a WBTrigger. Purely decorative.
+// TGHat - makes the bulge on top of a TGTrigger. Purely decorative.
 // Maybe move to pure CSS?
 //
 
-class WBHat extends SimpleBlock {
-  static tagName = "wb-hat";
+class TGHat extends SimpleBlock {
+  static tagName = "tg-hat";
   static _style = `
     :host{
       position: relative;
@@ -445,36 +427,15 @@ class WBHat extends SimpleBlock {
     }
   `;
 }
-customElements.define("wb-hat", WBHat);
+customElements.define("tg-hat", TGHat);
 
-// //
-// // WBSlot - makes the indent at the bottom of a block
-// //
-
-// class WBSlot extends HTMLElement {
-//   static get name() {
-//     return "WBSlot";
-//   }
-//   static get tagName() {
-//     return "wb-slot";
-//   }
-//   render() {
-//     return this.svg`<svg width="40" height="12"><path d="M 0 12
-//     a 6 6 90 0 0 6 -6
-//     a 6 6 90 0 1 6 -6
-//     h 16
-//     a 6 6 90 0 1 6 6
-//     a 6 6 90 0 0 6 6"></path></svg>`;
-//   }
-// }
-// WBSlot = define(WBSlot);
 
 //
-// WBLocals - holds values that are local to a block
+// TGLocals - holds values that are local to a block
 //
 
-class WBLocals extends SimpleBlock {
-  static tagName = "wb-locals";
+class TGLocals extends SimpleBlock {
+  static tagName = "tg-locals";
   static _style = `
     /* Container for values local to a block */
     :host {
@@ -485,20 +446,20 @@ class WBLocals extends SimpleBlock {
       padding: 1px;
       border-radius: 5px;
     }
-    wb-value{
+    tg-value{
       margin-bottom: 0;
       margin-right: 1px;
     }
   `;
   static _structure = `<slot></slot>`;
 }
-customElements.define("wb-locals", WBLocals);
+customElements.define("tg-locals", TGLocals);
 
 //
-// WBReturns - holds the result of a block that can be used by subsequent blocks
+// TGReturns - holds the result of a block that can be used by subsequent blocks
 //
-class WBReturns extends SimpleBlock {
-  static tagName = "wb-returns";
+class TGReturns extends SimpleBlock {
+  static tagName = "tg-returns";
   static _structure = `<slot></slot>`;
   static _style = `
     :host {
@@ -510,17 +471,17 @@ class WBReturns extends SimpleBlock {
       border: 3px inset grey;
       margin-left: 2em;
     }
-    wb-value{
+    tg-value{
       padding-top: 3px;
       padding-bottom: 3px;
       font-size: 80%;
     }
   `;
 }
-customElements.define("wb-returns", WBReturns);
+customElements.define("tg-returns", TGReturns);
 
-class WBContains extends SimpleBlock {
-  static tagName = "wb-contains";
+class TGContains extends SimpleBlock {
+  static tagName = "tg-contains";
   static _structure = `<slot></slot>`;
   static _style = `
     :host {
@@ -535,30 +496,30 @@ class WBContains extends SimpleBlock {
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
     }
-    wb-step {
+    tg-step {
       margin: 5px;
       margin-top: 12px;
     }
-    wb-context {
+    tg-context {
       margin: 5px;
       margin-top: 12px;
     }
-    wb-value{
+    tg-value{
       margin: 5px;
     }
-    wb-step{
+    tg-step{
       margin: 5px;
       margin-top: 12px;
     }
   `;
 }
-customElements.define("wb-contains", WBContains);
+customElements.define("tg-contains", TGContains);
 
 //
-// WBValue - standalone values
+// TGValue - standalone values
 //
 
-class WBValue extends WBBlock {
+class TGValue extends TGBlock {
   static _structure = `<span class="name"></span>`;
   static _style = `
     :host {
@@ -574,19 +535,19 @@ class WBValue extends WBBlock {
       background-image: var(--image);
     }
   `;
-  static tagName = "wb-value";
+  static tagName = "tg-value";
   update() {
     this.shadowRoot.querySelector(".name").replaceChildren(this.name);
   }
 }
-customElements.define("wb-value", WBValue);
+customElements.define("tg-value", TGValue);
 
 //
-// WBStep - the workhorse of Waterbear
+// TGStep - the workhorse of Waterbear
 //
 
-class WBStep extends WBBlock {
-  static _structure = `<wb-tab></wb-tab><header><span class="name"></span> <span class="params"></span> <wb-returns title="Returned value of this block"></wb-returns></header>`;
+class TGStep extends TGBlock {
+  static _structure = `<tg-tab></tg-tab><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></tg-returns></header>`;
   static _style = `
     :host {
       display: inline-block;
@@ -603,25 +564,25 @@ class WBStep extends WBBlock {
       border-style: solid;
     }
   `;
-  static tagName = "wb-step";
+  static tagName = "tg-step";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
     this.shadowRoot
       .querySelector(".params")
       .replaceChildren(...this.mapParams());
     this.shadowRoot
-      .querySelector("wb-returns")
+      .querySelector("tg-returns")
       .replaceChildren(this.returnsElement());
   }
 }
-customElements.define("wb-step", WBStep);
+customElements.define("tg-step", TGStep);
 
 //
-// WBContext - a container for steps (and a step itself)
+// TGContext - a container for steps (and a step itself)
 //
 
-class WBContext extends WBBlock {
-  static _structure = `<wb-tab></wb-tab><details open><summary><header><span class="name"></span> <span class="params"><slot name="params"></slot></span> <wb-returns title="Returned value of this block"><slot name="returns"></wb-returns></header><span class="locals"><slot name="locals"></slot></span></summary><wb-contains><slot name="steps></slot></wb-contains></details>`;
+class TGContext extends TGBlock {
+  static _structure = `<tg-tab></tg-tab><details open><summary><header><span class="name"></span> <span class="params"><slot name="params"></slot></span> <tg-returns title="Returned value of this block"><slot name="returns"></tg-returns></header><span class="locals"><slot name="locals"></slot></span></summary><tg-contains><slot name="steps></slot></tg-contains></details>`;
   static _style = `
     :host {
       display: inline-block;
@@ -667,7 +628,7 @@ class WBContext extends WBBlock {
     summary{
       ${SLOT_STYLE}
     }
-    wb-contains::before{
+    tg-contains::before{
       position: absolute;
       left: 5px;
       top: -5px;
@@ -683,26 +644,26 @@ class WBContext extends WBBlock {
     }
 
   `;
-  static tagName = "wb-context";
+  static tagName = "tg-context";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
     this.shadowRoot
       .querySelector(".params")
       .replaceChildren(...this.mapParams());
     this.shadowRoot
-      .querySelector("wb-returns")
+      .querySelector("tg-returns")
       .replaceChildren(this.returnsElement());
     this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
-customElements.define("wb-context", WBContext);
+customElements.define("tg-context", TGContext);
 
 //
-// WBTrigger - a starting point for a script, fired by an event occurring
+// TGTrigger - a starting point for a script, fired by an event occurring
 //
 
-class WBTrigger extends WBBlock {
-  static _structure = `<wb-hat></wb-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><wb-contains></wb-contains></details>`;
+class TGTrigger extends TGBlock {
+  static _structure = `<tg-hat></tg-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
   static _style = `
     :host {
       display: inline-block;
@@ -747,7 +708,7 @@ class WBTrigger extends WBBlock {
     summary{
       ${SLOT_STYLE}
     }
-    wb-contains::before{
+    tg-contains::before{
       position: absolute;
       left: 5px;
       top: -5px;
@@ -763,13 +724,13 @@ class WBTrigger extends WBBlock {
     }
 
 `;
-  static tagName = "wb-trigger";
+  static tagName = "tg-trigger";
   update() {
     this.shadowRoot.querySelector(".name").innerText = this.name;
     this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
-customElements.define("wb-trigger", WBTrigger);
+customElements.define("tg-trigger", TGTrigger);
 
 // Attribution for Font Awesome icons
 console.info(`Font Awesome Pro 5.15.1 by @fontawesome - https://fontawesome.com
@@ -777,8 +738,8 @@ License - https://fontawesome.com/license (Commercial License)
 `);
 
 export default {
-  Trigger: WBTrigger,
-  Context: WBContext,
-  Step: WBStep,
-  Value: WBValue,
+  Trigger: TGTrigger,
+  Context: TGContext,
+  Step: TGStep,
+  Value: TGValue,
 };
