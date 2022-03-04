@@ -2,8 +2,6 @@ import { parse } from "./moonshine.js";
 import drag from "./dragging.js";
 import blocks from "./blocks.js";
 
-//console.log({ immer, R, parse, dragula, define, ref, render, html });
-
 window.runtime = {};
 
 const processScript = async (script, menu) => {

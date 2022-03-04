@@ -1,6 +1,3 @@
-import heresy from "../lib/heresy.min.js";
-const { define, ref, render, html } = heresy;
-
 // Utility function
 function template(contents) {
   let t = document.createElement("template");
@@ -43,7 +40,6 @@ details[open] > summary > wb-slot {
 }`;
 
 const SLOT_STYLE = `
-  /* clip-path: url("#slot-cutout-path-inline"); */
   -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
   -webkit-mask-composite: destination-out;
   -webkit-mask-repeat: no-repeat;
@@ -52,7 +48,6 @@ const SLOT_STYLE = `
   mask-position: 40px bottom, left top;
   mask-size: 40px 12px, auto auto;
   mask-repeat: no-repeat;
-  /* mask-clip: stroke-box; */
 `;
 
 // FIXME: These should be extracted from .moon files
