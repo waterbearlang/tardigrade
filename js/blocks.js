@@ -1,22 +1,3 @@
-
-// Utility function
-function template(contents) {
-  let t;
-  try {
-    t = document.createElement("template");
-  } catch (e) {
-    console.error(`Problem creating template for ${this.tagName}`);
-  }
-  try {
-    t.innerHTML = contents;
-  } catch (e) {
-    console.error(`Problem setting innerHTML (${contents}) of template`);
-    console.trace(e);
-  }
-  document.body.appendChild(t);
-  return t;
-}
-
 // FIXME: These should be extracted from .moon files
 const selectChoices = {
   AngleUnit: ["degrees", "radians"],
@@ -25,47 +6,24 @@ const selectChoices = {
 };
 
 class SimpleBlock extends HTMLElement {
-  constructor() {
-    super();
+  populate() {
+    if (this._populated === true) return;
+    this._populated = true;
     if (this.constructor._structure) {
-      console.log("this constructor has structure");
       try {
-        console.log("structure: %s", this.constructor._structure);
         this.innerHTML = this.constructor._structure;
-        console.log("aaaaaand we're done here folks!");
-        // this.appendChild(this.template().content.cloneNode(true));
       } catch (e) {
         console.error(`Problem building ${this.tagName}`);
-        return this;
       }
+      return this;
     }
   }
 
   connectedCallback() {
+    this.populate();
     if (this.update) {
       this.update();
     }
-  }
-
-  // template method is inherited by instances, but works on class ;-)
-  template() {
-    let ctor = this.constructor;
-    if (!ctor._template) {
-      try {
-        ctor._template = template(ctor._structure);
-        console.log(
-          "template set for %s: %o",
-          this.tagName,
-          ctor._template.content
-        );
-      } catch (e) {
-        console.error(
-          `No good very bad in ${this.tagName}.template(): ${ctor._template}`
-        );
-        console.trace(e);
-      }
-    }
-    return ctor._template;
   }
 }
 
@@ -76,10 +34,6 @@ class SimpleBlock extends HTMLElement {
 // which blocks need which bits. For now, just toss it all here and we'll see what sticks.
 //
 class TGBlock extends SimpleBlock {
-  constructor() {
-    super();
-  }
-
   static create(props) {
     props = props || {};
     let obj;
@@ -393,8 +347,8 @@ class TGTrigger extends TGBlock {
   static _structure = `<tg-hat></tg-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
   static tagName = "tg-trigger";
   update() {
-    this.shadowRoot.querySelector(".name").innerText = this.name;
-    this.shadowRoot.querySelector(".locals").replaceWith(this.wrappedLocals());
+    this.querySelector(".name").innerText = this.name;
+    this.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
 customElements.define("tg-trigger", TGTrigger);
