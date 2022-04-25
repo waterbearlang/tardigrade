@@ -144,8 +144,8 @@ tg-block-param input[readonly] {
 tg-tab {
   position: relative;
   display: block;
-  fill: var(--color);
-  stroke: var(--border);
+  background-color: var(--color);
+  border-color: var(--border);
   margin: 0;
   padding: 0;
   border: 0;
@@ -153,14 +153,14 @@ tg-tab {
   height: 12px;
   left: 15px;
 
-  /* -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
+  -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
   -webkit-mask-composite: destination-out;
   -webkit-mask-repeat: no-repeat;
   mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
   mask-composite: exclude;
   mask-position: 40px bottom, left top;
   mask-size: 40px 12px, auto auto;
-  mask-repeat: no-repeat; */
+  mask-repeat: no-repeat;
 }
 
 tg-hat {
