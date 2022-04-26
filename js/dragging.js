@@ -2,24 +2,40 @@ import dragula from "../lib/dragula.min.js";
 
 let drag = dragula({
   isContainer: function (el) {
-    return el.matches("wb-contains, .script");
+    return el.matches("tg-contains, .script");
   },
   moves: function (el, source, handle, sibling) {
-    return el.matches("wb-step, wb-context, wb-value, wb-trigger");
+    return el.matches("tg-step, tg-context, tg-value, tg-trigger");
   },
   accepts: function (el, target, source, sibling) {
-    if (target.matches(".gu-transit, .gu-transit *")){ return false };
-    if (target.matches(".script")){ return true }; // elements can be dropped in any container by default
-    if (target.matches(".script wb-contains") && el.matches('wb-step, wb-context')){ return true; }
-    if (target.matches("wb-input-parameter, wb-truth-parameter, wb-select-parameter, wb-block-parameter") &&
-       (el.matches("wb-value") && target.type === el.returntype)){ return true; }
+    if (target.matches(".gu-transit, .gu-transit *")) {
+      return false;
+    }
+    if (target.matches(".script")) {
+      return true;
+    } // elements can be dropped in any container by default
+    if (
+      target.matches(".script tg-contains") &&
+      el.matches("tg-step, tg-context")
+    ) {
+      return true;
+    }
+    if (
+      target.matches(
+        "tg-input-parameter, tg-truth-parameter, tg-select-parameter, tg-block-parameter"
+      ) &&
+      el.matches("tg-value") &&
+      target.type === el.returntype
+    ) {
+      return true;
+    }
     return false;
   },
   invalid: function (el, handle) {
     return false; // don't prevent any drags from initiating by default
   },
   copy: function (el, source) {
-    if (source.matches(".blockmenu wb-contains")) {
+    if (source.matches(".blockmenu tg-contains")) {
       return true;
     }
     return false;
