@@ -350,11 +350,6 @@ customElements.define("tg-value", TGValue);
 class TGStep extends TGBlock {
   static _structure = `<tg-tab></tg-tab><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></tg-returns></header>`;
   static tagName = "tg-step";
-  // constructor() {
-  //   super();
-  //   let shadow = this.attachShadow({ mode: "open" });
-  //   shadow.appendChild(document.createElement("tg-tab"));
-  // }
   update() {
     this.querySelector(".name").innerText = this.name;
     this.querySelector(".params").replaceChildren(...this.mapParams());
@@ -370,11 +365,6 @@ customElements.define("tg-step", TGStep);
 class TGContext extends TGBlock {
   static _structure = `<tg-tab></tg-tab><details open><summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
   static tagName = "tg-context";
-  // constructor() {
-  //   super();
-  //   let shadow = this.attachShadow({ mode: "open" });
-  //   shadow.appendChild(document.createElement("tg-tab"));
-  // }
   update() {
     this.querySelector(".name").innerText = this.name;
     this.querySelector(".params").replaceChildren(...this.mapParams());
@@ -391,11 +381,6 @@ customElements.define("tg-context", TGContext);
 class TGTrigger extends TGBlock {
   static _structure = `<tg-hat></tg-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
   static tagName = "tg-trigger";
-  // constructor() {
-  //   super();
-  //   let shadow = this.attachShadow({ mode: "open" });
-  //   shadow.appendChild(document.createElement("tg-hat"));
-  // }
   update() {
     this.querySelector(".name").innerText = this.name;
     this.querySelector(".locals").replaceWith(this.wrappedLocals());
