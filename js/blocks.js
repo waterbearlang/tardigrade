@@ -15,15 +15,15 @@ class SimpleBlock extends HTMLElement {
       } catch (e) {
         console.error(`Problem building ${this.tagName}`);
       }
-      return this;
     }
+    if (this.update) {
+      this.update();
+    }
+    return this;
   }
 
   connectedCallback() {
     this.populate();
-    if (this.update) {
-      this.update();
-    }
   }
 }
 
@@ -38,7 +38,6 @@ class TGBlock extends SimpleBlock {
     props = props || {};
     let obj;
     try {
-      console.log(`trying to create a ${this.tagName}`);
       obj = document.createElement(this.tagName);
     } catch (e) {
       console.error(`createElement failed for ${this.tagName}`);
@@ -48,7 +47,7 @@ class TGBlock extends SimpleBlock {
       try {
         obj[key] = props[key];
       } catch (e) {
-        console.log(`setting property failed on ${this.tagName} for ${key}`);
+        console.error(`setting property failed on ${this.tagName} for ${key}`);
       }
     });
     return obj;
@@ -255,17 +254,53 @@ class TGBlockParam extends TGBlock {
 customElements.define("tg-block-param", TGBlockParam);
 
 //
-// TGTab - makes the tab at the top of a block. Purely decorative.
+// TGTab - add the tab at the top of steps and contexts. Purely decorative
 //
 
 class TGTab extends SimpleBlock {
   static tagName = "tg-tab";
+  constructor() {
+    super();
+    this.addTab();
+  }
+  addTab() {
+    let shadow = this.attachShadow({ mode: "open" });
+    let style = document.createElement("style");
+    style.innerText = `
+    :host {
+      position: relative;
+      display: block;
+      fill: var(--color);
+      stroke: var(--border);
+      margin: 0;
+      padding: 0;
+      border: 0;
+      width: 40px;
+      height: 12px;
+      left: 15px;
+    }
+  `;
+    shadow.appendChild(style);
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let div = document.createElement("div");
+    div.appendChild(svg);
+    svg.outerHTML = `<svg class="tab" width="40" height="12">
+      <path
+        d="M 0 12
+           a 6 6 90 0 0 6 -6
+           a 6 6 90 0 1 6 -6
+           h 16
+           a 6 6 90 0 1 6 6
+           a 6 6 90 0 0 6 6">
+      </path>
+    </svg>`;
+    shadow.appendChild(div.firstElementChild);
+  }
 }
 customElements.define("tg-tab", TGTab);
 
 //
 // TGHat - makes the bulge on top of a TGTrigger. Purely decorative.
-// Maybe move to pure CSS?
 //
 
 class TGHat extends SimpleBlock {
@@ -315,6 +350,9 @@ customElements.define("tg-value", TGValue);
 class TGStep extends TGBlock {
   static _structure = `<tg-tab></tg-tab><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></tg-returns></header>`;
   static tagName = "tg-step";
+  constructor() {
+    super();
+  }
   update() {
     this.querySelector(".name").innerText = this.name;
     this.querySelector(".params").replaceChildren(...this.mapParams());
@@ -330,6 +368,7 @@ customElements.define("tg-step", TGStep);
 class TGContext extends TGBlock {
   static _structure = `<tg-tab></tg-tab><details open><summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
   static tagName = "tg-context";
+  constructor() {}
   update() {
     this.querySelector(".name").innerText = this.name;
     this.querySelector(".params").replaceChildren(...this.mapParams());
