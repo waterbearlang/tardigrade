@@ -1,3 +1,7 @@
+.blockmenu tg-locals {
+  display: none;
+}
+
 tg-trigger {
   display: inline-block;
   position: relative;
@@ -207,6 +211,8 @@ tg-contains {
   min-height: 1.25em;
   padding-bottom: 14px;
   padding: 0.5em;
+  padding-top: 5px;
+  padding-bottom: 1em;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -214,19 +220,19 @@ tg-contains {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
-tg-contains tg-step {
+
+tg-contains tg-step,
+tg-contains tg-context,
+tg-contains tg-value,
+tg-contains tg-trigger {
   margin: 5px;
-  margin-top: 12px;
+  margin-top: -16px;
 }
-tg-contains tg-context {
-  margin: 5px;
-  margin-top: 12px;
-}
-tg-contains tg-value {
-  margin: 5px;
-}
-tg-contains tg-step {
-  margin: 5px;
+
+.blockmenu tg-contains tg-step,
+.blockmenu tg-contains tg-context,
+.blockmenu tg-contains tg-value,
+.blockmenu tg-contains tg-trigger {
   margin-top: 12px;
 }
 
@@ -318,4 +324,8 @@ tg-contains::before {
   border-style: solid;
   border-color: var(--color);
   clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+}
+
+.name {
+  margin-right: 0.5em;
 }
