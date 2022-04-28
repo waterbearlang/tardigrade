@@ -44,6 +44,11 @@ class TGBlock extends SimpleBlock {
       console.trace(e);
     }
     Object.keys(props).forEach(key => {
+      if (key === "body") {
+        console.log("%s: %o", key, props[key]);
+        // body is an array containing an object with properties "type", "namespace", "name", and "args"
+        return; // don't copy body property
+      }
       try {
         obj[key] = props[key];
       } catch (e) {

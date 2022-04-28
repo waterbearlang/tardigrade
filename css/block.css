@@ -64,9 +64,13 @@ tg-context {
   -webkit-mask-repeat: no-repeat;
   mask-image: url(/images/slot.svg#slot-cutout-path), transparent;
   mask-composite: exclude;
-  mask-position: 40px bottom, left top;
+  mask-position: 17px bottom, left top;
   mask-size: 40px 12px, auto auto;
   mask-repeat: no-repeat;
+}
+tg-trigger summary,
+tg-context summary {
+  mask-position: 28px bottom, left top;
 }
 tg-trigger tg-contains::before {
   position: absolute;
