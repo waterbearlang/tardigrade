@@ -7,6 +7,7 @@ tg-trigger {
   position: relative;
   z-index: 0;
 }
+
 tg-trigger::before {
   content: "";
   width: 10px;
@@ -23,6 +24,7 @@ tg-trigger::before {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
 tg-trigger::after {
   content: "";
   height: 20px;
@@ -40,6 +42,7 @@ tg-trigger::after {
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
 }
+
 /* summary style */
 tg-context summary,
 tg-trigger summary {
@@ -53,6 +56,7 @@ tg-trigger summary {
   padding-right: 10px;
   padding-bottom: 25px;
 }
+
 tg-context details,
 tg-trigger details {
   margin: 0;
@@ -72,10 +76,12 @@ tg-context {
   mask-size: 40px 12px, auto auto;
   mask-repeat: no-repeat;
 }
+
 tg-trigger summary,
 tg-context summary {
   mask-position: 28px bottom, left top;
 }
+
 tg-trigger tg-contains::before {
   position: absolute;
   left: 5px;
@@ -270,6 +276,11 @@ tg-step header {
   flex-wrap: nowrap;
   justify-content: flex-start unsafe;
   padding: 0.3em 0.5em;
+}
+
+tg-step header {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 tg-context {
