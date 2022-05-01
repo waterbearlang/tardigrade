@@ -44,8 +44,8 @@ tg-trigger::after {
 }
 
 /* summary style */
-tg-context summary,
-tg-trigger summary {
+tg-context tg-summary,
+tg-trigger tg-summary {
   position: relative;
   background-color: var(--color);
   border-color: var(--border);
@@ -57,14 +57,14 @@ tg-trigger summary {
   padding-bottom: 25px;
 }
 
-tg-context details,
-tg-trigger details {
+tg-context tg-details,
+tg-trigger tg-details {
   margin: 0;
 }
 
 /* slot style */
-tg-trigger summary,
-tg-context summary,
+tg-trigger tg-summary,
+tg-context tg-summary,
 tg-step,
 tg-context {
   -webkit-mask: url(/images/slot.svg) 40px bottom, linear-gradient(#000, #000);
@@ -77,8 +77,8 @@ tg-context {
   mask-repeat: no-repeat;
 }
 
-tg-trigger summary,
-tg-context summary {
+tg-trigger tg-summary,
+tg-context tg-summary {
   mask-position: 28px bottom, left top;
 }
 
@@ -339,4 +339,20 @@ tg-contains::before {
 
 .name {
   margin-right: 0.5em;
+}
+
+tg-details .name::before {
+  content: "▶";
+}
+
+tg-details[open] .name::before {
+  content: "▼";
+}
+
+tg-details tg-contains {
+  display: none;
+}
+
+tg-details[open] tg-contains {
+  display: flex;
 }

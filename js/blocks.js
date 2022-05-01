@@ -5,6 +5,15 @@ const selectChoices = {
   WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
 
+function toggleOpen(evt) {
+  let details = evt.target.closest("tg-details");
+  if (details.hasAttribute("open")) {
+    details.removeAttribute("open");
+  } else {
+    details.setAttribute("open", "open");
+  }
+}
+
 class SimpleBlock extends HTMLElement {
   populate() {
     if (this._populated === true) return;
@@ -368,10 +377,12 @@ customElements.define("tg-step", TGStep);
 //
 
 class TGContext extends TGBlock {
-  static _structure = `<tg-tab></tg-tab><details open><summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
+  static _structure = `<tg-tab></tg-tab><tg-details open><tg-summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></tg-summary><tg-contains></tg-contains></tg-details>`;
   static tagName = "tg-context";
   update() {
-    this.querySelector(".name").innerText = this.name;
+    let name = this.querySelector(".name");
+    name.innerText = this.name;
+    name.addEventListener("click", toggleOpen);
     this.querySelector(".params").replaceChildren(...this.mapParams());
     this.querySelector("tg-returns").replaceChildren(this.returnsElement());
     this.querySelector(".locals").replaceWith(this.wrappedLocals());
@@ -384,10 +395,12 @@ customElements.define("tg-context", TGContext);
 //
 
 class TGTrigger extends TGBlock {
-  static _structure = `<tg-hat></tg-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
+  static _structure = `<tg-hat></tg-hat><tg-details open><tg-summary><header><span class="name"></span> </header><span class="locals"></span></tg-summary><tg-contains></tg-contains></tg-details>`;
   static tagName = "tg-trigger";
   update() {
-    this.querySelector(".name").innerText = this.name;
+    let name = this.querySelector(".name");
+    name.innerText = this.name;
+    name.addEventListener("click", toggleOpen);
     this.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }
