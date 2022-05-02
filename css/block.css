@@ -43,6 +43,11 @@ tg-trigger::after {
   border-top-right-radius: 5px;
 }
 
+tg-context {
+  position: relative;
+  display: inline-block;
+}
+
 /* summary style */
 tg-context tg-summary,
 tg-trigger tg-summary {
@@ -233,6 +238,7 @@ tg-contains {
   align-items: flex-start;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  overflow-x: visible;
 }
 
 tg-contains tg-step,
@@ -355,4 +361,11 @@ tg-details tg-contains {
 
 tg-details[open] tg-contains {
   display: flex;
+}
+
+/* hide non-block siblings in a tg-socket */
+
+tg-socket > tg-value ~ *,
+tg-socket > * ~ tg-value {
+  display: none;
 }
