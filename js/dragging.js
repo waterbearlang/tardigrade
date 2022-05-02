@@ -25,6 +25,9 @@ let drag = dragula({
     if (
       target.matches("tg-socket") &&
       el.matches("tg-value") &&
+      !Array.from(target.children)
+        .map(n => n.tagName)
+        .includes("TG-VALUE") &&
       target.type === el.returntype
     ) {
       return true;

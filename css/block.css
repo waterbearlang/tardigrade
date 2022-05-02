@@ -365,7 +365,11 @@ tg-details[open] tg-contains {
 
 /* hide non-block siblings in a tg-socket */
 
-tg-socket > tg-value ~ *,
-tg-socket > * ~ tg-value {
+tg-socket > tg-value ~ input,
+tg-socket > input {
   display: none;
+}
+
+tg-socket > input:only-child {
+  display: revert;
 }
