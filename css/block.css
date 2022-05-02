@@ -47,6 +47,7 @@ tg-trigger::after {
 tg-context tg-summary,
 tg-trigger tg-summary {
   position: relative;
+  display: inline-block;
   background-color: var(--color);
   border-color: var(--border);
   border-top-left-radius: 5px;
@@ -55,6 +56,14 @@ tg-trigger tg-summary {
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 25px;
+}
+
+tg-details tg-summary::before {
+  content: "▶";
+  white-space: nowrap;
+}
+tg-details[open] tg-summary::before {
+  content: "▼";
 }
 
 tg-context tg-details,
@@ -274,7 +283,7 @@ tg-trigger header,
 tg-step header {
   display: inline-flex;
   flex-wrap: nowrap;
-  justify-content: flex-start unsafe;
+  justify-content: flex-start;
   padding: 0.3em 0.5em;
 }
 
@@ -339,14 +348,6 @@ tg-contains::before {
 
 .name {
   margin-right: 0.5em;
-}
-
-tg-details .name::before {
-  content: "▶";
-}
-
-tg-details[open] .name::before {
-  content: "▼";
 }
 
 tg-details tg-contains {
