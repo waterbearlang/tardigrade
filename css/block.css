@@ -60,7 +60,6 @@ tg-trigger tg-summary {
 
 tg-details tg-summary::before {
   content: "▶";
-  white-space: nowrap;
 }
 tg-details[open] tg-summary::before {
   content: "▼";
