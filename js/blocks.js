@@ -5,6 +5,15 @@ const selectChoices = {
   WaveChoice: ["sine", "saw", "square", "triangle", "pulse"],
 };
 
+function toggleOpen(evt) {
+  let details = evt.target.closest("tg-details");
+  if (details.hasAttribute("open")) {
+    details.removeAttribute("open");
+  } else {
+    details.setAttribute("open", "open");
+  }
+}
+
 class SimpleBlock extends HTMLElement {
   populate() {
     if (this._populated === true) return;
@@ -44,6 +53,11 @@ class TGBlock extends SimpleBlock {
       console.trace(e);
     }
     Object.keys(props).forEach(key => {
+      if (key === "body") {
+        console.log("%s: %o", key, props[key]);
+        // body is an array containing an object with properties "type", "namespace", "name", and "args"
+        return; // don't copy body property
+      }
       try {
         obj[key] = props[key];
       } catch (e) {
@@ -183,31 +197,29 @@ class TGBlock extends SimpleBlock {
 }
 
 class TGInputParam extends TGBlock {
-  static _structure = `<label class="name"> <input type="text" wbtype="" value=""></label>`;
+  static _structure = `<label class="name"> <tg-socket tg-type=""><input type="text" value=""></tg-socket></label>`;
   static tagName = "tg-input-param";
 
   update() {
     this.querySelector(".name").firstChild.replaceWith(this.name);
-    let input = this.querySelector("input");
-    input.setAttribute("wbtype", this.type);
-    input.setAttribute("value", this.returnName);
+    this.querySelector("input").setAttribute("value", this.returnName);
+    this.querySelector("tg-socket").setAttribute("tg-type", this.type);
   }
 }
 customElements.define("tg-input-param", TGInputParam);
 
 class TGTruthParam extends TGBlock {
-  static _structure = `<span><span class="name"></span> <input type="checkbox" wbtype="truth" value=""></span>`;
+  static _structure = `<span><span class="name"></span> <tg-socket tg-type="truth"><input type="checkbox" value=""></tg-socket></span>`;
   static tagName = "tg-truth-param";
   update() {
     this.querySelector(".name").innerText = this.name;
-    let input = this.querySelector("input");
-    input.checked = this.value === "true";
+    this.querySelector("input").checked = this.value === "true";
   }
 }
 customElements.define("tg-truth-param", TGTruthParam);
 
 class TGSelectParam extends TGBlock {
-  static _structure = `<select></select>`;
+  static _structure = `<tg-socket tg-type="text"><select></select></tg-socket>`;
   static tagName = "tg-select-param";
   get choices() {
     return this._choices;
@@ -242,12 +254,12 @@ customElements.define("tg-select-param", TGSelectParam);
 //
 
 class TGBlockParam extends TGBlock {
-  static _structure = `<label class="name"></label> <input type="text" wbtype="" readonly title="">`;
+  static _structure = `<label class="name"></label> <tg-socket tg-type=""><input type="text" readonly title=""></tg-socket>`;
   static tagName = "tg-block-param";
   update() {
     this.querySelector(".name").innerText = this.name;
     let input = this.querySelector("input");
-    input.setAttribute("wbtype", this.type);
+    input.setAttribute("tg-type", this.type);
     input.setAttribute("title", `drag a ${this.type} block here`);
   }
 }
@@ -363,10 +375,12 @@ customElements.define("tg-step", TGStep);
 //
 
 class TGContext extends TGBlock {
-  static _structure = `<tg-tab></tg-tab><details open><summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
+  static _structure = `<tg-tab></tg-tab><tg-details open><tg-summary><header><span class="name"></span> <span class="params"></span> <tg-returns title="Returned value of this block"></header><span class="locals"></span></tg-summary><tg-contains></tg-contains></tg-details>`;
   static tagName = "tg-context";
   update() {
-    this.querySelector(".name").innerText = this.name;
+    let name = this.querySelector(".name");
+    name.innerText = this.name;
+    name.addEventListener("click", toggleOpen);
     this.querySelector(".params").replaceChildren(...this.mapParams());
     this.querySelector("tg-returns").replaceChildren(this.returnsElement());
     this.querySelector(".locals").replaceWith(this.wrappedLocals());
@@ -379,10 +393,12 @@ customElements.define("tg-context", TGContext);
 //
 
 class TGTrigger extends TGBlock {
-  static _structure = `<tg-hat></tg-hat><details open><summary><header><span class="name"></span> </header><span class="locals"></span></summary><tg-contains></tg-contains></details>`;
+  static _structure = `<tg-hat></tg-hat><tg-details open><tg-summary><header><span class="name"></span> </header><span class="locals"></span></tg-summary><tg-contains></tg-contains></tg-details>`;
   static tagName = "tg-trigger";
   update() {
-    this.querySelector(".name").innerText = this.name;
+    let name = this.querySelector(".name");
+    name.innerText = this.name;
+    name.addEventListener("click", toggleOpen);
     this.querySelector(".locals").replaceWith(this.wrappedLocals());
   }
 }

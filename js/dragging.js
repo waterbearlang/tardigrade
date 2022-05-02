@@ -2,7 +2,9 @@ import dragula from "../lib/dragula.min.js";
 
 let drag = dragula({
   isContainer: function (el) {
-    return el.matches("tg-contains, .script");
+    return el.matches(
+      "tg-contains, .script, tg-locals, tg-returns, tg-block-param > input, tg-socket"
+    );
   },
   moves: function (el, source, handle, sibling) {
     return el.matches("tg-step, tg-context, tg-value, tg-trigger");
@@ -21,10 +23,11 @@ let drag = dragula({
       return true;
     }
     if (
-      target.matches(
-        "tg-input-parameter, tg-truth-parameter, tg-select-parameter, tg-block-parameter"
-      ) &&
+      target.matches("tg-socket") &&
       el.matches("tg-value") &&
+      !Array.from(target.children)
+        .map(n => n.tagName)
+        .includes("TG-VALUE") &&
       target.type === el.returntype
     ) {
       return true;
@@ -36,6 +39,9 @@ let drag = dragula({
   },
   copy: function (el, source) {
     if (source.matches(".blockmenu tg-contains")) {
+      return true;
+    }
+    if (source.matches("tg-locals, tg-returns")) {
       return true;
     }
     return false;
