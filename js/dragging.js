@@ -11,15 +11,18 @@ let drag = dragula({
   },
   accepts: function (el, target, source, sibling) {
     if (target.matches(".gu-transit, .gu-transit *")) {
+      /* I don't actually remember what this rule does, but the .gu- classes are part of the dragging library */
       return false;
     }
-    if (target.matches(".script")) {
+    if (target.matches(".script") && el.matches("tg-trigger")) {
+      // only triggers can be top-level in the script
       return true;
-    } // elements can be dropped in any container by default
+    }
     if (
       target.matches(".script tg-contains") &&
       el.matches("tg-step, tg-context")
     ) {
+      // Only contexts and steps can be contained by a trigger
       return true;
     }
     if (
@@ -30,18 +33,29 @@ let drag = dragula({
         .includes("TG-VALUE") &&
       target.type === el.returntype
     ) {
+      // values can only be dragged to sockets, and only if their type matches and there is not already a value in the socket
       return true;
     }
     return false;
   },
   invalid: function (el, handle) {
+    if (
+      el.parentElement.matches(".blockmenu tg-locals, .blockmenu tg-returns")
+    ) {
+      // cannot drag from locals or returns in the block menu
+      // (locals shouldn't even be visible, but just in case)
+      return true;
+    }
     return false; // don't prevent any drags from initiating by default
   },
   copy: function (el, source) {
-    if (source.matches(".blockmenu tg-contains")) {
-      return true;
-    }
-    if (source.matches("tg-locals, tg-returns")) {
+    if (
+      source.matches(
+        ".blockmenu tg-contains, .script tg-locals, .script tg-returns"
+      )
+    ) {
+      // locals and returns act like mini-blockmenus
+      // Will have to revisit when returns can be blocks other than values
       return true;
     }
     return false;
