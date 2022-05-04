@@ -14,6 +14,20 @@ function toggleOpen(evt) {
   }
 }
 
+function unpackValue(val) {
+  switch (val.type) {
+    case "StepCall":
+      return `${val.namespace}.${val.name}(${val.args.join(", ")})`;
+    case "KeyedValue":
+      return `${val.object}.${val.key}`;
+    case "IndexedValue":
+      return `${val.array}[${val.index}]`;
+    default:
+      console.info(`Unknown type of value: ${val.type} for value ${val}`);
+      return val;
+  }
+}
+
 class SimpleBlock extends HTMLElement {
   populate() {
     if (this._populated === true) return;
@@ -53,16 +67,7 @@ class TGBlock extends SimpleBlock {
       console.trace(e);
     }
     Object.keys(props).forEach(key => {
-      if (key === "body") {
-        console.log("%s: %o", key, props[key]);
-        // body is an array containing an object with properties "type", "namespace", "name", and "args"
-        return; // don't copy body property
-      }
-      try {
-        obj[key] = props[key];
-      } catch (e) {
-        console.error(`setting property failed on ${this.tagName} for ${key}`);
-      }
+      obj[key] = props[key];
     });
     return obj;
   }
@@ -79,11 +84,18 @@ class TGBlock extends SimpleBlock {
   set name(val) {
     this.setAttribute("name", val);
   }
+  get body() {
+    return this.getAttribute("body");
+  }
+  set body(val) {
+    val.map(v => unpackValue(v)).join(";");
+  }
   get value() {
     return this.getAttribute("value");
   }
+
   set value(val) {
-    this.setAttribute("value", val);
+    this.setAttribute("value", unpackValue(val));
   }
 
   _conditionalSetAttribute(name) {
@@ -348,7 +360,7 @@ customElements.define("tg-contains", TGContains);
 class TGSocket extends SimpleBlock {
   static tagName = "tg-socket";
 }
-customElements.define("tg-socket", TGReturns);
+customElements.define("tg-socket", TGSocket);
 
 //
 // TGDetails - replacement for <details> to work better with blocks
