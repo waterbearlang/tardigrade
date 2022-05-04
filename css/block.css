@@ -204,6 +204,7 @@ tg-locals {
   justify-content: flex-start; /* align on main axis (horizontal) */
   padding: 1px;
   border-radius: 5px;
+  height: fit-content;
 }
 .tg-locals > tg-value {
   flex: 0 0 0;
@@ -259,10 +260,8 @@ tg-contains.script,
   overflow: auto;
 }
 
-tg-contains tg-step,
-tg-contains tg-context,
-tg-contains tg-value,
-tg-contains tg-trigger {
+tg-contains > tg-step,
+tg-contains > tg-context {
   margin: 5px;
   margin-top: -16px;
 }
@@ -271,10 +270,10 @@ tg-contains.script > tg-step,
 tg-contains.script > tg-context,
 tg-contains.script > tg-value,
 tg-contains.script > tg-trigger,
-.blockmenu tg-contains tg-step,
-.blockmenu tg-contains tg-context,
-.blockmenu tg-contains tg-value,
-.blockmenu tg-contains tg-trigger {
+.blockmenu tg-contains > tg-step,
+.blockmenu tg-contains > tg-context,
+.blockmenu tg-contains > tg-value,
+.blockmenu tg-contains > tg-trigger {
   margin-top: 12px;
 }
 
