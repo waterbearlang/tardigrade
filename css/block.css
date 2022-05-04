@@ -1,6 +1,4 @@
-.blockmenu tg-locals {
-  display: none;
-}
+/* tg-trigger start */
 
 tg-trigger {
   display: inline-block;
@@ -43,12 +41,15 @@ tg-trigger::after {
   border-top-right-radius: 5px;
 }
 
+/* tg-trigger end */
+/* tg-context start */
+
 tg-context {
   position: relative;
   display: inline-block;
 }
 
-/* summary style */
+/* tg-summary start */
 tg-context tg-summary,
 tg-trigger tg-summary {
   position: relative;
@@ -70,10 +71,15 @@ tg-details[open] tg-summary::before {
   content: "▼";
 }
 
+/* tg-summary end */
+
+/* tg-details start */
 tg-context tg-details,
 tg-trigger tg-details {
   margin: 0;
 }
+
+/* tg-details end */
 
 /* slot style */
 tg-trigger tg-summary,
@@ -95,20 +101,7 @@ tg-context tg-summary {
   mask-position: 28px bottom, left top;
 }
 
-tg-trigger tg-contains::before {
-  position: absolute;
-  left: 5px;
-  top: -5px;
-  content: "";
-  height: calc(100% - 20px);
-  width: 10px;
-  display: block;
-  border-radius: 8px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--color);
-  clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
-}
+/* end slot style */
 
 tg-input-param {
   display: inline-flex;
@@ -168,6 +161,8 @@ tg-block-param input[readonly] {
   background-color: #ccc;
 }
 
+/* tg-hat begins */
+
 tg-hat {
   content: "";
   position: relative;
@@ -196,19 +191,34 @@ tg-hat::before {
   border-radius: 100%;
 }
 
+/* tg-hat ends */
+
+/* tg-locals begins */
 tg-locals {
   /* Container for values local to a block */
   position: relative;
   display: flex;
   flex-direction: row;
   background-color: white;
+  align-items: center; /* align on cross-axis (vertical) */
+  justify-content: flex-start; /* align on main axis (horizontal) */
   padding: 1px;
   border-radius: 5px;
+  height: fit-content;
 }
-.tg-locals tg-value {
-  margin-bottom: 0;
-  margin-right: 1px;
+.tg-locals > tg-value {
+  flex: 0 0 0;
+  /* margin-bottom: 0;
+  margin-right: 1px; */
 }
+
+/* .blockmenu tg-locals {
+  display: none;
+} */
+
+/* tg-locals ends */
+
+/* tg-returns begins */
 
 tg-returns {
   position: relative;
@@ -224,6 +234,10 @@ tg-returns tg-value {
   padding-bottom: 3px;
   font-size: 80%;
 }
+
+/* tg-returns ends */
+
+/* tg-contains begins */
 
 tg-contains {
   position: relative;
@@ -241,20 +255,53 @@ tg-contains {
   overflow-x: visible;
 }
 
-tg-contains tg-step,
-tg-contains tg-context,
-tg-contains tg-value,
-tg-contains tg-trigger {
+tg-contains.script,
+.blockmenu > details > tg-contains {
+  overflow: auto;
+}
+
+tg-contains > tg-step,
+tg-contains > tg-context {
   margin: 5px;
   margin-top: -16px;
 }
 
-.blockmenu tg-contains tg-step,
-.blockmenu tg-contains tg-context,
-.blockmenu tg-contains tg-value,
-.blockmenu tg-contains tg-trigger {
+tg-contains.script > tg-step,
+tg-contains.script > tg-context,
+tg-contains.script > tg-value,
+tg-contains.script > tg-trigger,
+.blockmenu tg-contains > tg-step,
+.blockmenu tg-contains > tg-context,
+.blockmenu tg-contains > tg-value,
+.blockmenu tg-contains > tg-trigger {
   margin-top: 12px;
 }
+
+tg-details tg-contains {
+  display: none;
+}
+
+tg-details[open] tg-contains {
+  display: flex;
+}
+
+tg-context > tg-details > tg-contains::before,
+tg-trigger > tg-details > tg-contains::before {
+  position: absolute;
+  left: 5px;
+  top: -5px;
+  content: "";
+  height: calc(100% - 20px);
+  width: 10px;
+  display: block;
+  border-radius: 8px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color);
+  clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+}
+
+/* tg-contains ends */
 
 tg-value {
   display: inline-block;
@@ -336,31 +383,8 @@ tg-context::after {
   border-top-right-radius: 5px;
 }
 
-tg-contains::before {
-  position: absolute;
-  left: 5px;
-  top: -5px;
-  content: "";
-  height: calc(100% - 20px);
-  width: 10px;
-  display: block;
-  border-radius: 8px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--color);
-  clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
-}
-
 .name {
   margin-right: 0.5em;
-}
-
-tg-details tg-contains {
-  display: none;
-}
-
-tg-details[open] tg-contains {
-  display: flex;
 }
 
 /* hide non-block siblings in a tg-socket */
