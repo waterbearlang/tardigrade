@@ -34,6 +34,17 @@ const processScript = async (script, menu) => {
   buildBlockMenu(ns, blocks, menu);
 };
 
+function download(content) {
+    // used to export from old .moon format to JSON, probably only needed once
+    let fileName = content.name + '.json';
+    let contentType = 'text/plain';
+    var a = document.createElement("a");
+    var file = new Blob([JSON.stringify(content, null, 2)], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
+
 const builder = (ns, block) => {
   const target = document.createElement("div");
   block.ns = ns;

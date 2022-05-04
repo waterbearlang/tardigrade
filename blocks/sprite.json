@@ -1,0 +1,566 @@
+{
+  "name": "sprite",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Step",
+      "name": "spriteFrom",
+      "returnType": "Sprite",
+      "returnName": "spriteFrom",
+      "params": [
+        {
+          "name": "images",
+          "type": "ImageList",
+          "returnName": "images"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Sprite",
+          "name": "spriteFromImages",
+          "args": [
+            "images"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "copy",
+      "returnType": "Sprite",
+      "returnName": "copy",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "copy",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "accelerate",
+      "returnType": "Sprite",
+      "returnName": "accelerate",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "by",
+          "type": "Vector",
+          "returnName": "by"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "accelerateBy",
+          "args": [
+            "vector"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "setVelocityFor",
+      "returnType": "Sprite",
+      "returnName": "setVelocityFor",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "to",
+          "type": "Vector",
+          "returnName": "to"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "setVelocityTo",
+          "args": [
+            "vector"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getVelocityOf",
+      "returnType": "Vector",
+      "returnName": "getVelocityOf",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "getVelocity",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getSpeedOf",
+      "returnType": "Vector",
+      "returnName": "getSpeedOf",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "getSpeed",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getPositionOf",
+      "returnType": "Vector",
+      "returnName": "getPositionOf",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "getPosition",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getAngleOf",
+      "returnType": "Angle",
+      "returnName": "getAngleOf",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "angle",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "rotate",
+      "returnType": "Sprite",
+      "returnName": "rotate",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "by",
+          "type": "Angle",
+          "returnName": "by"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "rotateBy",
+          "args": [
+            "angle"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "rotate",
+      "returnType": "Sprite",
+      "returnName": "rotate",
+      "params": [
+        {
+          "name": "to",
+          "type": "Sprite",
+          "returnName": "to"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "rotateTo",
+          "args": [
+            "angle"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "move",
+      "returnType": "Sprite",
+      "returnName": "move",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "move",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "should return a list of sprites\r"
+    },
+    {
+      "type": "Step",
+      "name": "moveAll",
+      "returnType": "SpriteList",
+      "returnName": "moveAll",
+      "params": [],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Sprite",
+          "name": "moveAll",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "moveTo",
+      "returnType": "Sprite",
+      "returnName": "moveTo",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "position",
+          "type": "Vector",
+          "returnName": "position"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "moveTo",
+          "args": [
+            "position"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "draw",
+      "returnType": "Sprite",
+      "returnName": "draw",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "draw",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "should return a list of sprites that were drawn (not hidden or offstage)\r"
+    },
+    {
+      "type": "Step",
+      "name": "drawAll",
+      "returnType": "Sprite",
+      "returnName": "drawAll",
+      "params": [],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Sprite",
+          "name": "drawAll",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "hide",
+      "returnType": "Sprite",
+      "returnName": "hide",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "hide",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "show",
+      "returnType": "Sprite",
+      "returnName": "show",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "show",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "isHidden",
+      "returnType": "Truth",
+      "returnName": "isHidden",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "isHidden",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "isOnstage",
+      "returnType": "Truth",
+      "returnName": "isOnstage",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "isOnstage",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "isVisible",
+      "returnType": "Truth",
+      "returnName": "isVisible",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "isVisible",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "applyForce",
+      "returnType": "Sprite",
+      "returnName": "applyForce",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "force",
+          "type": "Vector",
+          "returnName": "force"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "applyForce",
+          "args": [
+            "force"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "setEdgeBehavior",
+      "returnType": "Sprite",
+      "returnName": "setEdgeBehavior",
+      "params": [
+        {
+          "name": "sprite",
+          "type": "Sprite",
+          "returnName": "sprite"
+        },
+        {
+          "name": "behavior",
+          "type": "EdgeChoice",
+          "returnName": "behavior"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "sprite",
+          "name": "setEdgeBehavior",
+          "args": [
+            "behavior"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "areColliding",
+      "returnType": "Truth",
+      "returnName": "areColliding",
+      "params": [
+        {
+          "name": "a",
+          "type": "Sprite",
+          "returnName": "a"
+        },
+        {
+          "name": "b",
+          "type": "Sprite",
+          "returnName": "b"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "a",
+          "name": "collidingWithSprite",
+          "args": [
+            "b"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "areColliding",
+      "returnType": "Truth",
+      "returnName": "areColliding",
+      "params": [
+        {
+          "name": "a",
+          "type": "Sprite",
+          "returnName": "a"
+        },
+        {
+          "name": "b",
+          "type": "Shape",
+          "returnName": "b"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "a",
+          "name": "collidingWithShape",
+          "args": [
+            "b"
+          ]
+        }
+      ]
+    }
+  ]
+}

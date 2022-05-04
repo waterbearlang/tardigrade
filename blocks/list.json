@@ -1,0 +1,169 @@
+{
+  "name": "list",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Step",
+      "name": "create",
+      "returnType": "TypeList",
+      "returnName": "create",
+      "params": [
+        {
+          "name": "type",
+          "type": "Type",
+          "returnName": "type"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "list",
+          "name": "createListOfType",
+          "args": [
+            "type"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "itemAtIndex",
+      "returnType": "Type",
+      "returnName": "itemAtIndex",
+      "params": [
+        {
+          "name": "list",
+          "type": "TypeList",
+          "returnName": "list"
+        },
+        {
+          "name": "index",
+          "type": "Integer",
+          "returnName": "index"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "list",
+          "name": "get",
+          "args": [
+            "index"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "concatenate",
+      "returnType": "TypeList",
+      "returnName": "concatenate",
+      "params": [
+        {
+          "name": "a",
+          "type": "TypeList",
+          "returnName": "a"
+        },
+        {
+          "name": "b",
+          "type": "TypeList",
+          "returnName": "b"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "a",
+          "name": "concat",
+          "args": [
+            "b"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "joinWith",
+      "returnType": "String",
+      "returnName": "joinWith",
+      "params": [
+        {
+          "name": "list",
+          "type": "TypeList",
+          "returnName": "list"
+        },
+        {
+          "name": "separator",
+          "type": "Text",
+          "returnName": "separator"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "list",
+          "name": "join",
+          "args": [
+            "separator"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "append",
+      "returnType": "List",
+      "returnName": "append",
+      "params": [
+        {
+          "name": "list",
+          "type": "List",
+          "returnName": "list"
+        },
+        {
+          "name": "item",
+          "type": "Type",
+          "returnName": "item"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "list",
+          "name": "append",
+          "args": [
+            "item"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "prepend",
+      "returnType": "List",
+      "returnName": "prepend",
+      "params": [
+        {
+          "name": "list",
+          "type": "List",
+          "returnName": "list"
+        },
+        {
+          "name": "item",
+          "type": "Type",
+          "returnName": "item"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "list",
+          "name": "prepend",
+          "args": [
+            "item"
+          ]
+        }
+      ]
+    }
+  ]
+}

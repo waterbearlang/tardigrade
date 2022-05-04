@@ -1,0 +1,109 @@
+{
+  "name": "angle",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Comment",
+      "value": "combine a numeric angle with an angle unit and allow conversion between them\r"
+    },
+    {
+      "type": "Step",
+      "name": "angle",
+      "returnType": "Angle",
+      "returnName": "angle",
+      "params": [
+        {
+          "name": "measure",
+          "type": "Float",
+          "returnName": "measure"
+        },
+        {
+          "name": "unit",
+          "type": "AngleUnit",
+          "returnName": "unit"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Angle",
+          "name": "new",
+          "args": [
+            "measure",
+            "unit"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getDegrees",
+      "returnType": "Float",
+      "returnName": "getDegrees",
+      "params": [
+        {
+          "name": "angle",
+          "type": "Angle",
+          "returnName": "angle"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "angle",
+          "name": "degrees",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "getRadians",
+      "returnType": "Float",
+      "returnName": "getRadians",
+      "params": [
+        {
+          "name": "angle",
+          "type": "Angle",
+          "returnName": "angle"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "angle",
+          "name": "radians",
+          "args": []
+        }
+      ]
+    },
+    {
+      "type": "Step",
+      "name": "difference",
+      "returnType": "Angle",
+      "returnName": "difference",
+      "params": [
+        {
+          "name": "a",
+          "type": "Angle",
+          "returnName": "a"
+        },
+        {
+          "name": "b",
+          "type": "Angle",
+          "returnName": "b"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "a",
+          "name": "difference",
+          "args": [
+            "b"
+          ]
+        }
+      ]
+    }
+  ]
+}

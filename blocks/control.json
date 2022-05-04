@@ -1,0 +1,230 @@
+{
+  "name": "control",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Trigger",
+      "name": "eachFrame",
+      "locals": [
+        {
+          "type": "Value",
+          "name": "frameCount",
+          "returnType": "Integer",
+          "value": {
+            "type": "KeyedValue",
+            "object": "runtime",
+            "key": "frameCount"
+          }
+        },
+        {
+          "type": "Value",
+          "name": "elapsed",
+          "returnType": "Float",
+          "value": {
+            "type": "KeyedValue",
+            "object": "runtime",
+            "key": "elapsed"
+          }
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "eachFrame",
+          "args": [
+            "expressions"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Context",
+      "name": "repeat",
+      "params": [],
+      "locals": [
+        {
+          "type": "Value",
+          "name": "index",
+          "returnType": "Integer",
+          "value": {
+            "type": "KeyedValue",
+            "object": "Loop",
+            "key": "index"
+          }
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "repeat",
+          "args": [
+            "expressions"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Value",
+      "name": "pi",
+      "returnType": "Float",
+      "value": {
+        "type": "StepCall",
+        "namespace": "Math",
+        "name": "PI",
+        "args": []
+      }
+    },
+    {
+      "type": "Value",
+      "name": "true",
+      "returnType": "Truth",
+      "value": {
+        "type": "StepCall",
+        "namespace": "Truth",
+        "name": "true",
+        "args": []
+      }
+    },
+    {
+      "type": "Value",
+      "name": "false",
+      "returnType": "Truth",
+      "value": {
+        "type": "StepCall",
+        "namespace": "Truth",
+        "name": "false",
+        "args": []
+      }
+    },
+    {
+      "type": "Context",
+      "name": "loopOver",
+      "params": [
+        {
+          "name": "list",
+          "type": "TypeList",
+          "returnName": "list"
+        }
+      ],
+      "locals": [
+        {
+          "type": "Value",
+          "name": "index",
+          "returnType": "Integer",
+          "value": {
+            "type": "KeyedValue",
+            "object": "Loop",
+            "key": "index"
+          }
+        },
+        {
+          "type": "Value",
+          "name": "item",
+          "returnType": "Type",
+          "value": {
+            "type": "IndexedValue",
+            "array": "list",
+            "index": {
+              "type": "KeyedValue",
+              "object": "Loop",
+              "key": "index"
+            }
+          }
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "loopOver",
+          "args": [
+            "expressions"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "basic access to logging\r"
+    },
+    {
+      "type": "Step",
+      "name": "log",
+      "returnType": "Text",
+      "returnName": "log",
+      "params": [
+        {
+          "name": "text",
+          "type": "Text",
+          "returnName": "text"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "log",
+          "args": [
+            "text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "A note for the coder, ignored by the runtime\r"
+    },
+    {
+      "type": "Step",
+      "name": "comment",
+      "returnType": "Text",
+      "returnName": "comment",
+      "params": [
+        {
+          "name": "text",
+          "type": "Text",
+          "returnName": "text"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "comment",
+          "args": [
+            "text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "First boolean, but haven't implemented return values yet, so shouldn't matter?\r"
+    },
+    {
+      "type": "Step",
+      "name": "alert",
+      "returnType": "Truth",
+      "returnName": "alert",
+      "params": [
+        {
+          "name": "text",
+          "type": "Text",
+          "returnName": "text"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Control",
+          "name": "alert",
+          "args": [
+            "text"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "sound",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Comment",
+      "value": "Probably need to define some types\r"
+    },
+    {
+      "type": "Comment",
+      "value": "and handle audio *files* differently\r"
+    },
+    {
+      "type": "Comment",
+      "value": "from generated sounds, and sound effects\r"
+    },
+    {
+      "type": "Comment",
+      "value": "and synths differently from instrumetal\r"
+    },
+    {
+      "type": "Comment",
+      "value": "notes and chords. Gah!\r"
+    },
+    {
+      "type": "Step",
+      "name": "synth",
+      "returnType": "Sound",
+      "returnName": "synth",
+      "params": [
+        {
+          "name": "wave",
+          "type": "WaveChoice",
+          "returnName": "wave"
+        },
+        {
+          "name": "attack",
+          "type": "Float",
+          "returnName": "attack"
+        },
+        {
+          "name": "release",
+          "type": "Float",
+          "returnName": "release"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Sound",
+          "name": "synth",
+          "args": [
+            "wave",
+            "attack",
+            "release"
+          ]
+        }
+      ]
+    }
+  ]
+}
