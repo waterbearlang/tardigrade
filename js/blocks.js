@@ -343,6 +343,30 @@ class TGContains extends SimpleBlock {
 customElements.define("tg-contains", TGContains);
 
 //
+// TGSocket - holds value block and/or input
+//
+class TGSocket extends SimpleBlock {
+  static tagName = "tg-socket";
+}
+customElements.define("tg-socket", TGReturns);
+
+//
+// TGDetails - replacement for <details> to work better with blocks
+//
+class TGDetails extends SimpleBlock {
+  static tagName = "tg-details";
+}
+customElements.define("tg-details", TGDetails);
+
+//
+// TGSummary - replacement for <summary> to work better with blocks
+//
+class TGSummary extends SimpleBlock {
+  static tagName = "tg-summary";
+}
+customElements.define("tg-summary", TGSummary);
+
+//
 // TGValue - standalone values
 //
 
