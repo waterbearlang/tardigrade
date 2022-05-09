@@ -1,0 +1,33 @@
+{
+  "name": "stage",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Comment",
+      "value": "Static method\r"
+    },
+    {
+      "type": "Step",
+      "name": "clearToColor",
+      "returnType": "Colour",
+      "returnName": "clearToColor",
+      "params": [
+        {
+          "name": "color",
+          "type": "Colour",
+          "returnName": "color"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Stage",
+          "name": "background",
+          "args": [
+            "color"
+          ]
+        }
+      ]
+    }
+  ]
+}

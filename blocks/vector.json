@@ -1,0 +1,188 @@
+{
+  "name": "vector",
+  "type": "Namespace",
+  "values": [
+    {
+      "type": "Comment",
+      "value": "Basic constructor\r"
+    },
+    {
+      "type": "Step",
+      "name": "fromXY",
+      "returnType": "Vector",
+      "returnName": "fromXY",
+      "params": [
+        {
+          "name": "x",
+          "type": "Float",
+          "returnName": "x"
+        },
+        {
+          "name": "y",
+          "type": "Float",
+          "returnName": "y"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Runtime",
+          "name": "Vector",
+          "args": [
+            "x",
+            "y"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "Polar constructor\r"
+    },
+    {
+      "type": "Step",
+      "name": "fromMag_angle_unit",
+      "returnType": "Vector",
+      "returnName": "fromMag_angle_unit",
+      "params": [
+        {
+          "name": "mag",
+          "type": "Float",
+          "returnName": "mag"
+        },
+        {
+          "name": "angle",
+          "type": "Float",
+          "returnName": "angle"
+        },
+        {
+          "name": "unit",
+          "type": "AngleUnit",
+          "returnName": "unit"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Runtime",
+          "name": "Vector",
+          "args": [
+            {
+              "type": "StepCall",
+              "namespace": "Math",
+              "name": "mult",
+              "args": [
+                {
+                  "type": "StepCall",
+                  "namespace": "Math",
+                  "name": "cos",
+                  "args": [
+                    {
+                      "type": "StepCall",
+                      "namespace": "Math",
+                      "name": "radians",
+                      "args": [
+                        "angle",
+                        "unit"
+                      ]
+                    }
+                  ]
+                },
+                "mag"
+              ]
+            },
+            {
+              "type": "StepCall",
+              "namespace": "Math",
+              "name": "mult",
+              "args": [
+                {
+                  "type": "StepCall",
+                  "namespace": "Math",
+                  "name": "sin",
+                  "args": [
+                    {
+                      "type": "StepCall",
+                      "namespace": "Math",
+                      "name": "radians",
+                      "args": [
+                        "angle",
+                        "unit"
+                      ]
+                    }
+                  ]
+                },
+                "mag"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Comment",
+      "value": "Vector math\r"
+    },
+    {
+      "type": "Step",
+      "name": "add",
+      "returnType": "Vector",
+      "returnName": "add",
+      "params": [
+        {
+          "name": "a",
+          "type": "Vector",
+          "returnName": "a"
+        },
+        {
+          "name": "b",
+          "type": "Vector",
+          "returnName": "b"
+        }
+      ],
+      "body": [
+        {
+          "type": "StepCall",
+          "namespace": "Runtime",
+          "name": "Vector",
+          "args": [
+            {
+              "type": "StepCall",
+              "namespace": "Math",
+              "name": "add",
+              "args": [
+                {
+                  "type": "KeyedValue",
+                  "object": "a",
+                  "key": "x"
+                },
+                {
+                  "type": "KeyedValue",
+                  "object": "b",
+                  "key": "x"
+                }
+              ]
+            },
+            {
+              "type": "StepCall",
+              "namespace": "Math",
+              "name": "add",
+              "args": [
+                {
+                  "type": "KeyedValue",
+                  "object": "a",
+                  "key": "y"
+                },
+                {
+                  "type": "KeyedValue",
+                  "object": "b",
+                  "key": "y"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
